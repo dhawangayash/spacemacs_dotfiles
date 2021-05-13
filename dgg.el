@@ -17,6 +17,13 @@
 (spacemacs/toggle-visual-line-navigation)
 (spacemacs/toggle-highlight-current-line-globally-off )
 
+;; General CONFIGURATION
+;; Config auto complete
+(setq company-idle-delay 0.1)
+
+;; DO NOT AUTOMATICALLY autofill
+;; I prefer per buffer instead visual-fill-column-mode
+(spacemacs/toggle-auto-fill-mode)
 
 
 (with-eval-after-load 'eww
@@ -24,12 +31,6 @@
   (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
   (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer))
 
-;; General CONFIGURATION
-;; Config auto complete
-(setq company-idle-delay 0.1)
-
-;; DO NOT AUTOMATICALLY autofill
-(spacemacs/toggle-auto-fill-mode-off)
 
 ;; Execute cleanup functions when Emacs is closed
 (add-hook 'kill-emacs-hook 'mb/kill-emacs-hook)
@@ -43,7 +44,9 @@
 ;; Spaceline config
 (setq spaceline-org-clock-p t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG MODE CONFIGURATION
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; ORG-AGENDA CONFIGURATION
 ;; adding line numbers in tangle code blocks when hitting C-c '
@@ -78,7 +81,6 @@
 
 ;; Sets custom TODO states
 (setq org-todo-keywords
-      ;; '((sequence "TODO(t)" "IN-PROGRESS(i)" "PROJECT(p)" "EPIC(e)" "STORY(s)" "DELEGATED(p)" "DEFERRED(f)" "LATER(l)" "WAITING(w)" "SOMEDAY(m)" "|" "CANCELLED(c)" "NOTE(n)" "DONE(d)" "FIXED(f)")))
       '((sequence "REPEAT (r) TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
         (sequence "PROJECT(p)" "AREA(a)" "|" "COMPLETED(c)")
         (sequence "LATER(l)" "WAITING(w)" "FUTURE(f)" "|" "CANCELLED(x)")
@@ -358,3 +360,97 @@ To be used by `eww-after-render-hook'."
         (progn (org-end-of-subtree t t)
                (when (and (org-at-heading-p) (not (eobp))) (backward-char 1))
                (point)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Remove dark theme leuven
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package leuven-theme
+  :config
+
+  (setq leuven-scale-org-agenda-structure nil)
+  (setq leuven-dark-scale-volatile-highlight nil)
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org-mode second brain
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :custom
+  (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
+  (orb-file-field-extensions '("pdf" "epub" "html"))
+
+  (orb-templates
+   '(("r" "ref" plain (function org-roam-capture--get-point)
+      ""
+      :file-name "${citekey}"
+      :head "#+TITLE: ${citekey}: ${title}
+#+ROAM_KEY: ${ref}
+- tags ::
+- keywords :: ${keywords}
+* ${title}
+  :PROPERTIES:
+  :Custom_ID: ${citekey}
+  :URL: ${url}
+  :AUTHOR: ${author-or-editor}
+  :NOTER_DOCUMENT: ${file}
+  :NOTER_PAGE:
+  :END:"))))
+
+(use-package org-pdftools
+  :hook (org-mode . org-pdftools-setup-link)
+  )
+
+(use-package org-noter
+  :after (:any org pdf-view)
+  :config
+  (require 'org-noter-pdftools)
+  :custom
+  (org-noter-always-create-frame nil)
+  (org-noter-separate-notes-from-heading t)
+  (org-noter-default-notes-file-names '("notes.org"))
+  (org-noter-notes-search-path (list org-roam-directory))
+  )
+
+
+(use-package org-noter-pdftools
+  :after org-noter
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freestyle-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+(use-package helm-bibtex
+  :config
+  (setq bibtex-completion-bibliography
+        '("~/Dropbox/org/dgg_bib.bib"))
+)
