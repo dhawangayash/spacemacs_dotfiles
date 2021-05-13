@@ -376,6 +376,41 @@ To be used by `eww-after-render-hook'."
 ;; org-mode second brain
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package org-roam
+  :ensure t
+  :hook ((after-init . org-roam-map))
+  :custom
+  (org-roam-db-update-method 'immediate)
+  :config
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (function org-roam-capture--get-point)
+           "%?"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n"
+           :unnarrowed t))
+        org-roam-capture-ref-templates
+        '(("r" "ref" plain
+           (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n%(zp/org-protocol-insert-selection-dwim \"%i\")"
+           :unnarrowed t)
+          ("i" "incremental" plain
+           (function org-roam-capture--get-point)
+           "* %?\n%(zp/org-protocol-insert-selection-dwim \"%i\")"
+           :file-name "web/${slug}"
+           :head "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n"
+           :unnarrowed t
+           :empty-lines-before 1))
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           #'org-roam-capture--get-point
+           "* %?"
+           :file-name "scratch/%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d>\n\n"
+           :add-created t))))
+
 (use-package org-roam-bibtex
   :after org-roam
   :hook (org-roam-mode . org-roam-bibtex-mode)
@@ -451,6 +486,14 @@ With a prefix ARG, remove start location."
 
 (use-package helm-bibtex
   :config
-  (setq bibtex-completion-bibliography
-        '("~/Dropbox/org/dgg_bib.bib"))
+  ;; (setq bibtex-completion-bibliography
+  ;;       '("~/Dropbox/org/dgg_bib.bib"
+  ;;         "~/Dropbox/org/dgg_bib.org"))
+  ;; (setq bibtex-completion-notes-path "~/Dropbox/org/dgg_bib.org")
+  ;; (setq org-ref-default-bibliography '("~/Dropbox/org/dgg_bib.bib")
+  ;;       org-ref-pdf-directory "~/Dropbox/3_Resources/Books_Algo/"
+  ;;       org-ref-bibliography-notes "~/Dropbox/3_Resources/Books/")
+
+  (setq bibtex-completion-bibliography '("~/Dropbox/org/dgg_bib.bib"))
+  (setq bibtex-completion-pdf-field "File")
 )

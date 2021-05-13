@@ -45,7 +45,7 @@ This function should only modify configuration layer settings."
      (bibtex
       :variable
       bibtex-completion-bibliography (expand-file-name "~/Dropbox/org/dgg_bib.bib")
-      bibtex-completion-pdf-field "file"
+      bibtex-completion-pdf-field "File"
       ;; org-ref stuff (but used by bibtex layer)
       org-ref-default-bibliography (list bibtex-completion-bibliography)
       org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
