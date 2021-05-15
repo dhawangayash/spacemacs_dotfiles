@@ -4,18 +4,13 @@
 ;; URL: https://github.com/benswift/.dotfiles/blob/master/ben-utils.el
 ;;; Commentary:
 
-;; Ben's helper functions. Probably not useful for anyone else, but if you wanna
-;; pinch stuff then knock yourself out.
-
-;; commentary
-
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Visual appearance toggles
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (spacemacs/toggle-visual-line-navigation)
-(spacemacs/toggle-highlight-current-line-globally-off )
+(spacemacs/toggle-highlight-current-line-globally-off)
 
 ;; General CONFIGURATION
 ;; Config auto complete
@@ -24,12 +19,6 @@
 ;; DO NOT AUTOMATICALLY autofill
 ;; I prefer per buffer instead visual-fill-column-mode
 (spacemacs/toggle-auto-fill-mode)
-
-
-(with-eval-after-load 'eww
-  (add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
-  (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
-  (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer))
 
 
 ;; Execute cleanup functions when Emacs is closed
@@ -81,7 +70,7 @@
 
 ;; Sets custom TODO states
 (setq org-todo-keywords
-      '((sequence "REPEAT (r) TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
+      '((sequence "REPEAT(r) TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
         (sequence "PROJECT(p)" "AREA(a)" "|" "COMPLETED(c)")
         (sequence "LATER(l)" "WAITING(w)" "FUTURE(f)" "|" "CANCELLED(x)")
         (sequence "|" "NOTE(n)")))
@@ -109,8 +98,16 @@
 (setq org-clock-out-remove-zero-time-clocks t)
 (setq org-hide-emphasis-markers t)
 
+(setq org-superstar-headline-bullets-list '("◉" "○" "■" "◆" "▲" "▶"))
+
 ;; Org set habit graph columns
 ;; (setq 'org-habit-graph-column t)
+
+(defun datetree-tomorrow ()
+  (org-datetree-find-date-create
+   (calendar-gregorian-from-absolute
+    (time-to-days (time-add (current-time) (list 0 86400 0))))))
+
 
 ;; org-capture templates and reflile config
 (setq org-capture-templates
@@ -135,8 +132,15 @@
          "*** TODO %?\n%U\n%a\n:HABIT:\nSCHEDULED: %(format-time-string \"%<<%Y-%m(%B)-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n")
         ("v" "Videos to watch" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
          "*** TODO %? \t\t\t\t\t:VIDEOS:YT: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :clock-in t :clock-resume t :prepend t)
+
+
         ("g" "GTD" entry (file+olp+datetree "~/Dropbox/org/gtd.org")
          "*** %? :GTD:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
+
+        ("G" "Tomorrow GTD, cannot be applied for start of week" plain (file+function "~/Dropbox/org/gtd.org" datetree-tomorrow)
+         "*** %? :GTD:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t :immediate-finish t)
+
+
         ("d" "DONE" entry (file+olp+datetree "~/Dropbox/org/done.org")
          "*** %? :DONE:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
         ))
@@ -188,13 +192,27 @@
                                    '("~/Dropbox/org"
                                      "~/Dropbox/1_Projects"
                                      "~/Dropbox/2_Areas"
-                                     "~/Dropbox/3_Resources"
+                                     ;; "~/Dropbox/3_Resources"
                                      "~/Dropbox/4_Archives"
                                      "~/workdir/inter"))))
     )
 )
 
-(setq org-superstar-headline-bullets-list '("◉" "○" "■" "◆" "▲" "▶"))
+
+
+(setq org-agenda-custom-commands
+      '(("d" "Daily agenda and all TODOs"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+          (agenda "" ((org-agenda-span-to-ndays 1)))
+          (alltodo ""
+                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
+                                                   (air-org-skip-subtree-if-priority ?A)
+                                                   (org-agenda-skip-if nil '(scheduled deadline))))
+                    (org-agenda-overriding-header "ALL normal priority tasks:"))))
+         ((org-agenda-compact-blocks t)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; eshell and pyenv ;;;;
@@ -218,6 +236,17 @@
 (add-hook 'pyvenv-post-activate-hooks #'smf/post-venv-hook)
 (add-hook 'pyvenv-post-deactivate-hooks #'smf/post-venv-hook)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; eww configurations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; URL: https://protesilaos.com/dotemacs/#h:524bc702-ff55-4ed9-9a38-26d30d64591d
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'eww
+  (add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
+  (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
+  (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer))
+
 (defun prot-eww--rename-buffer ()
   "Rename EWW buffer using page title or URL.
 To be used by `eww-after-render-hook'."
@@ -226,19 +255,9 @@ To be used by `eww-after-render-hook'."
                 (plist-get eww-data :title))))
     (rename-buffer (format "*%s # eww*" name) t)))
 
-(setq org-agenda-custom-commands
-      '(("d" "Daily agenda and all TODOs"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
-          (agenda "" ((org-agenda-span-to-ndays 1)))
-          (alltodo ""
-                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
-                                                   (air-org-skip-subtree-if-priority ?A)
-                                                   (org-agenda-skip-if nil '(scheduled deadline))))
-                    (org-agenda-overriding-header "ALL normal priority tasks:"))))
-         ((org-agenda-compact-blocks t)))))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; END EWW CONFIGURATION
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun mb/org-mode-hook ()
   "Keep headings all the same size"
@@ -363,17 +382,28 @@ To be used by `eww-after-render-hook'."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Remove dark theme leuven
+;; leuven configurations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package leuven-theme
   :config
-
   (setq leuven-scale-org-agenda-structure nil)
   (setq leuven-dark-scale-volatile-highlight nil)
 )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; END leuven configurations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; org-mode second brain
+;; org roam configuration mode
+;; - org-roam
+;; - org-roam-bibtex
+;; - org-noter
+;; - org-noter-pdftools
+;; - helm-bibtex
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Used these instructions
+;; https://benswift.me/blog/2020/12/16/configuring-spacemacs-org-roam-org-noter-for-academic-writing-bliss/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org-roam
@@ -450,7 +480,6 @@ To be used by `eww-after-render-hook'."
   (org-noter-notes-search-path (list org-roam-directory))
   )
 
-
 (use-package org-noter-pdftools
   :after org-noter
   :config
@@ -497,3 +526,6 @@ With a prefix ARG, remove start location."
   (setq bibtex-completion-bibliography '("~/Dropbox/org/dgg_bib.bib"))
   (setq bibtex-completion-pdf-field "File")
 )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; END ORG ROAM CONFIG
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

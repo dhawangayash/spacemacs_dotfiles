@@ -106,6 +106,7 @@ This function should only modify configuration layer settings."
                                        :config
                                        (atomic-chrome start-server))
                                       ;; https://emacs.stackexchange.com/questions/54092/spacemacs-helm-org-layer-is-missing
+                                      hl-anything
                                       helm-org
                                       pyenv-mode
                                       imenu-anywhere
@@ -562,6 +563,9 @@ before packages are loaded."
 
   (spacemacs//add-to-load-path (expand-file-name "~/workdir/spacemacs_dotfiles/"))
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg.el"))
+  (eval-after-load 'org
+    (org-babel-load-file (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org"))
+    )
   )
 
 
@@ -586,6 +590,7 @@ This function is called at the very end of Spacemacs initialization."
  '(custom-safe-themes '(default))
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#6272a4")
+ '(fill-column 120)
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
  '(golden-ratio-mode nil)
  '(helm-completion-style 'emacs)

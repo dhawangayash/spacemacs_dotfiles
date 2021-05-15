@@ -1,0 +1,741 @@
+-*- buffer-read-only: t -*-
+* Evil-Mode
+** Setting auto-increment
+:PROPERTIES:
+:ID:       78cd2a12-c3cc-49b5-a0cd-16995bda665f
+:END:
+- URL :: [[Https://github.com/syl20bnr/spacemacs/issues/9914][URL-used-to-resolve-issue]]
+
+#+BEGIN_SRC emacs-lisp :results silent
+;; (require 'evil-numbers)
+1
+(evil-define-key 'normal global-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(evil-define-key 'normal global-map (kbd "C-s") 'evil-numbers/dec-at-pt)
+;; (evil-define-key 'normal global-map (kbd "C-x") 'evil-numbers/dec-at-pt)
+
+#+END_SRC
+
+* Dired configuration
+Get dired to print human readable sized files.
+#+BEGIN_SRC emacs-lisp :results silent
+
+(setq dired-listing-switches "-alh")
+
+#+END_SRC
+
+* Org stuff
+** Init Org mode, auto load todo paths, and define standard bindings
+#+Begin_SRC emacs-lisp
+;;;
+;;;  Org Mode
+;;;
+(add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+(require 'org)
+
+;;(setq org-directory "~/Dropbox/org ~/workdir/inter/interview")
+;;(setq org-default-notes-file "~/Dropbox/org/refile.org")
+
+;;
+;; Standard key bindings
+;; (global-set-key "\C-cb" 'org-iswitchb)
+
+#+END_SRC
+
+** Org configs based on john wigley
+
+Blog: [[http://newartisans.com/2007/08/using-org-mode-as-a-day-planner/][notes-john-wigley]]
+
+#+Begin_SRC emacs-lisp
+
+(setq org-agenda-start-on-weekday nil)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+
+#+END_SRC
+
+
+** Org bullets stuff
+#+Begin_SRC emacs-lisp
+  ;; https://orgmode.org/manual/Handling-links.html
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  ;; (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  ;; (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key (kbd "C-c C-l") 'org-insert-link)
+  ;;(add-hook 'org-load-hook
+  ;;  (lambda ()
+  ;;    (define-key org-mode-map "\M-n" 'org-next-link)
+  ;;    (define-key org-mode-map "\M-p" 'org-previous-link)))
+
+  ;; setting fontify for better java
+  ;; further explanantion here:
+  ;; https://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+  ;; (setq org-src-fontify-natively t)
+#+END_SRC
+
+** Org agenda list from aaron bieber
+Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html]
+
+- Good ::
+    #+BEGIN_SRC emacs-lisp
+
+    (defun dgg-pop-to-org-agenda (split)
+      "Visit the org agenda, in the current window or a SPLIT."
+      (interactive "P")
+      (org-agenda-list)
+      (when (not split)
+          (delete-other-windows)))
+
+    ;; (define-key global-map (kbd "C-<f12>") 'dgg-pop-to-org-agenda)
+    (global-set-key (kbd "C-<f12>") 'dgg-pop-to-org-agenda)
+
+    #+END_SRC
+    The "dgg" part is just a namespace prefix that I use for all of my custom functions for historical reasons I won't go into; the important part is the ~split~ argument, which allows me to optionally allow the window to split as it does normally by specifying a prefix.
+
+
+** For tag searches ignore tasks with scheduled and deadline dates
+#+BEGIN_SRC emacs-lisp :results silent
+  (setq org-agenda-tags-todo-honor-ignore-options t)
+#+END_SRC
+
+** Org mode enable habits
+[[http://lists.gnu.org/archive/html/emacs-orgmode//2010-04/msg00122.html][enable org habits]]
+
+#+BEGIN_SRC emacs-lisp
+;; Adding org-habit to the end of the list
+(add-to-list 'org-modules 'org-habit t)
+
+(setq org-habit-graph-column 80)
+(setq org-habit-show-habits-only-for-today nil)
+#+END_SRC
+
+** Org refile from Aaron URL
+[[https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html][refile-notes-aaron-blog]]
+
+- Refile targets with lower level
+  #+Begin_SRC emacs-lisp
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 10)))
+  #+END_SRC
+- Refile to the Top Level
+  #+Begin_SRC emacs-lisp
+  (setq org-refile-use-outline-path 'file)
+  #+END_SRC
+- Creating new parents
+  #+Begin_SRC emacs-lisp
+  (setq org-outline-path-complete-in-steps nil)
+  #+END_SRC
+- Creating New Parents
+  #+Begin_SRC emacs-lisp
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  #+END_SRC
+
+** Automatic Org mode time clock
+URLs used for this feature:
+- [[https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html][discussion]]
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][what's advicing function do?]]
+-[[https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/#disqus_thread][ sacha's notes for the same feature]]
+#+BEGIN_SRC emacs-lisp
+    ;; (setq org-clock-in-switch-to-state "IN_PROGRESS")
+
+    ;; https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html
+    ;; org-mode automatic clocking on TODO
+    ;; ------------------------------------------------------------------
+    ;; (defun sacha/org-clock-in-if-starting ()
+    ;;   "Clock in when the task is marked IN_PROGRESS."
+    ;;   (when (and (string= org-state "IN_PROGRESS")
+    ;;              (not (string= org-last-state org-state)))
+    ;;     (org-clock-in)))
+
+    ;; (defadvice org-clock-in (after sacha activate)
+    ;;   "Set this task's status to 'IN_PROGRESS'."
+    ;;   (org-todo "IN_PROGRESS"))
+
+    ;; (defadvice org-clock-out (after sacha activate)
+    ;;   "When clocking out set this task's status to 'WAITING'.
+    ;; When you want to close a task simply state change to 'DONE'"
+    ;;   (when (not (string= org-state "DONE")) (org-todo "WAITING")))
+
+    ;; (defun sacha/org-clock-out-if-waiting ()
+    ;;   "Clock out when the task is marked WAITING."
+    ;;   (when (and (string= org-state "WAITING")
+    ;;              (not (string= org-last-state org-state)))
+    ;;     (org-clock-out)))
+    ;;    (when (and (string= state "WAITING")
+    ;;               (equal (marker-buffer org-clock-marker) (current-buffer))
+    ;;               (< (point) org-clock-marker)
+    ;;               (> (save-excursion (outline-next-heading) (point))
+    ;;	                 org-clock-marker)
+    ;;	            (not (string= last-state state)))
+
+    ;; (add-hook 'org-clock-out-hook 'sacha/org-clock-out-if-waiting)
+    ;; (add-hook 'org-after-todo-state-change-hook 'sacha/org-clock-in-if-starting)
+    ;; (add-hook 'org-after-todo-state-change-hook 'sacha/org-clock-out-if-waiting)
+
+    ;; start the clock if there is a IN_PROGRESS todo tag in template
+    ;--------------------------------------------------------------------
+    ;; (add-hook 'org-clock-in-hook 'my-start-clock-if-needed)
+    ;; (add-hook 'org-clock-in-hook 'sacha/org-clock-in-if-starting)
+    ;; (add-hook 'org-remember-before-finalize-hook 'my-start-clock-if-needed)
+
+  ;; (defun my-start-clock-if-needed ()
+  ;;     (save-excursion
+  ;;       (goto-char (point-min))
+  ;;       (when (re-search-forward "*+ IN_PROGRESS" nil t)
+  ;;         (change-todo-state-on-old-clock)
+  ;;         (org-clock-in))))
+
+    ; change the state of the old clock
+    ;---------------------------------------------------------------------------
+  ;;   (defun change-todo-state-on-old-clock ()
+  ;;     "Change the state of the old clock.
+  ;; Function old-clock needs state changed if WAITING."
+  ;;     (save-excursion
+  ;;       (progn
+  ;;         (when (marker-buffer org-clock-marker)
+  ;;           (set-buffer (marker-buffer org-clock-marker))
+  ;;           (goto-char (point-min))
+  ;;           (when  (re-search-forward "^\*+ IN_PROGRESS" nil t)
+  ;;             (org-todo "WAITING"))))))
+
+
+#+END_SRC
+
+** Toggle function to display links
+URL: https://emacs.stackexchange.com/questions/5387/show-org-mode-hyperlink-as-plain-text
+#+BEGIN_SRC emacs-lisp :results silent
+  (defun dgg-org-toggle-link-display ()
+      "Toggle the literal or descriptive display of links."
+      (interactive)
+      (if org-descriptive-links
+          (progn (org-remove-from-invisibility-spec '(org-link))
+                  (org-restart-font-lock)
+                  (setq org-descriptive-links nil))
+          (progn (add-to-invisibility-spec '(org-link))
+                (org-restart-font-lock)
+                (setq org-descriptive-links t))))
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "l" 'dgg-org-toggle-link-display)
+
+#+END_SRC
+
+
+* Magit
+I use magit to handle version control. It’s lovely, but I tweak a few things:
+
+- I bring up the status menu with C-x g.
+- Use evil keybindings with magit.
+- The default behavior of magit is to ask before pushing. I haven’t had any problems with accidentally pushing, so I’d rather not confirm that every time.
+- Per tpope’s suggestions, highlight commit text in the summary line that goes beyond 50 characters.
+- On the command line I’ll generally push a new branch with a plain old git push, which automatically creates a tracking branch on (usually) origin. Magit, by default, wants me to manually specify an upstream branch. This binds P P to magit-push-implicitly, which is just a wrapper around git push -v. Convenient!
+- I’d like to start in the insert state when writing a commit message.
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :bind
+  ("C-x g" . magit-status)
+
+  :config
+  ;; (use-package evil-magit)
+  (use-package with-editor)
+  (setq magit-push-always-verify nil)
+  (setq git-commit-summary-max-length 50)
+
+  (with-eval-after-load 'magit-remote
+    (magit-define-popup-action 'magit-push-popup ?P
+      'magit-push-implicitly--desc
+      'magit-push-implicitly ?p t))
+
+  (add-hook 'with-editor-mode-hook 'evil-insert-state))
+#+END_SRC
+
+* IVY Mode
+URL : [[https://oremacs.com/swiper/#key-bindings][key-bindings]]
+
+#+Begin_SRC emacs-lisp
+
+(ivy-mode 1)
+
+(global-set-key (kbd "C-x s") 'swiper)
+
+#+END_SRC
+
+* Cursor marks
+Setting cursor location by marking locations
+http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html
+
+To set a mark in emacs use
+#+BEGIN_QUOTE
+C-c % ~> org-mark-ring-push
+C-c & ~> org-mark-ring-goto
+#+END_QUOTE
+
+Don't allow more than 6 locations in the buffer
+#+Begin_SRC emacs-lisp
+(setq mark-ring-max 40)
+(setq global-mark-ring-max 40)
+#+END_SRC
+
+Tip: Single key <F7> and popping from mark-ring by <F8>
+#+Begin_SRC emacs-lisp
+(defun xah-pop-local-mark-ring ()
+  "Move cursor to last mark position of current buffer.
+Call this repeatedly will cycle all positions in `mark-ring'.
+URL `http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html'
+Version 2016-04-04"
+  (interactive)
+  (set-mark-command t))
+
+(global-set-key (kbd "<f7>") 'pop-global-mark)
+(global-set-key (kbd "<f8>") 'xah-pop-local-mark-ring)
+#+END_SRC
+
+* ibuffers configs
+The source for these configuratios are the following URLs:
+URL: [[http://martinowen.net/blog/2010/02/03/tips-for-emacs-ibuffer.html][ibuffers-instructions]]
+URL: [[https://cestlaz.github.io/posts/using-emacs-34-ibuffer-emmet/][ibuffer-emmet-mz]]
+
+To use Ibuffer do the following:
+
+1) Use Ibuffer for Buffer List
+   #+Begin_SRC emacs-lisp
+   (global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
+
+   #+END_SRC
+
+2) Other useful options
+   There are a few other useful options that I didn’t find out about until I looked through the source:
+
+   - ibuffer-expert
+     Unless you turn this variable on you will be prompted every time you want to delete a buffer, even unmodified ones, which is way too cautious for most people. You’ll still be prompted for confirmation when deleting modified buffers after the option has been turned off.
+     #+Begin_SRC emacs-lisp
+     (setq ibuffer-expert t)
+     #+END_SRC
+
+   - ibuffer-show-empty-filter-groups
+     Turning off ibuffer-show-empty-filter-groups is particularly useful, because the empty filter groups can really clutter things up.
+     #+Begin_SRC emacs-lisp
+       (setq ibuffer-show-empty-filter-groups nil)
+     #+END_SRC
+
+   - ibuffer-auto-mode
+     =ibuffer-auto-mode= is a minor mode that automatically keeps the buffer list up to date. I turn it on in my =ibuffer-mode-hook=:
+     #+Begin_SRC emacs-lisp
+       (add-hook 'ibuffer-mode-hook
+                 '(lambda ()
+                    (ibuffer-auto-mode 1)
+                    (ibuffer-switch-to-saved-filter-groups "default")))
+     #+END_SRC
+
+* Buffers indirection
+#+BEGIN_SRC emacs-lisp :results silent
+(defun org-subtree-to-indirect-buffer ()
+  (interactive)
+  (let ((ind-buf (concat (buffer-name) "-narrowclone")))
+    (if (get-buffer ind-buf)
+        (kill-buffer ind-buf))
+    (clone-indirect-buffer-other-window ind-buf t)
+    (org-narrow-to-subtree)
+    (switch-to-buffer ind-buf)))
+
+#+END_SRC
+
+* Todo keywords
+** Fast Todo Selection
+Fast todo selection allows changing from any task todo state to any other state directly.
+
+#+Begin_SRC emacs-lisp
+(setq org-use-fast-todo-selection t)
+
+(setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+#+END_SRC
+
+* My shortcut keys
+** Move to next method and previous method
+#+Begin_SRC emacs-lisp
+(global-set-key (kbd "M-[") 'beginning-of-defun)
+(global-set-key (kbd "M-]") 'end-of-defun)
+#+END_SRC
+
+** Forcing org-mode to open a link in another frame not window
+#+Begin_SRC emacs-lisp
+(defun dgg/org-open-other-frame ()
+  "Jump to bookmark in another frame. See `bookmark-jump' for more."
+  (interactive)
+  (let ((org-link-frame-setup (cons (cons 'file 'find-file-other-frame) org-link-frame-setup)))
+    (org-open-at-point)))
+
+(global-set-key (kbd "C-c 5 C-o") 'dgg/org-open-other-frame)
+
+
+#+END_SRC
+* Java Setup
+** Log4j setup Notes
+[[https://writequit.org/articles/working-with-logs-in-emacs.html][URl WriteQuitNotes]]
+
+#+BEGIN_SRC emacs-lisp
+;; Configuration:
+
+;; You can customize the faces that are used for syntax highlighting.
+;; Type `M-x customize-group' and enter group name "log4j-mode".
+;;
+;; To customize the regular expressions used to identify log records for
+;; syntax highlighting, change the variables `log4j-match-error-regexp'
+;; etc.
+;;
+;; You can also customize the regular expressions that are used to find the
+;; beginning and end of multi-line log records. However, in many cases this
+;; will not be necessary. Log4j mode can automatically detect single-line and
+;; multi-line log records created by Log4j and JDK's built-in logging package.
+;;
+;; Log file buffers are auto reverted by default. If you don't like that,
+;; set `log4j-auto-revert-flag' to nil.
+;;
+;; If you use the arrow keys to move around in the text, you can define `C-up'
+;; and `C-down' to move to the end and beginning of the current log record.
+;; Put the following lines of code in your init file:
+;;
+;; (add-hook
+;;  'log4j-mode-hook
+;;  (lambda ()
+;;    (define-key log4j-mode-local-map [(control down)] 'log4j-forward-record)
+;;    (define-key log4j-mode-local-map [(control up)] 'log4j-backward-record)))
+
+;; XEmacs:
+
+;; XEmacs tends to move the point to `point-min' when auto reverting a buffer.
+;; Setting the customizable variable `log4j-restore-point-flag' to 't leaves
+;; the point at its original position.
+;;
+;; To tell XEmacs which tags table files to use for log files, modify variable
+;; `tag-table-alist' to include log files. Using the example in file "jtags.el"
+;; you could put the following lines of code in your init file:
+;;
+;; (setq tag-table-alist '(("\\.\\(java\\|log\\)$" . "c:/java/j2sdk1.4.2/src")
+;;                         ("\\.\\(java\\|log\\)$" . "c:/projects/tetris/src")))
+
+#+END_SRC
+
+** Java indentation
+URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.html]
+#+BEGIN_SRC emacs-lisp
+(defun fix-c-indent-offset-according-to-syntax-context (key val)
+  ;; remove the old element
+  (setq c-offsets-alist (delq (assoc key c-offsets-alist) c-offsets-alist))
+  ;; new value
+  (add-to-list 'c-offsets-alist '(key . val)))
+
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+             (setq c-basic-offset 2
+                   tab-width 2
+                   indent-tabs-mode t)
+             ;; indent
+             (fix-c-indent-offset-according-to-syntax-context 'substatement 0)
+             (fix-c-indent-offset-according-to-syntax-context 'func-decl-cont 0))
+            ))
+#+END_SRC
+
+** eclim installation
+#+BEGIN_SRC emacs-lisp
+;; (require 'eclim)
+;; (global-eclim-mode)
+;;
+;;
+;; (custom-set-variables
+;;   '(eclim-eclipse-dirs '("/Applications/java-2018-122/Eclipse.app/Contents/Eclipse"))
+;;   '(eclim-executable "/Applications/java-2018-122/Eclipse.app/Contents/Eclipse/eclimd"))
+#+END_SRC
+
+* Dgg functions
+** My functions for shortcuts
+These functions define shortcuts or abbreviations for java setup. The shortcuts are kept as simple as possible for java and src.
+#+Begin_SRC emacs-lisp :results silent
+
+  (defun dgg-java-src ()
+     (interactive)
+     (insert "#+HEADERS: :classname Solution :cmdline \"-cp . -ea\"\n#+BEGIN_SRC java -n -r :RESULTS output :exports both\nclass Solution {\n\tpublic static void main(String args[]) {\n\n\t}\n}\n\n#+END_SRC\n\n#+RESULTS:\n"))
+
+  (defun dgg-python-src ()
+     (interactive)
+     (insert "#+BEGIN_SRC python -n -r :results output :exports both\n\ndef method(n):\n\t\tprint(n)\n\nmethod(10)\n#+END_SRC\n\n#+RESULTS:\n\n"))
+
+  (defun dgg-shell-src ()
+     (interactive)
+     (insert "#+BEGIN_SRC shell -n -r :results output :exports both\n\n\n#+END_SRC\n\n#+RESULTS:\n\n"))
+
+  (defun dgg-emacs-src ()
+     (interactive)
+     (insert "#+BEGIN_SRC emacs-lisp :results silent\n\n\n#+END_SRC\n\n"))
+
+  (defun dgg-text-src ()
+     (interactive)
+     (insert "#+BEGIN_SRC text\n\n\n#+END_SRC\n\n"))
+
+  (defun dgg-italic-bold-begin ()
+     (interactive)
+     (insert "/\` *"))
+
+  (defun dgg-italic-bold-end ()
+     (interactive)
+     (insert "* \`/"))
+
+  (defun dgg-bold-highlight-begin ()
+     (interactive)
+     (insert "*   ="))
+
+  (defun dgg-bold-highlight-end ()
+     (interactive)
+     (insert "=  *"))
+
+  (defun dgg-org-src-old ()
+     (interactive)
+     (insert "DOC TITLE -*- mode: org -*-\n#+LANGUAGE:  en\n#+INFOJS_OPT: view:showall toc:t ltoc:t mouse:underline path:http://orgmode.org/org-info.js\n#+LINK_HOME: http://ehneilsen.net\n#+LINK_UP: http://ehneilsen.net/notebook\n#+HTML_HEAD: <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/notebook.css\" />\n\n#+STARTUP:    indent hidestars\n\n#+OPTIONS:    num:nil \n\n#+TITLE: Bucket Sort"))
+
+  (defun dgg-org-src ()
+     (interactive)
+     (insert "-*- File Name -*-\n#+TITLE: FileName\n#+AUTHOR:    Dhawan Gayash\n#+LANGUAGE:  en\n#+OPTIONS:   H:10 num:nil toc:10\n#+STARTUP:    indent hidestars\n#+OPTIONS:    num:nil \n#+SETUPFILE: /Users/tmp/workdir/inter/interview/html_pages/theme-readtheorg.setup"))
+
+  (defun dgg-read-only-mode-directive ()
+     (interactive)
+     (insert "-*- buffer-read-only: t -*-"))
+
+  (global-set-key (kbd "C-c f") 'dgg-java-src)
+  (global-set-key (kbd "C-c p") 'dgg-python-src)
+  (global-set-key (kbd "C-c s") 'dgg-shell-src)
+  (global-set-key (kbd "C-c q") 'dgg-org-src)
+
+  (global-set-key (kbd "C-c t") 'dgg-text-src)
+  (global-set-key (kbd "C-c e") 'dgg-emacs-src)
+  (global-set-key (kbd "C-c y") 'dgg-read-only-mode-directive)
+
+  ;; comment and uncomment code sections
+  (global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
+
+  ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
+  ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
+
+#+END_SRC
+
+Stop asking for code evaluation confirmation every single time
+url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
+#+Begin_SRC emacs-lisp :results silent
+  (defun dgg/org-confirm-babel-evaluate (lang body)
+    (not (or (string= lang "java") (string= lang "python"))))
+  (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
+#+END_SRC
+
+** Insert around region
+URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
+#+BEGIN_SRC emacs-lisp
+
+  (defun wrap-markup-bold-quotes-region (start end)
+    "Insert a markup / * and * // around a region."
+    (interactive "r")
+    (save-excursion
+      (goto-char end) (insert "* //")
+      (goto-char start) (insert "/ *")))
+
+  (defun wrap-markup-bold-region (start end)
+    "Insert a markup * and * around a region."
+    (interactive "r")
+    (save-excursion
+      (goto-char end) (insert "*")
+      (goto-char start) (insert "*")))
+
+  (defun wrap-markup-italic-region (start end)
+    "Insert a markup * and * around a region."
+    (interactive "r")
+    (save-excursion
+      (goto-char end) (insert "/")
+      (goto-char start) (insert "/")))
+
+  (defun wrap-markup-italic-underscore-region (start end)
+    "Insert a markup /_ and _/ around a region."
+    (interactive "r")
+    (save-excursion
+      (goto-char end) (insert " ̣/")
+      (goto-char start) (insert " /̣")))
+
+  (defun wrap-markup-bold-italic-region (start end)
+    "Insert a markup /[_] and [_]/ around a region."
+    (interactive "r")
+    (save-excursion
+      (goto-char end) (insert "/ ❕*")
+      (goto-char start) (insert "*❕ /")))
+
+  (global-set-key (kbd "C-c o") 'wrap-markup-bold-quotes-region)
+  (global-set-key (kbd "C-c m") 'wrap-markup-italic-underscore-region)
+
+  (global-set-key (kbd "C-c n") 'wrap-markup-bold-italic-region)
+
+  (global-set-key (kbd "C-c b") 'wrap-markup-bold-region)
+  (global-set-key (kbd "C-c i") 'wrap-markup-italic-region)
+
+  ;; http://ergoemacs.org/emacs/elisp_examples.html
+  (defun wrap-markup-region ()
+    "Insert a markup #+begin_src text\n\n#+end_src around a region."
+    (interactive)
+    (save-excursion
+      (goto-char (region-end))
+      (insert "#+end_src \n")
+      (goto-char (region-beginning))
+      (insert "#+begin_src text \n")))
+
+#+END_SRC
+
+*❕ /global-set-key/ ❕*
+
+** Unicode chars
+:PROPERTIES:
+:ID:       D0B1FB9A-E9CD-4388-A0B3-E413EC8601CE
+:END:
+URL: [[https://emacs.stackexchange.com/questions/7254/idiomatic-way-of-extending-keymap-for-inserting-unicode-symbols][Unicode-horizontal-ellipses]]
+#+BEGIN_SRC emacs-lisp :results silent
+
+(define-key 'iso-transl-ctl-x-8-map "." "…")
+
+#+END_SRC
+
+** Using Rainer Konig's blog about keeping three most important things
+:PROPERTIES:
+:ID:       5886F113-0C39-4FEC-B57B-19E89D794D99
+:END:
+URL: [[id:5886F113-0C39-4FEC-B57B-19E89D794D99][Using Rainer Konig's blog about keeping three most important things]]
+URL: [[https://koenig-haunstetten.de/2018/02/17/improving-my-orgmode-workflow/][Koenig-url]]
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (defun dgg-copy-idlink-to-clipboard()
+    "Copy an ID link with the
+      headline to killring, if no ID is there then create a new unique
+      ID.  This function works only in org-mode or org-agenda buffers.
+      The purpose of this function is to easily construct id:-links to
+      org-mode items. If its assigned to a key it saves you marking the
+      text and copying to the killring."
+    (interactive)
+    (when (eq major-mode 'org-agenda-mode) ;switch to orgmode
+      (org-agenda-show)
+      (org-agenda-goto))
+    (when (eq major-mode 'org-mode) ; do this only in org-mode buffers
+      (setq mytmphead (nth 4 (org-heading-components)))
+      (setq mytmpid (funcall 'org-id-get-create))
+      (setq mytmplink (format "[[id:%s][%s]]" mytmpid mytmphead))
+      (kill-new mytmplink)
+      (message "Copied %s to killring (clipboard)" mytmplink)
+      ))
+
+  (global-set-key (kbd "<f5>") 'dgg-copy-idlink-to-clipboard)
+
+#+END_SRC
+
+* Clipboard managment using ivy
+** Counsel-Yank-Pop With a Tweak
+- URL :: [[http://pragmaticemacs.com/emacs/counsel-yank-pop-with-a-tweak/][URL-ivy-mode]]
+One of my favourites is counsel-yank-pop which replaces the standard clipboard history (kill-ring in Emacs terminology) with an ivy-powered version. You can then type search strings to filter your clipboard history dynamically.
+  #+BEGIN_SRC emacs-lisp
+
+    ;; (use-package counsel
+    ;;   :bind
+    ;;   (("M-y" . counsel-yank-pop)
+    ;;   :map ivy-minibuffer-map
+    ;;   ("M-y" . ivy-next-line)))
+
+  #+END_SRC
+
+** Add the System Clipboard to the emacs-kill-ring
+- URL :: [[http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/][URL-kill-ring-config]]]
+- Kill ring URL :: [[https://emacs.stackexchange.com/questions/766/add-operating-system-clipboard-to-kill-ring][Kill-ring-enable]]
+I wrote previously about adding mouse selections in Emacs to the system clipboard, and here is another tip to integrate the system clipboard more nicely with Emacs. This comes from the fantastic Emacs operating system set of configuration files, which are full of gems like this (thanks to Irreal for pointing me to EOS).
+
+#+BEGIN_Quote text
+Kill ring can be accessed using
+M-y and M-S-y
+#+END_Quote
+
+** Enable storing everything into clipboard not just within emacs.
+Save whatever’s in the current (system) clipboard before replacing it with the Emacs’ text. https://github.com/dakrone/eos/blob/master/eos.org
+
+#+BEGIN_SRC emacs-lisp :results silent
+
+(setq save-interprogram-paste-before-kill t)
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :results silent
+
+(setq select-enable-clipboard t)
+
+#+END_SRC
+
+* Setup Emacs as a SQL database client
+Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emacs-as-an-sql-database-client][URL-emacs-sql]]
+** Adding SQL mode
+#+BEGIN_SRC emacs-lisp
+
+    (require 'sql)
+
+    (add-hook 'sql-interactive-mode-hook
+              (lambda ()
+                (toggle-truncate-lines t)))
+
+#+END_SRC
+
+** SQL mode
+- History save sessions in emacs
+  #+BEGIN_SRC emacs-lisp
+
+    (defun my-sql-save-history-hook ()
+      (let ((lval 'sql-input-ring-file-name)
+            (rval 'sql-product))
+        (if (symbol-value rval)
+            (let ((filename
+                   (concat "~/.emacs.d/sql/"
+                           (symbol-name (symbol-value rval))
+                           "-history.sql")))
+              (set (make-local-variable lval) filename))
+          (error
+           (format "SQL history will not be saved because %s is nil"
+                   (symbol-name rval))))))
+
+    (add-hook 'sql-interactive-mode-hook 'my-sql-save-history-hook)
+
+  #+END_SRC
+* NOTE CamelCaseing and Lower caseing in emacs
+CLOSED: [2020-06-26 Fri 20:25]
+URL: [[https://stackoverflow.com/questions/9288181/converting-from-camelcase-to-in-emacs][SO-elisp-code]]
+#+BEGIN_SRC emacs-lisp
+  (defun to-underscore ()
+  "Convert underscore naming convention to camel case naming convention.
+This function replaces all the underscores in the region to camel case."
+    (interactive)
+    (progn
+      (replace-regexp "\\([A-Z]\\)" "_\\1" nil (region-beginning) (region-end))
+      (downcase-region (region-beginning) (region-end))))
+
+  (defun toggle-camelcase-underscores ()
+    "Toggle between camelcase and underscore notation for the symbol at point."
+    (interactive "r")
+    (save-excursion
+      (let* ((bounds (bounds-of-thing-at-point 'symbol))
+             (start (car bounds))
+             (end (cdr bounds))
+             (currently-using-underscores-p (progn (goto-char start)
+                                                   (re-search-forward "_" end t))))
+        (if currently-using-underscores-p
+            (progn
+              (upcase-initials-region start end)
+              (replace-string "_" "" nil start end)
+              (downcase-region start (1+ start)))
+          (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
+          (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
+#+END_SRC
+* Spacemacs configs
+** Turn off auto fill mode.
+#+BEGIN_SRC emacs-lisp :results silent
+
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+#+END_SRC
