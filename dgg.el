@@ -9,17 +9,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Visual appearance toggles
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(spacemacs/toggle-visual-line-navigation)
+;; (spacemacs/toggle-visual-line-navigation)
 (spacemacs/toggle-highlight-current-line-globally-off)
 
+
 ;; General CONFIGURATION
-;; Config auto complete
-(setq company-idle-delay 0.1)
-
-;; DO NOT AUTOMATICALLY autofill
-;; I prefer per buffer instead visual-fill-column-mode
-(spacemacs/toggle-auto-fill-mode)
-
 
 ;; Execute cleanup functions when Emacs is closed
 (add-hook 'kill-emacs-hook 'mb/kill-emacs-hook)
@@ -33,14 +27,10 @@
 ;; Spaceline config
 (setq spaceline-org-clock-p t)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG MODE CONFIGURATION
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; ORG-AGENDA CONFIGURATION
-;; adding line numbers in tangle code blocks when hitting C-c '
-;; Wrap long lines in org-mode
-(add-hook 'org-mode-hook 'auto-fill-mode)
 
 ;; Force headings to be the same Size. Not sure if I'm crazy...
 (add-hook 'org-load-hook #'mb/org-mode-hook)
@@ -60,11 +50,6 @@
 ;; Size images displayed in org buffers to be more reasonable by default
 (setq org-image-actual-width 600)
 
-;; Org key bindings
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "I" 'org-clock-in)
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "O" 'org-clock-out)
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "sp" 'mb/org-narrow-to-parent)
-
 ;; Toggle TODO states in normal mode with the "t" key
 (evil-define-key 'normal org-mode-map "t" 'org-todo)
 
@@ -81,22 +66,6 @@
 
 ;; ORG-AGENDA CONFIGURATION
 (setq org-agenda-start-with-follow-mode 't)
-
-;; Refile URL
-;; configurations: https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html
-;; adding current file into refile target: https://www.reddit.com/r/orgmode/comments/g5006o/can_you_add_the_current_file_to_orgrefiletargets/
-;; (setq org-refile-targets '((org-agenda-files :maxlevel . 5)
-;;                            (org-buffer-list :maxlevel . 2)))
-(setq org-refile-targets '((nil :maxlevel . 9)
-                           (org-agenda-files :maxlevel . 5)))
-(setq org-refile-use-outline-path 'file)
-(setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
-
-;; URL: http://doc.norang.ca/org-mode.html#CaptureTemplates
-;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-(setq org-clock-out-remove-zero-time-clocks t)
-(setq org-hide-emphasis-markers t)
 
 (setq org-superstar-headline-bullets-list '("◉" "○" "■" "◆" "▲" "▶"))
 

@@ -40,6 +40,11 @@ This function should only modify configuration layer settings."
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-complete-with-key-sequence '"jk"
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-idle-delay 0.1
                       auto-completion-enable-sort-by-usage t)
      ;; better-defaults
      (bibtex
@@ -640,7 +645,8 @@ This function is called at the very end of Spacemacs initialization."
     (cons 340 "#6272a4")
     (cons 360 "#6272a4")))
  '(vc-annotate-very-old-color nil)
- '(window-divider-mode nil))
+ '(window-divider-mode nil)
+ '(writeroom-width 120))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,4 +1,25 @@
 -*- buffer-read-only: t -*-
+
+#+TAGS: KEYBINDINGS ORG BUG_FIX
+
+* My keybindings
+
+** Shortcuts for insert-pair and delete-pair                   :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+(define-key global-map [?\s-r] 'revert-buffer)
+;; My keybindings
+;; for inserting quotations, parenthesis, and square brackets
+(global-set-key (kbd "M-[") 'insert-pair)
+(global-set-key (kbd "M-\"") 'insert-pair)
+(global-set-key (kbd "M-\'") 'insert-pair)
+(global-set-key (kbd "C-M-)") 'delete-pair)
+;; END: My keybindings
+
+
+#+END_SRC
+
+
 * Evil-Mode
 ** Setting auto-increment
 :PROPERTIES:
@@ -14,6 +35,33 @@
 ;; (evil-define-key 'normal global-map (kbd "C-x") 'evil-numbers/dec-at-pt)
 
 #+END_SRC
+** Keybindings to replicate gk and gj in VIM on Evil           :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys "oj" 'evil-next-line)
+  (spacemacs/set-leader-keys "ok" 'evil-previous-line)
+
+#+END_SRC
+** Toggle TODO states in normal mode with the "t" key          :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; Toggle TODO states in normal mode with the "t" key
+  (evil-define-key 'normal org-mode-map "t" 'org-todo)
+
+
+#+END_SRC
+** Python mode quirks in evil mode                        :BUG_FIX:KEYBINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; (setq evilmi-always-simple-jump t) is an option for advanced users. Jump algorithm using python indentation is still usable but with lower priority when this flag is on.
+  ;; https://github.com/redguardtoo/evil-matchit/issues/75
+  ;; (setq evilmi-always-simple-jump t)
+  ;; (setq revert-without-query '(".*"))
+  ;; (global-auto-revert-mode)
+
+
+#+END_SRC
+
 
 * Dired configuration
 Get dired to print human readable sized files.
@@ -23,7 +71,42 @@ Get dired to print human readable sized files.
 
 #+END_SRC
 
-* Org stuff
+* Auto complete
+** Auto complete prompts using company mode
+URL: https://github.com/syl20bnr/spacemacs/issues/4284
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (add-hook 'company-mode-hook
+            (lambda()
+              (global-set-key (kbd "S-SPC") 'company-complete)))
+
+#+END_SRC
+** Removing annoying decorator on company prompt
+URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_company_mode_that_i/
+#+BEGIN_SRC emacs-lisp :results silent
+
+;; Config auto complete
+;; not necessary because of spacemacs config layer
+;; (setq company-idle-delay 0.1)
+
+;; remove the annoying abc characters in complete-at-point
+;; company-complete
+;;
+(setq company-format-margin-function nil)
+
+
+#+END_SRC
+** Binding keybinding SHIFT-SPC for company prompt
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (add-hook 'company-mode-hook
+            (lambda()
+              (global-set-key (kbd "S-SPC") 'company-complete)))
+
+#+END_SRC
+
+
+* Org stuff                                                             :ORG:
 ** Init Org mode, auto load todo paths, and define standard bindings
 #+Begin_SRC emacs-lisp
 ;;;
@@ -130,7 +213,7 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   #+END_SRC
 
-** Automatic Org mode time clock
+** +Automatic Org mode time clock+
 URLs used for this feature:
 - [[https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html][discussion]]
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][what's advicing function do?]]
@@ -201,7 +284,55 @@ URLs used for this feature:
 
 #+END_SRC
 
-** Toggle function to display links
+** Shortcut to move to your parent heading and narrow buffer to that heading :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "sp" 'mb/org-narrow-to-parent)
+
+
+#+END_SRC
+
+** ORG Clocking shortcuts                                      :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "I" 'org-clock-in)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "O" 'org-clock-out)
+
+
+#+END_SRC
+
+
+** Refile org configurations with reverse notes
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; Refile notes to top
+  (setq org-reverse-note-order t)
+
+#+END_SRC
+
+** Refile configurations from aaron bieber
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; Refile URL
+  ;; configurations: https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html
+  ;; adding current file into refile target: https://www.reddit.com/r/orgmode/comments/g5006o/can_you_add_the_current_file_to_orgrefiletargets/
+  ;; (setq org-refile-targets '((org-agenda-files :maxlevel . 5)
+  ;;                            (org-buffer-list :maxlevel . 2)))
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 5)))
+  (setq org-refile-use-outline-path 'file)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+
+
+
+#+END_SRC
+
+
+** Toggle function to display links or hide links              :KEYBINDINGS:
+:PROPERTIES:
+:ID:       71089dbe-9801-4e81-a78e-a21a59023bc1
+:END:
 URL: https://emacs.stackexchange.com/questions/5387/show-org-mode-hyperlink-as-plain-text
 #+BEGIN_SRC emacs-lisp :results silent
   (defun dgg-org-toggle-link-display ()
@@ -219,6 +350,62 @@ URL: https://emacs.stackexchange.com/questions/5387/show-org-mode-hyperlink-as-p
 
 #+END_SRC
 
+** Toggle function to display emphasis markers in org file or hide emphasis markers
+Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to display links or hide links]]
+#+BEGIN_SRC emacs-lisp :results silent
+  (defun dgg-org-toggle-emphasis-display ()
+    "Toggle the emphasis markers or show emphasis markers in org file."
+    (interactive)
+    (if org-hide-emphasis-markers
+        (progn
+          (setq org-hide-emphasis-markers nil)
+          (message "setq org-hide-emphasis-markers=%s" org-hide-emphasis-markers))
+        (progn
+          (setq org-hide-emphasis-markers t)
+          (message "setq org-hide-emphasis-markers=%s" org-hide-emphasis-markers))))
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "m" 'dgg-org-toggle-emphasis-display)
+#+END_SRC
+
+
+** Shutdown hooks
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; ORG-AGENDA CONFIGURATION
+  ;; adding line numbers in tangle code blocks when hitting C-c '
+  ;; Wrap long lines in org-mode
+  ;; (add-hook 'org-mode-hook 'auto-fill-mode)
+  ;; Force headings to be the same Size. Not sure if I'm crazy...
+  (add-hook 'org-load-hook #'mb/org-mode-hook)
+  ;; Ensure buffers are saved automatically to prevent sync errors
+  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  ;; Save file (if it exists) when cycling TODO states
+  (advice-add 'org-todo           :after 'mb/save-buffer-if-file)
+  (advice-add 'org-deadline       :after 'mb/save-buffer-if-file)
+  (advice-add 'org-schedule       :after 'mb/save-buffer-if-file)
+  (advice-add 'org-store-log-note :after 'mb/save-buffer-if-file)
+
+
+#+END_SRC
+
+** Org clock remove clocked tasks with 0:00 duration
+URL: http://doc.norang.ca/org-mode.html#CaptureTemplates
+#+BEGIN_SRC emacs-lisp :results silent
+
+;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+(setq org-clock-out-remove-zero-time-clocks t)
+
+
+#+END_SRC
+
+
+** Hide emphasis markers in emacs makes org files look clean
+URL: [[http://doc.norang.ca/org-mode.html#CaptureTemplates][norang]]
+#+BEGIN_SRC emacs-lisp :results silent
+
+;; (setq org-hide-emphasis-markers t)
+
+#+END_SRC
 
 * Magit
 I use magit to handle version control. It’s lovely, but I tweak a few things:
@@ -328,6 +515,8 @@ To use Ibuffer do the following:
      #+END_SRC
 
 * Buffers indirection
+
+** Sub-tree indirect to buffer
 #+BEGIN_SRC emacs-lisp :results silent
 (defun org-subtree-to-indirect-buffer ()
   (interactive)
@@ -339,6 +528,23 @@ To use Ibuffer do the following:
     (switch-to-buffer ind-buf)))
 
 #+END_SRC
+
+** Toggle Revert Buffer without or with confirmation
+URL: [[https://www.emacswiki.org/emacs/RevertBuffer][emacs-wiki-email-thread]]
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "s-r")
+   (lambda (&optional force-reverting)
+     "Interactive call to revert-buffer. Ignoring the auto-save
+   file and not requesting for confirmation. When the current buffer
+   is modified, the command refuses to revert it, unless you specify
+   the optional argument: force-reverting to true."
+     (interactive "P")
+     ;;(message "force-reverting value is %s" force-reverting)
+     (if (or force-reverting (not (buffer-modified-p)))
+         (revert-buffer :ignore-auto :noconfirm)
+       (error "The buffer has been modified"))))
+#+END_SRC
+
 
 * Todo keywords
 ** Fast Todo Selection
@@ -733,9 +939,23 @@ This function replaces all the underscores in the region to camel case."
           (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 #+END_SRC
 * Spacemacs configs
+** +Turn on auto fill mode.+
+#+BEGIN_SRC emacs-lisp :results silent
+
+;; (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+#+END_SRC
 ** Turn off auto fill mode.
 #+BEGIN_SRC emacs-lisp :results silent
 
-(add-hook 'org-mode-hook 'turn-on-auto-fill)
+;; DO NOT AUTOMATICALLY autofill
+(auto-fill-mode -1)
+
+
+#+END_SRC
+** Enable visual-line-mode
+#+BEGIN_SRC emacs-lisp :results silent
+
+(visual-line-mode t)
 
 #+END_SRC
