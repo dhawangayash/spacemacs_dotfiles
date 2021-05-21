@@ -435,7 +435,8 @@ To be used by `eww-after-render-hook'."
   :END:"))))
 
 (use-package org-pdftools
-  :hook (org-mode . org-pdftools-setup-link)
+  :hook
+  (org-mode . org-pdftools-setup-link)
   )
 
 (use-package org-noter
@@ -445,9 +446,18 @@ To be used by `eww-after-render-hook'."
   :custom
   (org-noter-always-create-frame nil)
   (org-noter-separate-notes-from-heading t)
+  (org-noter-insert-note-no-questions t)
+  (org-noter-separate-notes-from-heading t)
+  (org-noter-save-last-location-property t)
   (org-noter-default-notes-file-names '("notes.org"))
   (org-noter-notes-search-path (list org-roam-directory))
-  )
+  ;; added this from here
+  ;; https://github.com/weirdNox/org-noter/issues/57
+  (defun org-noter-init-pdf-view ()
+    (pdf-view-fit-page-to-window)
+    (pdf-view-auto-slice-minor-mode)
+    (run-at-time "0.5 sec" nil #'org-noter))
+  (add-hook 'pdf-view-mode-hook 'org-noter-init-pdf-view))
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -498,3 +508,36 @@ With a prefix ARG, remove start location."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END ORG ROAM CONFIG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Disable flyspell by default
+;; overriding the init-flyspell function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; +May not be required check at dgg-settings.el+
+;; This is required to suppress the flyspell hook for org-mode files
+;; Even after adding this to the flyspell config: https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default
+;;
+(defun spacemacs/init-flyspell ()
+  (defun dgg-enable-flyspell-mode ()
+    (flyspell-mode 1))
+  (use-package flyspell
+    :defer t
+    :init
+    (progn
+      (setq-default ispell-program-name "aspell")
+      (setq-default ispell-dictionary "english")
+      (add-hook 'markdown-mode-hook 'dgg-enable-flyspell-mode)
+      (add-hook 'text-mode-hook 'dgg-enable-flyspell-mode)
+      (add-hook 'dgg-mode-hook 'dgg-enable-flyspell-mode)
+      (spacemacs|add-toggle spelling-checking
+        :status flyspell-mode
+        :on (flyspell-mode)
+        :off (flyspell-mode -1)
+        :documentation
+        "Enable flyspell for automatic spelling checking."
+        :evil-leader "ts"))
+    :config
+    (progn
+      (flyspell-prog-mode)
+      (spacemacs|diminish flyspell-mode " ⓢ" " s"))))

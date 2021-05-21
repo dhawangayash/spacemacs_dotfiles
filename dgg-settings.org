@@ -2,9 +2,26 @@
 
 #+TAGS: KEYBINDINGS ORG BUG_FIX
 
-* My keybindings
 
-** Shortcuts for insert-pair and delete-pair                   :KEYBINDINGS:
+* Enhancing the speed of spacemacs owing to flyspell performance issues
++ Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
++ +Disabling flyspell by default:+ [[https://gist.github.com/metamorph/69f37f7686164e7c4d94][github-gist-disable-flyspell-by-default]]
++ Disabling using the configuration layers variable: [[https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default][disable-by-default-spacemacs]]
+
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (remove-hook 'text-mode-hook 'dgg-enable-flyspell-mode)
+  (remove-hook 'org-mode-hook 'dgg-enable-flyspell-mode)
+  (remove-hook 'markdown-mode-hook 'dgg-enable-flyspell-mode)
+
+
+#+END_SRC
+
+
+
+* My keybindings                                                :KEYBINDINGS:
+
+** Shortcuts for insert-pair and delete-pair
 #+BEGIN_SRC emacs-lisp :results silent
 
 (define-key global-map [?\s-r] 'revert-buffer)
@@ -15,6 +32,16 @@
 (global-set-key (kbd "M-\'") 'insert-pair)
 (global-set-key (kbd "C-M-)") 'delete-pair)
 ;; END: My keybindings
+
+
+#+END_SRC
+
+** Go to the next checkbox or list item
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-next-item)
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "k") 'org-previous-item)
 
 
 #+END_SRC
@@ -407,6 +434,17 @@ URL: [[http://doc.norang.ca/org-mode.html#CaptureTemplates][norang]]
 
 #+END_SRC
 
+
+* Writeroom configurations
+
+** Toggle line numbers in writeroom mode.                      :KEYBINDINGS:
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-minor-mode 'writeroom-mode "n" 'spacemacs/toggle-line-numbers)
+
+#+END_SRC
+
+
 * Magit
 I use magit to handle version control. It’s lovely, but I tweak a few things:
 
@@ -418,22 +456,23 @@ I use magit to handle version control. It’s lovely, but I tweak a few things:
 - I’d like to start in the insert state when writing a commit message.
 
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :bind
-  ("C-x g" . magit-status)
+    (use-package magit
+      :bind
+      ("C-x g" . magit-status)
 
-  :config
-  ;; (use-package evil-magit)
-  (use-package with-editor)
-  (setq magit-push-always-verify nil)
-  (setq git-commit-summary-max-length 50)
+      :config
+      ;; (use-package evil-magit)
+      (use-package with-editor)
+      (setq magit-push-always-verify nil)
+      (setq git-commit-summary-max-length 50)
 
-  (with-eval-after-load 'magit-remote
-    (magit-define-popup-action 'magit-push-popup ?P
-      'magit-push-implicitly--desc
-      'magit-push-implicitly ?p t))
+      ;; (with-eval-after-load 'magit-remote
+      ;;   (magit-define-popup-action 'magit-push-popup ?P
+      ;;     'magit-push-implicitly--desc
+      ;;     'magit-push-implicitly ?p t))
 
-  (add-hook 'with-editor-mode-hook 'evil-insert-state))
+      ;; (add-hook 'with-editor-mode-hook 'evil-insert-state)
+      )
 #+END_SRC
 
 * IVY Mode

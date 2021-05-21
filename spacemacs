@@ -90,7 +90,9 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom)
      ;; speed-reading -- use phrasereader.com instead
      (sql :variables sql-capitalize-keywords t)
-     spell-checking
+     ;; https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default
+     (spell-checking
+      :variable spell-checking-enable-by-default nil)
      ;; syntax-checking
      ;; version-control
      treemacs
@@ -117,6 +119,7 @@ This function should only modify configuration layer settings."
                                       imenu-anywhere
                                       ;;; second brain
                                       org-roam-bibtex
+                                      (org-pdftools :location (recipe :fetcher github :repo "fuxialexander/org-pdftools"))
                                       org-noter
                                       org-noter-pdftools
                                       ;; themes
@@ -595,7 +598,7 @@ This function is called at the very end of Spacemacs initialization."
  '(custom-safe-themes '(default))
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#6272a4")
- '(fill-column 120)
+ '(fill-column 100)
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
  '(golden-ratio-mode nil)
  '(helm-completion-style 'emacs)
@@ -616,6 +619,9 @@ This function is called at the very end of Spacemacs initialization."
      ("FIXME" . "#dc752f")
      ("XXX+" . "#dc752f")
      ("\\?\\?\\?+" . "#dc752f")))
+ '(jdee-db-active-breakpoint-face-colors (cons "#171F24" "#237AD3"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#171F24" "#579C4C"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#171F24" "#777778"))
  '(objed-cursor-color "#ff5555")
  '(org-todo-keyword-faces '(("REPEAT" . "red") ("PROJECT" . "cyan3")))
  '(package-selected-packages
