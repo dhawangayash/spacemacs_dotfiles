@@ -27,7 +27,7 @@
 (define-key global-map [?\s-r] 'revert-buffer)
 ;; My keybindings
 ;; for inserting quotations, parenthesis, and square brackets
-(global-set-key (kbd "M-[") 'insert-pair)
+(global-set-key (kbd "M-\[") 'insert-pair)
 (global-set-key (kbd "M-\"") 'insert-pair)
 (global-set-key (kbd "M-\'") 'insert-pair)
 (global-set-key (kbd "C-M-)") 'delete-pair)

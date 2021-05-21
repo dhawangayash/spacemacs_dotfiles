@@ -652,7 +652,7 @@ This function is called at the very end of Spacemacs initialization."
     (cons 360 "#6272a4")))
  '(vc-annotate-very-old-color nil)
  '(window-divider-mode nil)
- '(writeroom-width 120))
+ '(writeroom-width 70))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
