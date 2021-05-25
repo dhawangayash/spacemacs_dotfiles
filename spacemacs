@@ -84,6 +84,7 @@ This function should only modify configuration layer settings."
       :variables
       plantuml-jar-path "~/Downloads/plantuml.jar"
       org-plantuml-jar-path "~/Downloads/plantuml.jar")
+     projectile
      shell-scripts
      (shell :variables
             shell-default-height 30
