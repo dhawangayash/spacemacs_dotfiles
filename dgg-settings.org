@@ -1,6 +1,6 @@
 -*- buffer-read-only: t -*-
 
-#+TAGS: KEYBINDINGS ORG BUG_FIX
+#+TAGS: KEYBINDINGS ORG BUG_FIX EVIL_MODE
 
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
@@ -47,7 +47,7 @@
 #+END_SRC
 
 
-* Evil-Mode
+* Evil-Mode                                                       :EVIL_MODE:
 ** Setting auto-increment
 :PROPERTIES:
 :ID:       78cd2a12-c3cc-49b5-a0cd-16995bda665f
@@ -77,7 +77,7 @@
 
 
 #+END_SRC
-** Python mode quirks in evil mode                        :BUG_FIX:KEYBINGS:
+** Python mode quirks in evil mode                     :KEYBINDINGS:BUG_FIX:
 #+BEGIN_SRC emacs-lisp :results silent
 
   ;; (setq evilmi-always-simple-jump t) is an option for advanced users. Jump algorithm using python indentation is still usable but with lower priority when this flag is on.
@@ -225,7 +225,8 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
 
 - Refile targets with lower level
   #+Begin_SRC emacs-lisp
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 10)))
+    (setq org-refile-targets '((nil :maxlevel . 10)
+                               (org-agenda-files :maxlevel . 5))
   #+END_SRC
 - Refile to the Top Level
   #+Begin_SRC emacs-lisp
@@ -998,3 +999,7 @@ This function replaces all the underscores in the region to camel case."
 (visual-line-mode t)
 
 #+END_SRC
+** Global visual line mode
+#+begin_src emacs-lisp :tangle yes :results silent
+;; (global-visual-line-mode)
+#+end_src
