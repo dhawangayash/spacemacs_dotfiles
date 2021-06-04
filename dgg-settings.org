@@ -1,7 +1,80 @@
 -*- buffer-read-only: t -*-
 
-#+TAGS: KEYBINDINGS ORG BUG_FIX EVIL_MODE
+#+TAGS: KEYBINDINGS ORG BUG_FIX EVIL_MODE SO_Solution TOC
 
+* TOC                                                                   :TOC:
+- [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
+- [[#my-keybindings][My keybindings]]
+  - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
+  - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
+- [[#evil-mode][Evil-Mode]]
+  - [[#setting-auto-increment][Setting auto-increment]]
+  - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
+  - [[#toggle-todo-states-in-normal-mode-with-the-t-key][Toggle TODO states in normal mode with the "t" key]]
+  - [[#python-mode-quirks-in-evil-mode][Python mode quirks in evil mode]]
+- [[#dired-configuration][Dired configuration]]
+- [[#auto-complete][Auto complete]]
+  - [[#auto-complete-prompts-using-company-mode][Auto complete prompts using company mode]]
+  - [[#removing-annoying-decorator-on-company-prompt][Removing annoying decorator on company prompt]]
+  - [[#binding-keybinding-shift-spc-for-company-prompt][Binding keybinding SHIFT-SPC for company prompt]]
+- [[#org-stuff][Org stuff]]
+  - [[#init-org-mode-auto-load-todo-paths-and-define-standard-bindings][Init Org mode, auto load todo paths, and define standard bindings]]
+  - [[#org-configs-based-on-john-wigley][Org configs based on john wigley]]
+  - [[#org-bullets-stuff][Org bullets stuff]]
+  - [[#org-agenda-list-from-aaron-bieber][Org agenda list from aaron bieber]]
+  - [[#for-tag-searches-ignore-tasks-with-scheduled-and-deadline-dates][For tag searches ignore tasks with scheduled and deadline dates]]
+  - [[#org-mode-enable-habits][Org mode enable habits]]
+  - [[#org-refile-from-aaron-url][Org refile from Aaron URL]]
+  - [[#automatic-org-mode-time-clock][+Automatic Org mode time clock+]]
+  - [[#shortcut-to-move-to-your-parent-heading-and-narrow-buffer-to-that-heading][Shortcut to move to your parent heading and narrow buffer to that heading]]
+  - [[#org-clocking-shortcuts][ORG Clocking shortcuts]]
+  - [[#refile-org-configurations-with-reverse-notes][Refile org configurations with reverse notes]]
+  - [[#refile-configurations-from-aaron-bieber][Refile configurations from aaron bieber]]
+  - [[#toggle-function-to-display-links-or-hide-links][Toggle function to display links or hide links]]
+  - [[#toggle-function-to-display-emphasis-markers-in-org-file-or-hide-emphasis-markers][Toggle function to display emphasis markers in org file or hide emphasis markers]]
+  - [[#shutdown-hooks][Shutdown hooks]]
+  - [[#org-clock-remove-clocked-tasks-with-000-duration][Org clock remove clocked tasks with 0:00 duration]]
+  - [[#hide-emphasis-markers-in-emacs-makes-org-files-look-clean][Hide emphasis markers in emacs makes org files look clean]]
+  - [[#disable-enlarged-org-mode-header-appearance][Disable enlarged org-mode header appearance]]
+  - [[#changing-the-org-mode-ellipsis-to-a-more-indicative-symbol][Changing the org-mode ellipsis to a more indicative symbol]]
+  - [[#org-roam-update-the-files-last_updated-tag-when-saving-the-file][Org-Roam update the files last_updated tag when saving the file]]
+  - [[#org-narrow-backwards-and-forwards][Org narrow backwards and forwards]]
+- [[#writeroom-configurations][Writeroom configurations]]
+  - [[#toggle-line-numbers-in-writeroom-mode][Toggle line numbers in writeroom mode.]]
+- [[#magit][Magit]]
+- [[#ivy-mode][IVY Mode]]
+- [[#cursor-marks][Cursor marks]]
+- [[#ibuffers-configs][ibuffers configs]]
+- [[#buffers-indirection][Buffers indirection]]
+  - [[#sub-tree-indirect-to-buffer][Sub-tree indirect to buffer]]
+  - [[#toggle-revert-buffer-without-or-with-confirmation][Toggle Revert Buffer without or with confirmation]]
+- [[#keywords][keywords]]
+  - [[#fast-todo-selection][Fast Todo Selection]]
+- [[#my-shortcut-keys][My shortcut keys]]
+  - [[#move-to-next-method-and-previous-method][Move to next method and previous method]]
+  - [[#forcing-org-mode-to-open-a-link-in-another-frame-not-window][Forcing org-mode to open a link in another frame not window]]
+- [[#java-setup][Java Setup]]
+  - [[#log4j-setup-notes][Log4j setup Notes]]
+  - [[#java-indentation][Java indentation]]
+  - [[#eclim-installation][eclim installation]]
+- [[#dgg-functions][Dgg functions]]
+  - [[#my-functions-for-shortcuts][My functions for shortcuts]]
+  - [[#insert-around-region][Insert around region]]
+  - [[#unicode-chars][Unicode chars]]
+  - [[#using-rainer-konigs-blog-about-keeping-three-most-important-things][Using Rainer Konig's blog about keeping three most important things]]
+- [[#clipboard-managment-using-ivy][Clipboard managment using ivy]]
+  - [[#counsel-yank-pop-with-a-tweak][Counsel-Yank-Pop With a Tweak]]
+  - [[#add-the-system-clipboard-to-the-emacs-kill-ring][Add the System Clipboard to the emacs-kill-ring]]
+  - [[#enable-storing-everything-into-clipboard-not-just-within-emacs][Enable storing everything into clipboard not just within emacs.]]
+- [[#setup-emacs-as-a-sql-database-client][Setup Emacs as a SQL database client]]
+  - [[#adding-sql-mode][Adding SQL mode]]
+  - [[#sql-mode][SQL mode]]
+- [[#note-camelcaseing-and-lower-caseing-in-emacs][NOTE CamelCaseing and Lower caseing in emacs]]
+- [[#spacemacs-configs][Spacemacs configs]]
+  - [[#turn-on-auto-fill-mode][+Turn on auto fill mode.+]]
+  - [[#turn-off-auto-fill-mode][Turn off auto fill mode.]]
+  - [[#enable-visual-line-mode][Enable visual-line-mode]]
+  - [[#global-visual-line-mode][Global visual line mode]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
@@ -433,6 +506,137 @@ URL: [[http://doc.norang.ca/org-mode.html#CaptureTemplates][norang]]
 
 ;; (setq org-hide-emphasis-markers t)
 
+#+END_SRC
+
+
+** Disable enlarged org-mode header appearance                 :SO_Solution:
+Many themes seem to increase size of headers based on the level. I absolutely hate this, but would still want to keep the theme for headers. I found this solution on stack overflow.
+URL: [[https://emacs.stackexchange.com/questions/22584/disable-enlarged-org-mode-header-appearance][SO-solution-for-enlarged-org-mode-headers]]
+#+BEGIN_SRC emacs-lisp :results silent
+
+(defun my/org-mode-hook ()
+  "Stop the org-level headers from increasing in height relative to the other text."
+  (dolist (face '(org-level-1
+                  org-level-2
+                  org-level-3
+                  org-level-4
+                  org-level-5))
+  (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+
+(add-hook 'org-mode-hook #'my/org-mode-hook)
+
+#+END_SRC
+
+
+
+** Changing the org-mode ellipsis to a more indicative symbol
+URL: https://endlessparentheses.com/changing-the-org-mode-ellipsis.html
+- Content of the URL not sure if this guys blog will stay forever
+  Changing the org-mode ellipsis 02 Nov 2015, by Artur Malabarba.
+  The dot-dot-dot ellipsis that org-mode uses to indicate hidden content is usually just fine. It’s only when you’re staring at a document where every line is a folded headline, that you start to feel like they’re a little too much “in your face”. I have a few org files with thousands of lines and hundreds of headlines, and changing that ... to something shorter greatly reduces visual clutter.
+
+  The more straightforward option is to use a proper ellipsis character (the same effect with a third the length).
+
+  (setq org-ellipsis "…")
+
+  The one I’m currently using is a cornered arrow.
+
+  (setq org-ellipsis "⤵")
+
+  Other interesting characters are ▼, ↴, ⬎, ⤷, and ⋱.
+
+- Code
+  #+BEGIN_SRC emacs-lisp :results silent
+
+  (setq org-ellipsis "⤵")
+
+  #+END_SRC
+
+
+** Org-Roam update the files last_updated tag when saving the file
+
+- Description
+  There's a healthy discussion here and Zaeph has given a clear example: [[https://org-roam.discourse.group/t/update-a-field-last-modified-at-save/321/4][URL]]
+- Code
+  #+BEGIN_SRC emacs-lisp :results silent
+
+    (add-hook 'before-save-hook #'zp/org-set-last-modified)
+
+    (defun zp/org-find-time-file-property (property &optional anywhere)
+      "Return the position of the time file PROPERTY if it exists.
+    When ANYWHERE is non-nil, search beyond the preamble."
+      (save-excursion
+        (goto-char (point-min))
+        (let ((first-heading
+               (save-excursion
+                 (re-search-forward org-outline-regexp-bol nil t))))
+          (when (re-search-forward (format "^#\\+%s:" property)
+                                   (if anywhere nil first-heading)
+                                   t)
+            (point)))))
+
+    (defun zp/org-has-time-file-property-p (property &optional anywhere)
+      "Return the position of time file PROPERTY if it is defined.
+    As a special case, return -1 if the time file PROPERTY exists but
+    is not defined."
+      (when-let ((pos (zp/org-find-time-file-property property anywhere)))
+        (save-excursion
+          (goto-char pos)
+          (if (and (looking-at-p " ")
+                   (progn (forward-char)
+                          (org-at-timestamp-p 'lax)))
+              pos
+            -1))))
+
+    (defun zp/org-set-time-file-property (property &optional anywhere pos)
+      "Set the time file PROPERTY in the preamble.
+    When ANYWHERE is non-nil, search beyond the preamble.
+    If the position of the file PROPERTY has already been computed,
+    it can be passed in POS."
+      (when-let ((pos (or pos
+                          (zp/org-find-time-file-property property))))
+        (save-excursion
+          (goto-char pos)
+          (if (looking-at-p " ")
+              (forward-char)
+            (insert " "))
+          (delete-region (point) (line-end-position))
+          (let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
+            (insert now)))))
+
+    (defun zp/org-set-last-modified ()
+      "Update the LAST_MODIFIED file property in the preamble."
+      (when (derived-mode-p 'org-mode)
+        (zp/org-set-time-file-property "LAST_MODIFIED")))
+
+
+  #+END_SRC
+
+
+** Org narrow backwards and forwards
+URL: https://github.com/zaeph/.emacs.d/blob/master/lisp/zp-org.el
+#+BEGIN_SRC emacs-lisp :results silent
+  ;; source https://github.com/zaeph/.emacs.d/blob/master/lisp/zp-org.el
+  (defun zp/org-narrow-forwards ()
+    "Move to the next subtree at same level, and narrow the buffer to it."
+    (interactive)
+    (widen)
+    (org-forward-heading-same-level 1)
+    (org-narrow-to-subtree)
+    (when (called-interactively-p 'any)
+      (message "Narrowing to next tree.")))
+
+  (defun zp/org-narrow-backwards ()
+    "Move to the next subtree at same level, and narrow the buffer to it."
+    (interactive)
+    (widen)
+    (org-backward-heading-same-level 1)
+    (org-narrow-to-subtree)
+    (when (called-interactively-p 'any)
+      (message "Narrowing to previous tree.")))
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "nf" 'zp/org-narrow-forwards)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "nb" 'zp/org-narrow-backwards)
 #+END_SRC
 
 

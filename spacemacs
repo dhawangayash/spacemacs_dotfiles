@@ -33,7 +33,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(python
+   '(
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -42,9 +42,10 @@ This function should only modify configuration layer settings."
      (auto-completion :variables
                       auto-completion-return-key-behavior 'complete
                       auto-completion-complete-with-key-sequence '"jk"
+                      auto-completion-complete-with-key-sequence-delay 0.1
                       auto-completion-tab-key-behavior 'cycle
                       auto-completion-enable-snippets-in-popup t
-                      auto-completion-idle-delay 0.1
+                      auto-completion-idle-delay 0.2
                       auto-completion-enable-sort-by-usage t)
      ;; better-defaults
      (bibtex
@@ -84,7 +85,8 @@ This function should only modify configuration layer settings."
       :variables
       plantuml-jar-path "~/Downloads/plantuml.jar"
       org-plantuml-jar-path "~/Downloads/plantuml.jar")
-     projectile
+     python
+     ;; projectile
      shell-scripts
      (shell :variables
             shell-default-height 30

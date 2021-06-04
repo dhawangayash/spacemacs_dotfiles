@@ -55,7 +55,7 @@
 
 ;; Sets custom TODO states
 (setq org-todo-keywords
-      '((sequence "REPEAT(r) TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
+      '((sequence "REPEAT(r)" "TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
         (sequence "PROJECT(p)" "AREA(a)" "|" "COMPLETED(c)")
         (sequence "LATER(l)" "WAITING(w)" "FUTURE(f)" "|" "CANCELLED(x)")
         (sequence "|" "NOTE(n)")))
