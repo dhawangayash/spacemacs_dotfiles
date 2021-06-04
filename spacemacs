@@ -61,8 +61,8 @@ This function should only modify configuration layer settings."
      epub
      eww
      git
-     helm
-     ;; (ivy :variables ivy-enable-advanced-buffer-information t)
+     ;; helm
+     (ivy :variables ivy-enable-advanced-buffer-information t)
      html
      ibuffer
      json
@@ -121,7 +121,7 @@ This function should only modify configuration layer settings."
                                       pyenv-mode
                                       imenu-anywhere
                                       ;;; second brain
-                                      org-roam-bibtex
+                                      ;; org-roam-bibtex
                                       (org-pdftools :location (recipe :fetcher github :repo "fuxialexander/org-pdftools"))
                                       org-noter
                                       org-noter-pdftools
@@ -575,8 +575,7 @@ before packages are loaded."
   (spacemacs//add-to-load-path (expand-file-name "~/workdir/spacemacs_dotfiles/"))
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg.el"))
   (eval-after-load 'org
-    (org-babel-load-file (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org"))
-    )
+    (org-babel-load-file (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org")))
   )
 
 

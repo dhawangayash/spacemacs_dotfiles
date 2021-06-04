@@ -11,13 +11,15 @@
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
   - [[#toggle-todo-states-in-normal-mode-with-the-t-key][Toggle TODO states in normal mode with the "t" key]]
-  - [[#python-mode-quirks-in-evil-mode][Python mode quirks in evil mode]]
+  - [[#python-mode-quirks-in-evil-mode][+Python mode quirks in evil mode+]]
 - [[#dired-configuration][Dired configuration]]
+  - [[#debug-message][Debug message]]
 - [[#auto-complete][Auto complete]]
   - [[#auto-complete-prompts-using-company-mode][Auto complete prompts using company mode]]
   - [[#removing-annoying-decorator-on-company-prompt][Removing annoying decorator on company prompt]]
   - [[#binding-keybinding-shift-spc-for-company-prompt][Binding keybinding SHIFT-SPC for company prompt]]
 - [[#org-stuff][Org stuff]]
+  - [[#org-tangle-confirmation-disable][Org tangle confirmation disable]]
   - [[#init-org-mode-auto-load-todo-paths-and-define-standard-bindings][Init Org mode, auto load todo paths, and define standard bindings]]
   - [[#org-configs-based-on-john-wigley][Org configs based on john wigley]]
   - [[#org-bullets-stuff][Org bullets stuff]]
@@ -45,6 +47,11 @@
 - [[#ivy-mode][IVY Mode]]
 - [[#cursor-marks][Cursor marks]]
 - [[#ibuffers-configs][ibuffers configs]]
+  - [[#use-ibuffer-for-buffer-list][Use Ibuffer for Buffer List]]
+  - [[#other-useful-options][Other useful options]]
+    - [[#ibuffer-expert][ibuffer-expert]]
+    - [[#ibuffer-show-empty-filter-groups][ibuffer-show-empty-filter-groups]]
+    - [[#ibuffer-auto-mode][ibuffer-auto-mode]]
 - [[#buffers-indirection][Buffers indirection]]
   - [[#sub-tree-indirect-to-buffer][Sub-tree indirect to buffer]]
   - [[#toggle-revert-buffer-without-or-with-confirmation][Toggle Revert Buffer without or with confirmation]]
@@ -54,7 +61,7 @@
   - [[#move-to-next-method-and-previous-method][Move to next method and previous method]]
   - [[#forcing-org-mode-to-open-a-link-in-another-frame-not-window][Forcing org-mode to open a link in another frame not window]]
 - [[#java-setup][Java Setup]]
-  - [[#log4j-setup-notes][Log4j setup Notes]]
+  - [[#log4j-setup-notes][+Log4j setup Notes+]]
   - [[#java-indentation][Java indentation]]
   - [[#eclim-installation][eclim installation]]
 - [[#dgg-functions][Dgg functions]]
@@ -63,39 +70,39 @@
   - [[#unicode-chars][Unicode chars]]
   - [[#using-rainer-konigs-blog-about-keeping-three-most-important-things][Using Rainer Konig's blog about keeping three most important things]]
 - [[#clipboard-managment-using-ivy][Clipboard managment using ivy]]
-  - [[#counsel-yank-pop-with-a-tweak][Counsel-Yank-Pop With a Tweak]]
+  - [[#counsel-yank-pop-with-a-tweak][+Counsel-Yank-Pop With a Tweak+]]
   - [[#add-the-system-clipboard-to-the-emacs-kill-ring][Add the System Clipboard to the emacs-kill-ring]]
   - [[#enable-storing-everything-into-clipboard-not-just-within-emacs][Enable storing everything into clipboard not just within emacs.]]
 - [[#setup-emacs-as-a-sql-database-client][Setup Emacs as a SQL database client]]
   - [[#adding-sql-mode][Adding SQL mode]]
   - [[#sql-mode][SQL mode]]
-- [[#note-camelcaseing-and-lower-caseing-in-emacs][NOTE CamelCaseing and Lower caseing in emacs]]
+- [[#camelcaseing-and-lower-caseing-in-emacs][CamelCaseing and Lower caseing in emacs]]
 - [[#spacemacs-configs][Spacemacs configs]]
   - [[#turn-on-auto-fill-mode][+Turn on auto fill mode.+]]
   - [[#turn-off-auto-fill-mode][Turn off auto fill mode.]]
   - [[#enable-visual-line-mode][Enable visual-line-mode]]
   - [[#global-visual-line-mode][Global visual line mode]]
+  - [[#dgg-helper-functions][DGG helper functions]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
 + +Disabling flyspell by default:+ [[https://gist.github.com/metamorph/69f37f7686164e7c4d94][github-gist-disable-flyspell-by-default]]
 + Disabling using the configuration layers variable: [[https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default][disable-by-default-spacemacs]]
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
 
   (remove-hook 'text-mode-hook 'dgg-enable-flyspell-mode)
   (remove-hook 'org-mode-hook 'dgg-enable-flyspell-mode)
   (remove-hook 'markdown-mode-hook 'dgg-enable-flyspell-mode)
-
+  (message "Completed Enhancing section")
 
 #+END_SRC
-
 
 
 * My keybindings                                                :KEYBINDINGS:
 
 ** Shortcuts for insert-pair and delete-pair
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
 
 (define-key global-map [?\s-r] 'revert-buffer)
 ;; My keybindings
@@ -105,7 +112,7 @@
 (global-set-key (kbd "M-\'") 'insert-pair)
 (global-set-key (kbd "C-M-)") 'delete-pair)
 ;; END: My keybindings
-
+(message "After: Shortcuts for insert-pair and delete-pair")
 
 #+END_SRC
 
@@ -116,7 +123,7 @@
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "k") 'org-previous-item)
 
-
+  (message "After: Go to the next checkbox or list item")
 #+END_SRC
 
 
@@ -133,25 +140,25 @@
 (evil-define-key 'normal global-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 (evil-define-key 'normal global-map (kbd "C-s") 'evil-numbers/dec-at-pt)
 ;; (evil-define-key 'normal global-map (kbd "C-x") 'evil-numbers/dec-at-pt)
-
+(message "After: Setting auto-increment")
 #+END_SRC
 ** Keybindings to replicate gk and gj in VIM on Evil           :KEYBINDINGS:
 #+BEGIN_SRC emacs-lisp :results silent
 
   (spacemacs/set-leader-keys "oj" 'evil-next-line)
   (spacemacs/set-leader-keys "ok" 'evil-previous-line)
-
+(message "After: Keybindings to replicate gk and gj in VIM on Evil")
 #+END_SRC
 ** Toggle TODO states in normal mode with the "t" key          :KEYBINDINGS:
 #+BEGIN_SRC emacs-lisp :results silent
 
   ;; Toggle TODO states in normal mode with the "t" key
   (evil-define-key 'normal org-mode-map "t" 'org-todo)
-
+(message "After: Toggle TODO states in normal mode with the "t" key")
 
 #+END_SRC
-** Python mode quirks in evil mode                     :KEYBINDINGS:BUG_FIX:
-#+BEGIN_SRC emacs-lisp :results silent
+** +Python mode quirks in evil mode+                     :KEYBINDINGS:BUG_FIX:
+#+BEGIN_SRC emacs-lisp :results silent :tangle no
 
   ;; (setq evilmi-always-simple-jump t) is an option for advanced users. Jump algorithm using python indentation is still usable but with lower priority when this flag is on.
   ;; https://github.com/redguardtoo/evil-matchit/issues/75
@@ -159,17 +166,21 @@
   ;; (setq revert-without-query '(".*"))
   ;; (global-auto-revert-mode)
 
-
 #+END_SRC
-
-
 * Dired configuration
 Get dired to print human readable sized files.
 #+BEGIN_SRC emacs-lisp :results silent
 
 (setq dired-listing-switches "-alh")
+(message "After: Dired configuration")
+#+END_SRC
+** Debug message
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (message "Dired Config done")
 
 #+END_SRC
+
 
 * Auto complete
 ** Auto complete prompts using company mode
@@ -179,7 +190,7 @@ URL: https://github.com/syl20bnr/spacemacs/issues/4284
   (add-hook 'company-mode-hook
             (lambda()
               (global-set-key (kbd "S-SPC") 'company-complete)))
-
+(message "After: Auto complete prompts using company mode")
 #+END_SRC
 ** Removing annoying decorator on company prompt
 URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_company_mode_that_i/
@@ -193,7 +204,7 @@ URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_c
 ;; company-complete
 ;;
 (setq company-format-margin-function nil)
-
+(message "After: Removing annoying decorator on company prompt")
 
 #+END_SRC
 ** Binding keybinding SHIFT-SPC for company prompt
@@ -202,11 +213,21 @@ URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_c
   (add-hook 'company-mode-hook
             (lambda()
               (global-set-key (kbd "S-SPC") 'company-complete)))
-
+(message "After: Binding keybinding SHIFT-SPC for company prompt")
 #+END_SRC
 
 
 * Org stuff                                                             :ORG:
+** Org tangle confirmation disable
+Stop asking for code evaluation confirmation every single time
+url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
+#+Begin_SRC emacs-lisp :results silent
+  (defun dgg/org-confirm-babel-evaluate (lang body)
+    (not (or (string= lang "java") (string= lang "python"))))
+  (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
+  (message "After: Org tangle confirmation disable")
+#+END_SRC
+
 ** Init Org mode, auto load todo paths, and define standard bindings
 #+Begin_SRC emacs-lisp
 ;;;
@@ -215,7 +236,7 @@ URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_c
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 (require 'org)
-
+(message "After: Init Org mode, auto load todo paths, and define standard bindings")
 ;;(setq org-directory "~/Dropbox/org ~/workdir/inter/interview")
 ;;(setq org-default-notes-file "~/Dropbox/org/refile.org")
 
@@ -231,9 +252,10 @@ Blog: [[http://newartisans.com/2007/08/using-org-mode-as-a-day-planner/][notes-j
 
 #+Begin_SRC emacs-lisp
 
-(setq org-agenda-start-on-weekday nil)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-start-on-weekday nil)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (message "After:Org configs based on john wigley")
 
 #+END_SRC
 
@@ -255,6 +277,7 @@ Blog: [[http://newartisans.com/2007/08/using-org-mode-as-a-day-planner/][notes-j
   ;; further explanantion here:
   ;; https://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
   ;; (setq org-src-fontify-natively t)
+  (message "After: Org bullets stuff")
 #+END_SRC
 
 ** Org agenda list from aaron bieber
@@ -272,7 +295,7 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
 
     ;; (define-key global-map (kbd "C-<f12>") 'dgg-pop-to-org-agenda)
     (global-set-key (kbd "C-<f12>") 'dgg-pop-to-org-agenda)
-
+    (message "After: Org agenda list from aaron bieber")
     #+END_SRC
     The "dgg" part is just a namespace prefix that I use for all of my custom functions for historical reasons I won't go into; the important part is the ~split~ argument, which allows me to optionally allow the window to split as it does normally by specifying a prefix.
 
@@ -280,17 +303,19 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
 ** For tag searches ignore tasks with scheduled and deadline dates
 #+BEGIN_SRC emacs-lisp :results silent
   (setq org-agenda-tags-todo-honor-ignore-options t)
+  (message "After: For tag searches ignore tasks with scheduled and deadline dates")
 #+END_SRC
 
 ** Org mode enable habits
 [[http://lists.gnu.org/archive/html/emacs-orgmode//2010-04/msg00122.html][enable org habits]]
 
 #+BEGIN_SRC emacs-lisp
-;; Adding org-habit to the end of the list
-(add-to-list 'org-modules 'org-habit t)
+  ;; Adding org-habit to the end of the list
+  (add-to-list 'org-modules 'org-habit t)
 
-(setq org-habit-graph-column 80)
-(setq org-habit-show-habits-only-for-today nil)
+  (setq org-habit-graph-column 80)
+  (setq org-habit-show-habits-only-for-today nil)
+  (message "After: Org mode enable habits")
 #+END_SRC
 
 ** Org refile from Aaron URL
@@ -299,19 +324,24 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
 - Refile targets with lower level
   #+Begin_SRC emacs-lisp
     (setq org-refile-targets '((nil :maxlevel . 10)
-                               (org-agenda-files :maxlevel . 5))
+                               (org-agenda-files :maxlevel . 5)))
+    (message "After: Refile targets with lower level")
   #+END_SRC
 - Refile to the Top Level
   #+Begin_SRC emacs-lisp
   (setq org-refile-use-outline-path 'file)
+  (message "After: Refile to the Top Level")
   #+END_SRC
 - Creating new parents
   #+Begin_SRC emacs-lisp
   (setq org-outline-path-complete-in-steps nil)
+  (message "After: Creating new parents")
   #+END_SRC
 - Creating New Parents
   #+Begin_SRC emacs-lisp
   (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (message "After: Creating New Parents")
+  (message "After: Org refile from Aaron URL")
   #+END_SRC
 
 ** +Automatic Org mode time clock+
@@ -319,7 +349,7 @@ URLs used for this feature:
 - [[https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html][discussion]]
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][what's advicing function do?]]
 -[[https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/#disqus_thread][ sacha's notes for the same feature]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
     ;; (setq org-clock-in-switch-to-state "IN_PROGRESS")
 
     ;; https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html
@@ -389,7 +419,7 @@ URLs used for this feature:
 #+BEGIN_SRC emacs-lisp :results silent
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "sp" 'mb/org-narrow-to-parent)
-
+  (message "After: Shortcut to move to your parent heading and narrow buffer to that heading")
 
 #+END_SRC
 
@@ -398,7 +428,7 @@ URLs used for this feature:
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "I" 'org-clock-in)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "O" 'org-clock-out)
-
+  (message "After: ORG Clocking shortcuts")
 
 #+END_SRC
 
@@ -408,7 +438,7 @@ URLs used for this feature:
 
   ;; Refile notes to top
   (setq org-reverse-note-order t)
-
+  (message "After: Refile org configurations with reverse notes")
 #+END_SRC
 
 ** Refile configurations from aaron bieber
@@ -424,7 +454,7 @@ URLs used for this feature:
   (setq org-refile-use-outline-path 'file)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
-
+  (message "After: Refile configurations from aaron bieber")
 
 
 #+END_SRC
@@ -448,7 +478,7 @@ URL: https://emacs.stackexchange.com/questions/5387/show-org-mode-hyperlink-as-p
                 (setq org-descriptive-links t))))
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "l" 'dgg-org-toggle-link-display)
-
+  (message "After: Toggle function to display links or hide links")
 #+END_SRC
 
 ** Toggle function to display emphasis markers in org file or hide emphasis markers
@@ -466,8 +496,8 @@ Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to displ
           (message "setq org-hide-emphasis-markers=%s" org-hide-emphasis-markers))))
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "m" 'dgg-org-toggle-emphasis-display)
+  (message "After: Toggle function to display emphasis markers in org file or hide emphasis markers")
 #+END_SRC
-
 
 ** Shutdown hooks
 #+BEGIN_SRC emacs-lisp :results silent
@@ -485,7 +515,7 @@ Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to displ
   (advice-add 'org-deadline       :after 'mb/save-buffer-if-file)
   (advice-add 'org-schedule       :after 'mb/save-buffer-if-file)
   (advice-add 'org-store-log-note :after 'mb/save-buffer-if-file)
-
+  (message "After: Shutdown hooks")
 
 #+END_SRC
 
@@ -495,7 +525,7 @@ URL: http://doc.norang.ca/org-mode.html#CaptureTemplates
 
 ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
 (setq org-clock-out-remove-zero-time-clocks t)
-
+(message "After: Org clock remove clocked tasks with 0:00 duration")
 
 #+END_SRC
 
@@ -504,7 +534,8 @@ URL: http://doc.norang.ca/org-mode.html#CaptureTemplates
 URL: [[http://doc.norang.ca/org-mode.html#CaptureTemplates][norang]]
 #+BEGIN_SRC emacs-lisp :results silent
 
-;; (setq org-hide-emphasis-markers t)
+  ;; (setq org-hide-emphasis-markers t)
+  (message "After: Hide emphasis markers in emacs makes org files look clean")
 
 #+END_SRC
 
@@ -514,16 +545,17 @@ Many themes seem to increase size of headers based on the level. I absolutely ha
 URL: [[https://emacs.stackexchange.com/questions/22584/disable-enlarged-org-mode-header-appearance][SO-solution-for-enlarged-org-mode-headers]]
 #+BEGIN_SRC emacs-lisp :results silent
 
-(defun my/org-mode-hook ()
-  "Stop the org-level headers from increasing in height relative to the other text."
-  (dolist (face '(org-level-1
-                  org-level-2
-                  org-level-3
-                  org-level-4
-                  org-level-5))
-  (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+  (defun my/org-mode-hook ()
+    "Stop the org-level headers from increasing in height relative to the other text."
+    (dolist (face '(org-level-1
+                    org-level-2
+                    org-level-3
+                    org-level-4
+                    org-level-5))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
 
-(add-hook 'org-mode-hook #'my/org-mode-hook)
+  (add-hook 'org-mode-hook #'my/org-mode-hook)
+  (message "After: Disable enlarged org-mode header appearance")
 
 #+END_SRC
 
@@ -549,7 +581,7 @@ URL: https://endlessparentheses.com/changing-the-org-mode-ellipsis.html
   #+BEGIN_SRC emacs-lisp :results silent
 
   (setq org-ellipsis "⤵")
-
+  (message "After: Changing the org-mode ellipsis to a more indicative symbol")
   #+END_SRC
 
 
@@ -560,55 +592,56 @@ URL: https://endlessparentheses.com/changing-the-org-mode-ellipsis.html
 - Code
   #+BEGIN_SRC emacs-lisp :results silent
 
-    (add-hook 'before-save-hook #'zp/org-set-last-modified)
+      (add-hook 'before-save-hook #'zp/org-set-last-modified)
 
-    (defun zp/org-find-time-file-property (property &optional anywhere)
-      "Return the position of the time file PROPERTY if it exists.
-    When ANYWHERE is non-nil, search beyond the preamble."
-      (save-excursion
-        (goto-char (point-min))
-        (let ((first-heading
-               (save-excursion
-                 (re-search-forward org-outline-regexp-bol nil t))))
-          (when (re-search-forward (format "^#\\+%s:" property)
-                                   (if anywhere nil first-heading)
-                                   t)
-            (point)))))
-
-    (defun zp/org-has-time-file-property-p (property &optional anywhere)
-      "Return the position of time file PROPERTY if it is defined.
-    As a special case, return -1 if the time file PROPERTY exists but
-    is not defined."
-      (when-let ((pos (zp/org-find-time-file-property property anywhere)))
+      (defun zp/org-find-time-file-property (property &optional anywhere)
+        "Return the position of the time file PROPERTY if it exists.
+      When ANYWHERE is non-nil, search beyond the preamble."
         (save-excursion
-          (goto-char pos)
-          (if (and (looking-at-p " ")
-                   (progn (forward-char)
-                          (org-at-timestamp-p 'lax)))
-              pos
-            -1))))
+          (goto-char (point-min))
+          (let ((first-heading
+                 (save-excursion
+                   (re-search-forward org-outline-regexp-bol nil t))))
+            (when (re-search-forward (format "^#\\+%s:" property)
+                                     (if anywhere nil first-heading)
+                                     t)
+              (point)))))
 
-    (defun zp/org-set-time-file-property (property &optional anywhere pos)
-      "Set the time file PROPERTY in the preamble.
-    When ANYWHERE is non-nil, search beyond the preamble.
-    If the position of the file PROPERTY has already been computed,
-    it can be passed in POS."
-      (when-let ((pos (or pos
-                          (zp/org-find-time-file-property property))))
-        (save-excursion
-          (goto-char pos)
-          (if (looking-at-p " ")
-              (forward-char)
-            (insert " "))
-          (delete-region (point) (line-end-position))
-          (let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
-            (insert now)))))
+      (defun zp/org-has-time-file-property-p (property &optional anywhere)
+        "Return the position of time file PROPERTY if it is defined.
+      As a special case, return -1 if the time file PROPERTY exists but
+      is not defined."
+        (when-let ((pos (zp/org-find-time-file-property property anywhere)))
+          (save-excursion
+            (goto-char pos)
+            (if (and (looking-at-p " ")
+                     (progn (forward-char)
+                            (org-at-timestamp-p 'lax)))
+                pos
+              -1))))
 
-    (defun zp/org-set-last-modified ()
-      "Update the LAST_MODIFIED file property in the preamble."
-      (when (derived-mode-p 'org-mode)
-        (zp/org-set-time-file-property "LAST_MODIFIED")))
+      (defun zp/org-set-time-file-property (property &optional anywhere pos)
+        "Set the time file PROPERTY in the preamble.
+      When ANYWHERE is non-nil, search beyond the preamble.
+      If the position of the file PROPERTY has already been computed,
+      it can be passed in POS."
+        (when-let ((pos (or pos
+                            (zp/org-find-time-file-property property))))
+          (save-excursion
+            (goto-char pos)
+            (if (looking-at-p " ")
+                (forward-char)
+              (insert " "))
+            (delete-region (point) (line-end-position))
+            (let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
+              (insert now)))))
 
+      (defun zp/org-set-last-modified ()
+        "Update the LAST_MODIFIED file property in the preamble."
+        (when (derived-mode-p 'org-mode)
+          (zp/org-set-time-file-property "LAST_MODIFIED")))
+
+    (message "After: Org-Roam update the files last_updated tag when saving the file")
 
   #+END_SRC
 
@@ -637,6 +670,7 @@ URL: https://github.com/zaeph/.emacs.d/blob/master/lisp/zp-org.el
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "nf" 'zp/org-narrow-forwards)
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "nb" 'zp/org-narrow-backwards)
+  (message "After: Org narrow backwards and forwards")
 #+END_SRC
 
 
@@ -646,7 +680,7 @@ URL: https://github.com/zaeph/.emacs.d/blob/master/lisp/zp-org.el
 #+BEGIN_SRC emacs-lisp :results silent
 
   (spacemacs/set-leader-keys-for-minor-mode 'writeroom-mode "n" 'spacemacs/toggle-line-numbers)
-
+  (message "After: Toggle line numbers in writeroom mode.")
 #+END_SRC
 
 
@@ -661,23 +695,24 @@ I use magit to handle version control. It’s lovely, but I tweak a few things:
 - I’d like to start in the insert state when writing a commit message.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package magit
-      :bind
-      ("C-x g" . magit-status)
+  (use-package magit
+    :bind
+    ("C-x g" . magit-status)
 
-      :config
-      ;; (use-package evil-magit)
-      (use-package with-editor)
-      (setq magit-push-always-verify nil)
-      (setq git-commit-summary-max-length 50)
+    :config
+    ;; (use-package evil-magit)
+    (use-package with-editor)
+    (setq magit-push-always-verify nil)
+    (setq git-commit-summary-max-length 50)
 
-      ;; (with-eval-after-load 'magit-remote
-      ;;   (magit-define-popup-action 'magit-push-popup ?P
-      ;;     'magit-push-implicitly--desc
-      ;;     'magit-push-implicitly ?p t))
+    ;; (with-eval-after-load 'magit-remote
+    ;;   (magit-define-popup-action 'magit-push-popup ?P
+    ;;     'magit-push-implicitly--desc
+    ;;     'magit-push-implicitly ?p t))
 
-      ;; (add-hook 'with-editor-mode-hook 'evil-insert-state)
-      )
+    ;; (add-hook 'with-editor-mode-hook 'evil-insert-state)
+    )
+  (message "After: Magit")
 #+END_SRC
 
 * IVY Mode
@@ -688,7 +723,7 @@ URL : [[https://oremacs.com/swiper/#key-bindings][key-bindings]]
 (ivy-mode 1)
 
 (global-set-key (kbd "C-x s") 'swiper)
-
+(message "After: IVY Mode")
 #+END_SRC
 
 * Cursor marks
@@ -696,10 +731,10 @@ Setting cursor location by marking locations
 http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html
 
 To set a mark in emacs use
-#+BEGIN_QUOTE
-C-c % ~> org-mark-ring-push
-C-c & ~> org-mark-ring-goto
-#+END_QUOTE
+| keyboard shortcut | Function call      |
+|-------------------+--------------------|
+| C-c %             | org-mark-ring-push |
+| C-c &             | org-mark-ring-goto |
 
 Don't allow more than 6 locations in the buffer
 #+Begin_SRC emacs-lisp
@@ -709,16 +744,17 @@ Don't allow more than 6 locations in the buffer
 
 Tip: Single key <F7> and popping from mark-ring by <F8>
 #+Begin_SRC emacs-lisp
-(defun xah-pop-local-mark-ring ()
-  "Move cursor to last mark position of current buffer.
-Call this repeatedly will cycle all positions in `mark-ring'.
-URL `http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html'
-Version 2016-04-04"
-  (interactive)
-  (set-mark-command t))
+  (defun xah-pop-local-mark-ring ()
+    "Move cursor to last mark position of current buffer.
+  Call this repeatedly will cycle all positions in `mark-ring'.
+  URL `http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html'
+  Version 2016-04-04"
+    (interactive)
+    (set-mark-command t))
 
-(global-set-key (kbd "<f7>") 'pop-global-mark)
-(global-set-key (kbd "<f8>") 'xah-pop-local-mark-ring)
+  (global-set-key (kbd "<f7>") 'pop-global-mark)
+  (global-set-key (kbd "<f8>") 'xah-pop-local-mark-ring)
+  (message "After: Cursor marks")
 #+END_SRC
 
 * ibuffers configs
@@ -728,34 +764,37 @@ URL: [[https://cestlaz.github.io/posts/using-emacs-34-ibuffer-emmet/][ibuffer-em
 
 To use Ibuffer do the following:
 
-1) Use Ibuffer for Buffer List
-   #+Begin_SRC emacs-lisp
-   (global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
+** Use Ibuffer for Buffer List
+  #+Begin_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
+  (message "After: Use Ibuffer for Buffer List")
+  #+END_SRC
 
-   #+END_SRC
-
-2) Other useful options
+** Other useful options
    There are a few other useful options that I didn’t find out about until I looked through the source:
 
-   - ibuffer-expert
+*** ibuffer-expert
      Unless you turn this variable on you will be prompted every time you want to delete a buffer, even unmodified ones, which is way too cautious for most people. You’ll still be prompted for confirmation when deleting modified buffers after the option has been turned off.
      #+Begin_SRC emacs-lisp
-     (setq ibuffer-expert t)
+       (setq ibuffer-expert t)
+       (message "After: ibuffer-expert")
      #+END_SRC
 
-   - ibuffer-show-empty-filter-groups
+*** ibuffer-show-empty-filter-groups
      Turning off ibuffer-show-empty-filter-groups is particularly useful, because the empty filter groups can really clutter things up.
      #+Begin_SRC emacs-lisp
        (setq ibuffer-show-empty-filter-groups nil)
+       (message "After: ibuffer-show-empty-filter-groups")
      #+END_SRC
 
-   - ibuffer-auto-mode
+*** ibuffer-auto-mode
      =ibuffer-auto-mode= is a minor mode that automatically keeps the buffer list up to date. I turn it on in my =ibuffer-mode-hook=:
      #+Begin_SRC emacs-lisp
        (add-hook 'ibuffer-mode-hook
                  '(lambda ()
                     (ibuffer-auto-mode 1)
                     (ibuffer-switch-to-saved-filter-groups "default")))
+       (message "After: ibuffer-auto-mode")
      #+END_SRC
 
 * Buffers indirection
@@ -770,7 +809,7 @@ To use Ibuffer do the following:
     (clone-indirect-buffer-other-window ind-buf t)
     (org-narrow-to-subtree)
     (switch-to-buffer ind-buf)))
-
+(message "After: Sub-tree indirect to buffer")
 #+END_SRC
 
 ** Toggle Revert Buffer without or with confirmation
@@ -787,6 +826,7 @@ URL: [[https://www.emacswiki.org/emacs/RevertBuffer][emacs-wiki-email-thread]]
      (if (or force-reverting (not (buffer-modified-p)))
          (revert-buffer :ignore-auto :noconfirm)
        (error "The buffer has been modified"))))
+  (message "After: Toggle Revert Buffer without or with confirmation")
 #+END_SRC
 
 
@@ -798,14 +838,15 @@ Fast todo selection allows changing from any task todo state to any other state 
 (setq org-use-fast-todo-selection t)
 
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-
+(message "After: Fast Todo Selection")
 #+END_SRC
 
 * My shortcut keys
 ** Move to next method and previous method
 #+Begin_SRC emacs-lisp
-(global-set-key (kbd "M-[") 'beginning-of-defun)
-(global-set-key (kbd "M-]") 'end-of-defun)
+  (global-set-key (kbd "M-[") 'beginning-of-defun)
+  (global-set-key (kbd "M-]") 'end-of-defun)
+  (message "After: Move to next method and previous method")
 #+END_SRC
 
 ** Forcing org-mode to open a link in another frame not window
@@ -817,14 +858,14 @@ Fast todo selection allows changing from any task todo state to any other state 
     (org-open-at-point)))
 
 (global-set-key (kbd "C-c 5 C-o") 'dgg/org-open-other-frame)
-
+(message "After: Forcing org-mode to open a link in another frame not window")
 
 #+END_SRC
 * Java Setup
-** Log4j setup Notes
+** +Log4j setup Notes+
 [[https://writequit.org/articles/working-with-logs-in-emacs.html][URl WriteQuitNotes]]
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; Configuration:
 
 ;; You can customize the faces that are used for syntax highlighting.
@@ -870,27 +911,28 @@ Fast todo selection allows changing from any task todo state to any other state 
 ** Java indentation
 URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.html]
 #+BEGIN_SRC emacs-lisp
-(defun fix-c-indent-offset-according-to-syntax-context (key val)
-  ;; remove the old element
-  (setq c-offsets-alist (delq (assoc key c-offsets-alist) c-offsets-alist))
-  ;; new value
-  (add-to-list 'c-offsets-alist '(key . val)))
+  (defun fix-c-indent-offset-according-to-syntax-context (key val)
+    ;; remove the old element
+    (setq c-offsets-alist (delq (assoc key c-offsets-alist) c-offsets-alist))
+    ;; new value
+    (add-to-list 'c-offsets-alist '(key . val)))
 
 
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-             (setq c-basic-offset 2
-                   tab-width 2
-                   indent-tabs-mode t)
-             ;; indent
-             (fix-c-indent-offset-according-to-syntax-context 'substatement 0)
-             (fix-c-indent-offset-according-to-syntax-context 'func-decl-cont 0))
-            ))
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+               (setq c-basic-offset 2
+                     tab-width 2
+                     indent-tabs-mode t)
+               ;; indent
+               (fix-c-indent-offset-according-to-syntax-context 'substatement 0)
+               (fix-c-indent-offset-according-to-syntax-context 'func-decl-cont 0))
+              ))
+  (message "After: Java indentation")
 #+END_SRC
 
 ** eclim installation
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (require 'eclim)
 ;; (global-eclim-mode)
 ;;
@@ -967,17 +1009,8 @@ These functions define shortcuts or abbreviations for java setup. The shortcuts 
 
   ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
   ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
-
+(message "After: My functions for shortcuts")
 #+END_SRC
-
-Stop asking for code evaluation confirmation every single time
-url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
-#+Begin_SRC emacs-lisp :results silent
-  (defun dgg/org-confirm-babel-evaluate (lang body)
-    (not (or (string= lang "java") (string= lang "python"))))
-  (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
-#+END_SRC
-
 ** Insert around region
 URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
 #+BEGIN_SRC emacs-lisp
@@ -1035,6 +1068,7 @@ URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
       (goto-char (region-beginning))
       (insert "#+begin_src text \n")))
 
+  (message "After: Insert around region")
 #+END_SRC
 
 *❕ /global-set-key/ ❕*
@@ -1047,7 +1081,7 @@ URL: [[https://emacs.stackexchange.com/questions/7254/idiomatic-way-of-extending
 #+BEGIN_SRC emacs-lisp :results silent
 
 (define-key 'iso-transl-ctl-x-8-map "." "…")
-
+(message "After: Unicode chars")
 #+END_SRC
 
 ** Using Rainer Konig's blog about keeping three most important things
@@ -1079,13 +1113,14 @@ URL: [[https://koenig-haunstetten.de/2018/02/17/improving-my-orgmode-workflow/][
 
   (global-set-key (kbd "<f5>") 'dgg-copy-idlink-to-clipboard)
 
+  (message "After: Using Rainer Konig's blog about keeping three most important things")
 #+END_SRC
 
 * Clipboard managment using ivy
-** Counsel-Yank-Pop With a Tweak
+** +Counsel-Yank-Pop With a Tweak+
 - URL :: [[http://pragmaticemacs.com/emacs/counsel-yank-pop-with-a-tweak/][URL-ivy-mode]]
 One of my favourites is counsel-yank-pop which replaces the standard clipboard history (kill-ring in Emacs terminology) with an ivy-powered version. You can then type search strings to filter your clipboard history dynamically.
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp :tangle no
 
     ;; (use-package counsel
     ;;   :bind
@@ -1111,13 +1146,9 @@ Save whatever’s in the current (system) clipboard before replacing it with the
 #+BEGIN_SRC emacs-lisp :results silent
 
 (setq save-interprogram-paste-before-kill t)
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :results silent
-
 (setq select-enable-clipboard t)
 
+(message "After: Enable storing everything into clipboard not just within emacs.")
 #+END_SRC
 
 * Setup Emacs as a SQL database client
@@ -1130,7 +1161,7 @@ Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emac
     (add-hook 'sql-interactive-mode-hook
               (lambda ()
                 (toggle-truncate-lines t)))
-
+    (message "After: Adding SQL mode")
 #+END_SRC
 
 ** SQL mode
@@ -1151,15 +1182,14 @@ Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emac
                    (symbol-name rval))))))
 
     (add-hook 'sql-interactive-mode-hook 'my-sql-save-history-hook)
-
+    (message "After: SQL mode")
   #+END_SRC
-* NOTE CamelCaseing and Lower caseing in emacs
-CLOSED: [2020-06-26 Fri 20:25]
+* CamelCaseing and Lower caseing in emacs
 URL: [[https://stackoverflow.com/questions/9288181/converting-from-camelcase-to-in-emacs][SO-elisp-code]]
 #+BEGIN_SRC emacs-lisp
   (defun to-underscore ()
-  "Convert underscore naming convention to camel case naming convention.
-This function replaces all the underscores in the region to camel case."
+    "Convert underscore naming convention to camel case naming convention.
+  This function replaces all the underscores in the region to camel case."
     (interactive)
     (progn
       (replace-regexp "\\([A-Z]\\)" "_\\1" nil (region-beginning) (region-end))
@@ -1181,10 +1211,12 @@ This function replaces all the underscores in the region to camel case."
               (downcase-region start (1+ start)))
           (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
           (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
+
+  (message "After: CamelCaseing and Lower caseing in emacs")
 #+END_SRC
 * Spacemacs configs
 ** +Turn on auto fill mode.+
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :results silent :tangle no
 
 ;; (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
@@ -1194,16 +1226,33 @@ This function replaces all the underscores in the region to camel case."
 
 ;; DO NOT AUTOMATICALLY autofill
 (auto-fill-mode -1)
-
+(message "After: Turn off auto fill mode.")
 
 #+END_SRC
 ** Enable visual-line-mode
 #+BEGIN_SRC emacs-lisp :results silent
 
 (visual-line-mode t)
-
+(message "After: Enable visual-line-mode")
 #+END_SRC
 ** Global visual line mode
-#+begin_src emacs-lisp :tangle yes :results silent
+#+begin_src emacs-lisp :results silent :tangle no
 ;; (global-visual-line-mode)
 #+end_src
+
+** DGG helper functions
+URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-title-using-org-entry-get/29884
+#+BEGIN_SRC emacs-lisp
+
+  (defun dgg-debug-msg-adder()
+    " My function to get current heading.
+  This function will pick the org mode heading at point and
+  create a message debug statement. This is very useful in the dgg-settings.org
+  when you want to check init loader."
+    (interactive)
+    (kill-new (concat "(message \"After: " (nth 4 (org-heading-components)) "\")"))
+  )
+
+  (global-set-key (kbd "C-c M-/") 'dgg-debug-msg-adder)
+  (message "After: DGG helper functions")
+#+END_SRC
