@@ -50,9 +50,6 @@
 ;; Size images displayed in org buffers to be more reasonable by default
 (setq org-image-actual-width 600)
 
-;; Toggle TODO states in normal mode with the "t" key
-(evil-define-key 'normal org-mode-map "t" 'org-todo)
-
 ;; Sets custom TODO states
 (setq org-todo-keywords
       '((sequence "REPEAT(r)" "TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")

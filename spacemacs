@@ -61,8 +61,8 @@ This function should only modify configuration layer settings."
      epub
      eww
      git
-     ;; helm
-     (ivy :variables ivy-enable-advanced-buffer-information t)
+     helm
+     ;; (ivy :variables ivy-enable-advanced-buffer-information t)
      html
      ibuffer
      json
