@@ -84,6 +84,7 @@
   - [[#global-visual-line-mode][Global visual line mode]]
   - [[#dgg-helper-functions][DGG helper functions]]
   - [[#update-path-variables][Update PATH variables]]
+  - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
@@ -1286,5 +1287,15 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
       ))
 
   (message "After: Update PATH variables")
+
+#+END_SRC
+
+** Making IELM usage bare-able with autopair or paraedit
+URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; use C-j instead of RETURN
+  (setq ielm-dynamic-return nil)
+  (message "After: Making IELM usage bare-able with autopair or paraedit")
 
 #+END_SRC
