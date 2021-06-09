@@ -83,6 +83,8 @@
   - [[#enable-visual-line-mode][Enable visual-line-mode]]
   - [[#global-visual-line-mode][Global visual line mode]]
   - [[#dgg-helper-functions][DGG helper functions]]
+  - [[#update-path-variables][Update PATH variables]]
+  - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
@@ -152,8 +154,8 @@
 ** Toggle TODO states in normal mode with the "t" key          :KEYBINDINGS:
 #+BEGIN_SRC emacs-lisp :results silent
 
-  ;; Toggle TODO states in normal mode with the "t" key
-  (evil-define-key 'normal org-mode-map "t" 'org-todo)
+  ;; Toggle TODO states in normal mode with the "Tt" key
+  (evil-define-key 'normal org-mode-map "Tt" 'org-todo)
 (message "After: Toggle TODO states in normal mode with the "t" key")
 
 #+END_SRC
@@ -1255,4 +1257,45 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
 
   (global-set-key (kbd "C-c M-/") 'dgg-debug-msg-adder)
   (message "After: DGG helper functions")
+#+END_SRC
+
+** Update PATH variables
+#+BEGIN_SRC emacs-lisp :results silent
+  (when (string-equal system-type "gnu/linux")
+    (let (
+          (mypaths
+           '(
+             "/home/dgg/.pyenv/plugins/pyenv-virtualenv/shims"
+             "/home/dgg/.pyenv/shims"
+             "/home/dgg/.pyenv/bin"
+             "/home/dgg/.sdkman/candidates/java/current/bin"
+             "/usr/local/sbin"
+             "/usr/local/bin"
+             "/usr/sbin"
+             "/usr/bin"
+             "/sbin"
+             "/bin"
+             "/usr/games"
+             "/usr/local/games"
+             "/snap/bin"
+             ))
+          )
+
+      (setenv "PATH" (mapconcat 'identity mypaths ":") )
+
+      (setq exec-path (append mypaths (list "." exec-directory)) )
+      ))
+
+  (message "After: Update PATH variables")
+
+#+END_SRC
+
+** Making IELM usage bare-able with autopair or paraedit
+URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
+#+BEGIN_SRC emacs-lisp :results silent
+
+  ;; use C-j instead of RETURN
+  (setq ielm-dynamic-return nil)
+  (message "After: Making IELM usage bare-able with autopair or paraedit")
+
 #+END_SRC

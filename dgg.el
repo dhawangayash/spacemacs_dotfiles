@@ -50,9 +50,6 @@
 ;; Size images displayed in org buffers to be more reasonable by default
 (setq org-image-actual-width 600)
 
-;; Toggle TODO states in normal mode with the "t" key
-(evil-define-key 'normal org-mode-map "t" 'org-todo)
-
 ;; Sets custom TODO states
 (setq org-todo-keywords
       '((sequence "REPEAT(r)" "TODO(t)" "IN-PROGRESS(i)" "|" "DONE(d)")
@@ -73,7 +70,7 @@
 ;; (setq 'org-habit-graph-column t)
 
 (defun datetree-tomorrow ()
-  (org-datetree-find-date-create
+  (org-datetree-find-iso-week-create
    (calendar-gregorian-from-absolute
     (time-to-days (time-add (current-time) (list 0 86400 0))))))
 
@@ -84,13 +81,13 @@
         ("n" "Note" entry (file+headline "~/Dropbox/org/inbox.org" "Notes")
          "*** %? :NOTE:\n%U\n%a\n%i\n:WEEK:%u " :prepend t :tree-type week :clock-in t :clock-resume t)
         ("p" "New Project" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         "** PROJECT %? \t\t\n\nEntered on: %U" :clock-in t :clock-resume t :prepend t)
+         "** PROJECT %? \t\t\n\nEntered on: %U" :empty-lines-after 2)
         ("t" "TODO" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         "** TODO %? \nEntered on: %U\nURL: %c\n\nContext: %a\n%i\n" :clock-in t :clock-resume t :prepend t)
-        ("i" "INTER" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         "** QUESTION %? \t\t:LC:LiC:INTER:\nURL:%c\nLC: \nLiC: \nAreas:\nEntered on: %U\n%a\n%i\n" :clock-in t :clock-resume t :prepend t)
+         "** TODO %? \nEntered on: %U\nURL: %c\n\nContext: %a\n%i\n" :clock-resume t :prepend t)
+        ("i" "Inter" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
+         (file "~/Dropbox/org/questions_template.txt") :empty-lines-after 2 :clock-resume t)
         ("u" "Tech Tutorial" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         "** TODO %? \t\t\t\t:TECH:TUTORIAL: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :clock-in t :clock-resume t :prepend t)
+         "** TODO %? \t\t\t\t:TECH:TUTORIAL: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :clock-resume t :prepend t)
         ("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org")
          "*** %<%H:%M> %U\n\t\tFrom: %a\n%?" :tree-type week :clock-in t :clock-resume t)
         ("m" "Meeting" entry (file+headline "~/Dropbox/org/inbox.org" "Meeting")
@@ -100,15 +97,13 @@
         ("h" "Habit" entry (file "~/Dropbox/org/inbox.org")
          "*** TODO %?\n%U\n%a\n:HABIT:\nSCHEDULED: %(format-time-string \"%<<%Y-%m(%B)-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n")
         ("v" "Videos to watch" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         "*** TODO %? \t\t\t\t\t:VIDEOS:YT: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :clock-in t :clock-resume t :prepend t)
-
+         "*** TODO %? \t\t\t\t\t:VIDEOS:YT: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :prepend t)
 
         ("g" "GTD" entry (file+olp+datetree "~/Dropbox/org/gtd.org")
          "*** %? :GTD:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
 
         ("G" "Tomorrow GTD, cannot be applied for start of week" plain (file+function "~/Dropbox/org/gtd.org" datetree-tomorrow)
-         "*** %? :GTD:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t :immediate-finish t)
-
+         "*** %? :GTD:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
 
         ("d" "DONE" entry (file+olp+datetree "~/Dropbox/org/done.org")
          "*** %? :DONE:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
