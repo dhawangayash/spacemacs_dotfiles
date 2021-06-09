@@ -84,7 +84,7 @@
   - [[#enable-visual-line-mode][Enable visual-line-mode]]
   - [[#global-visual-line-mode][Global visual line mode]]
   - [[#dgg-helper-functions][DGG helper functions]]
-  - [[#update-path-variables][Update PATH variables]]
+  - [[#update-path-variables][+Update PATH variables+]]
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
@@ -1282,36 +1282,39 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
   (message "After: DGG helper functions")
 #+END_SRC
 
-** Update PATH variables
-#+BEGIN_SRC emacs-lisp :results silent
-  (when (string-equal system-type "gnu/linux")
-    (let (
-          (mypaths
-           '(
-             "/home/dgg/.pyenv/plugins/pyenv-virtualenv/shims"
-             "/home/dgg/.pyenv/shims"
-             "/home/dgg/.pyenv/bin"
-             "/home/dgg/.sdkman/candidates/java/current/bin"
-             "/usr/local/sbin"
-             "/usr/local/bin"
-             "/usr/sbin"
-             "/usr/bin"
-             "/sbin"
-             "/bin"
-             "/usr/games"
-             "/usr/local/games"
-             "/snap/bin"
-             ))
-          )
+** +Update PATH variables+
+- Note taken on [2021-06-09 Wed 14:19] \\
+  SDKMAN is only being used in desktop as of now.
+- Code
+  #+BEGIN_SRC emacs-lisp :results silent
+    ;; (when (string-equal system-type "gnu/linux")
+    ;;   (let (
+    ;;         (mypaths
+    ;;          '(
+    ;;            "/home/dgg/.pyenv/plugins/pyenv-virtualenv/shims"
+    ;;            "/home/dgg/.pyenv/shims"
+    ;;            "/home/dgg/.pyenv/bin"
+    ;;            "/home/dgg/.sdkman/candidates/java/current/bin"
+    ;;            "/usr/local/sbin"
+    ;;            "/usr/local/bin"
+    ;;            "/usr/sbin"
+    ;;            "/usr/bin"
+    ;;            "/sbin"
+    ;;            "/bin"
+    ;;            "/usr/games"
+    ;;            "/usr/local/games"
+    ;;            "/snap/bin"
+    ;;            ))
+    ;;         )
 
-      (setenv "PATH" (mapconcat 'identity mypaths ":") )
+    ;;     (setenv "PATH" (mapconcat 'identity mypaths ":") )
 
-      (setq exec-path (append mypaths (list "." exec-directory)) )
-      ))
+    ;;     (setq exec-path (append mypaths (list "." exec-directory)) )
+    ;;     ))
 
-  (message "After: Update PATH variables")
+    ;; (message "After: Update PATH variables")
 
-#+END_SRC
+  #+END_SRC
 
 ** Making IELM usage bare-able with autopair or paraedit
 URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
