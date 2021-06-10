@@ -1252,10 +1252,18 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
   create a message debug statement. This is very useful in the dgg-settings.org
   when you want to check init loader."
     (interactive)
-    (kill-new (concat "(message \"After: " (nth 4 (org-heading-components)) "\")"))
-  )
+    (kill-new (concat "(message \"After: " (nth 4 (org-heading-components)) "\")")))
 
   (global-set-key (kbd "C-c M-/") 'dgg-debug-msg-adder)
+
+  (defun dgg-extract-org-title()
+    " My function to get current heading.
+  Very useful when you want to extract the heading only."
+    (interactive)
+    (kill-new (nth 4 (org-heading-components))))
+
+  (global-set-key (kbd "F6") 'dgg-extract-org-title)
+
   (message "After: DGG helper functions")
 #+END_SRC
 

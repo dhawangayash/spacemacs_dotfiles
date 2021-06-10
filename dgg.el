@@ -107,6 +107,10 @@
 
         ("d" "DONE" entry (file+olp+datetree "~/Dropbox/org/done.org")
          "*** %? :DONE:\n%U\n%a\n%i\n" :prepend t :tree-type week :clock-in t :clock-resume t)
+
+
+        ("D" "Insert to DONE_MAP Question" entry (file+headline "~/Dropbox/org/done_map.org" "Questions")
+         (file "~/Dropbox/org/done_map_question.txt") :clock-resume t :immediate-finish t)
         ))
 
 
