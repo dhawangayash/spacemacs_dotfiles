@@ -4,6 +4,7 @@
 
 * TOC                                                                   :TOC:
 - [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
+- [[#add-the-system-clipboard-to-emacs-kill-ring][Add the System Clipboard to emacs kill-ring]]
 - [[#my-keybindings][My keybindings]]
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
@@ -99,6 +100,20 @@
   (message "Completed Enhancing section")
 
 #+END_SRC
+
+* Add the System Clipboard to emacs kill-ring
+- URL: http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/
+
+- Gist:
+  By default, if you copy something to the system clipboard (e.g. some text in firefox) and then copy or kill some text in Emacs, then the text from firefox is lost. If you set the option below in your emacs config file then copying or killing text in Emacs will add the system clipboard text to the kill-ring so that you can find it when you cycle through your clipboard history in Emacs.
+
+- Code
+  #+BEGIN_SRC emacs-lisp :results silent
+
+    (setq save-interprogram-paste-before-kill t)
+    (message "After: Add the System Clipboard to emacs kill-ring")
+
+  #+END_SRC
 
 
 * My keybindings                                                :KEYBINDINGS:
@@ -1262,7 +1277,7 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
     (interactive)
     (kill-new (nth 4 (org-heading-components))))
 
-  (global-set-key (kbd "F6") 'dgg-extract-org-title)
+  (global-set-key (kbd "<F6>") 'dgg-extract-org-title)
 
   (message "After: DGG helper functions")
 #+END_SRC

@@ -85,7 +85,7 @@
         ("t" "TODO" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
          "** TODO %? \nEntered on: %U\nURL: %c\n\nContext: %a\n%i\n" :clock-resume t :prepend t)
         ("i" "Inter" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
-         (file "~/Dropbox/org/questions_template.txt") :empty-lines-after 2 :clock-resume t)
+         (file "~/Dropbox/org/questions_template.txt") :prepend t :empty-lines-after 2 :clock-resume t)
         ("u" "Tech Tutorial" entry (file+headline "~/Dropbox/org/inbox.org" "Tasks")
          "** TODO %? \t\t\t\t:TECH:TUTORIAL: \nURL:%c\n\nEntered on: %U\nContext:%a\n%i\n" :clock-resume t :prepend t)
         ("j" "Journal" entry (file+olp+datetree "~/Dropbox/org/journal.org")
