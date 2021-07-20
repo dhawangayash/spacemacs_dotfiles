@@ -694,9 +694,11 @@ URL: https://github.com/zaeph/.emacs.d/blob/master/lisp/zp-org.el
 * Writeroom configurations
 
 ** Toggle line numbers in writeroom mode.                      :KEYBINDINGS:
+URL: Fix the before evaluation error from here: https://github.com/syl20bnr/spacemacs/pull/9087/files#
 #+BEGIN_SRC emacs-lisp :results silent
 
-  (spacemacs/set-leader-keys-for-minor-mode 'writeroom-mode "n" 'spacemacs/toggle-line-numbers)
+  (with-eval-after-load 'writeroom
+    (spacemacs/set-leader-keys-for-minor-mode 'writeroom-mode "n" 'spacemacs/toggle-line-numbers))
   (message "After: Toggle line numbers in writeroom mode.")
 #+END_SRC
 
