@@ -448,7 +448,7 @@ To be used by `eww-after-render-hook'."
   (org-noter-insert-note-no-questions t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-save-last-location-property t)
-  (org-noter-default-notes-file-names '("notes.org"))
+  ;; (org-noter-default-notes-file-names '("notes.org"))
   (org-noter-notes-search-path (list org-roam-directory))
   ;; added this from here
   ;; https://github.com/weirdNox/org-noter/issues/57
