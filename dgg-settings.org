@@ -8,6 +8,7 @@
 - [[#my-keybindings][My keybindings]]
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
+  - [[#org-mode-enable-search-in-current-buffer-using-sparse-tree-search][Org mode enable search in current buffer using sparse tree search]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -142,10 +143,19 @@
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-next-item)
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "k") 'org-previous-item)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "u") 'org-previous-item)
 
   (message "After: Go to the next checkbox or list item")
 #+END_SRC
+
+** Org mode enable search in current buffer using sparse tree search
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "q") 'org-tags-sparse-tree)
+
+#+END_SRC
+
+
 
 
 * Evil-Mode                                                       :EVIL_MODE:
@@ -1126,69 +1136,69 @@ URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.h
 These functions define shortcuts or abbreviations for java setup. The shortcuts are kept as simple as possible for java and src.
 #+Begin_SRC emacs-lisp :results silent
 
-  (defun dgg-java-src ()
-     (interactive)
-     (insert "#+HEADERS: :classname Solution :cmdline \"-cp . -ea\"\n#+BEGIN_SRC java -n -r :RESULTS output :exports both\nclass Solution {\n\tpublic static void main(String args[]) {\n\n\t}\n}\n\n#+END_SRC\n\n#+RESULTS:\n"))
+    (defun dgg-java-src ()
+       (interactive)
+       (insert "#+HEADERS: :classname Solution :cmdline \"-cp . -ea\"\n#+BEGIN_SRC java -n -r :RESULTS output :exports both\nclass Solution {\n\tpublic static void main(String args[]) {\n\n\t}\n}\n\n#+END_SRC\n\n#+RESULTS:\n"))
 
-  (defun dgg-python-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC python -n -r :results output :exports both\n\ndef method(n):\n\t\tprint(n)\n\nmethod(10)\n#+END_SRC\n\n#+RESULTS:\n\n"))
+    (defun dgg-python-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC python -n -r :results output :exports both\n\ndef method(n):\n\t\tprint(n)\n\nmethod(10)\n#+END_SRC\n\n#+RESULTS:\n\n"))
 
-  (defun dgg-shell-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC shell -n -r :results output :exports both\n\n\n#+END_SRC\n\n#+RESULTS:\n\n"))
+    (defun dgg-shell-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC shell -n -r :results output :exports both\n\n\n#+END_SRC\n\n#+RESULTS:\n\n"))
 
-  (defun dgg-emacs-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC emacs-lisp :results silent\n\n\n#+END_SRC\n\n"))
+    (defun dgg-emacs-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC emacs-lisp :results silent\n\n\n#+END_SRC\n\n"))
 
-  (defun dgg-text-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC text\n\n\n#+END_SRC\n\n"))
+    (defun dgg-text-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC text\n\n\n#+END_SRC\n\n"))
 
-  (defun dgg-italic-bold-begin ()
-     (interactive)
-     (insert "/\` *"))
+    (defun dgg-italic-bold-begin ()
+       (interactive)
+       (insert "/\` *"))
 
-  (defun dgg-italic-bold-end ()
-     (interactive)
-     (insert "* \`/"))
+    (defun dgg-italic-bold-end ()
+       (interactive)
+       (insert "* \`/"))
 
-  (defun dgg-bold-highlight-begin ()
-     (interactive)
-     (insert "*   ="))
+    (defun dgg-bold-highlight-begin ()
+       (interactive)
+       (insert "*   ="))
 
-  (defun dgg-bold-highlight-end ()
-     (interactive)
-     (insert "=  *"))
+    (defun dgg-bold-highlight-end ()
+       (interactive)
+       (insert "=  *"))
 
-  (defun dgg-org-src-old ()
-     (interactive)
-     (insert "DOC TITLE -*- mode: org -*-\n#+LANGUAGE:  en\n#+INFOJS_OPT: view:showall toc:t ltoc:t mouse:underline path:http://orgmode.org/org-info.js\n#+LINK_HOME: http://ehneilsen.net\n#+LINK_UP: http://ehneilsen.net/notebook\n#+HTML_HEAD: <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/notebook.css\" />\n\n#+STARTUP:    indent hidestars\n\n#+OPTIONS:    num:nil \n\n#+TITLE: Bucket Sort"))
+    (defun dgg-org-src-old ()
+       (interactive)
+       (insert "DOC TITLE -*- mode: org -*-\n#+LANGUAGE:  en\n#+INFOJS_OPT: view:showall toc:t ltoc:t mouse:underline path:http://orgmode.org/org-info.js\n#+LINK_HOME: http://ehneilsen.net\n#+LINK_UP: http://ehneilsen.net/notebook\n#+HTML_HEAD: <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/notebook.css\" />\n\n#+STARTUP:    indent hidestars\n\n#+OPTIONS:    num:nil \n\n#+TITLE: Bucket Sort"))
 
-  (defun dgg-org-src ()
-     (interactive)
-     (insert "-*- File Name -*-\n#+TITLE: FileName\n#+AUTHOR:    Dhawan Gayash\n#+LANGUAGE:  en\n#+OPTIONS:   H:10 num:nil toc:10\n#+STARTUP:    indent hidestars\n#+OPTIONS:    num:nil \n#+SETUPFILE: /Users/tmp/workdir/inter/interview/html_pages/theme-readtheorg.setup"))
+    (defun dgg-org-src ()
+       (interactive)
+       (insert "-*- File Name -*-\n#+TITLE: FileName\n#+AUTHOR:    Dhawan Gayash\n#+LANGUAGE:  en\n#+OPTIONS:   H:10 num:nil toc:10\n#+STARTUP:    indent hidestars\n#+OPTIONS:    num:nil \n#+SETUPFILE: /Users/tmp/workdir/inter/interview/html_pages/theme-readtheorg.setup"))
 
-  (defun dgg-read-only-mode-directive ()
-     (interactive)
-     (insert "-*- buffer-read-only: t -*-"))
+    (defun dgg-read-only-mode-directive ()
+       (interactive)
+       (insert "-*- buffer-read-only: t -*-"))
 
-  (global-set-key (kbd "C-c f") 'dgg-java-src)
-  (global-set-key (kbd "C-c p") 'dgg-python-src)
-  (global-set-key (kbd "C-c s") 'dgg-shell-src)
-  (global-set-key (kbd "C-c q") 'dgg-org-src)
+    ;; (global-set-key (kbd "C-c f") 'dgg-java-src)
+    ;; (global-set-key (kbd "C-c p") 'dgg-python-src)
+    ;; (global-set-key (kbd "C-c s") 'dgg-shell-src)
+    ;; (global-set-key (kbd "C-c q") 'dgg-org-src)
 
-  (global-set-key (kbd "C-c t") 'dgg-text-src)
-  (global-set-key (kbd "C-c e") 'dgg-emacs-src)
-  (global-set-key (kbd "C-c y") 'dgg-read-only-mode-directive)
+    ;; (global-set-key (kbd "C-c t") 'dgg-text-src)
+    ;; (global-set-key (kbd "C-c e") 'dgg-emacs-src)
+    ;; (global-set-key (kbd "C-c y") 'dgg-read-only-mode-directive)
 
-  ;; comment and uncomment code sections
-  (global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
+    ;; comment and uncomment code sections
+    ;; (global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
 
-  ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
-  ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
-(message "After: My functions for shortcuts")
+    ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
+    ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
+  (message "After: My functions for shortcuts")
 #+END_SRC
 ** Insert around region
 URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
@@ -1229,13 +1239,13 @@ URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
       (goto-char end) (insert "/ ❕*")
       (goto-char start) (insert "*❕ /")))
 
-  (global-set-key (kbd "C-c o") 'wrap-markup-bold-quotes-region)
-  (global-set-key (kbd "C-c m") 'wrap-markup-italic-underscore-region)
+  ;; (global-set-key (kbd "C-c o") 'wrap-markup-bold-quotes-region)
+  ;; (global-set-key (kbd "C-c m") 'wrap-markup-italic-underscore-region)
 
-  (global-set-key (kbd "C-c n") 'wrap-markup-bold-italic-region)
+  ;; (global-set-key (kbd "C-c n") 'wrap-markup-bold-italic-region)
 
-  (global-set-key (kbd "C-c b") 'wrap-markup-bold-region)
-  (global-set-key (kbd "C-c i") 'wrap-markup-italic-region)
+  ;; (global-set-key (kbd "C-c b") 'wrap-markup-bold-region)
+  ;; (global-set-key (kbd "C-c i") 'wrap-markup-italic-region)
 
   ;; http://ergoemacs.org/emacs/elisp_examples.html
   (defun wrap-markup-region ()
@@ -1439,7 +1449,7 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
     (interactive)
     (kill-new (nth 4 (org-heading-components))))
 
-  (global-set-key (kbd "<F6>") 'dgg-extract-org-title)
+  (global-set-key (kbd "<F13>") 'dgg-extract-org-title)
 
   (message "After: DGG helper functions")
 #+END_SRC
