@@ -8,11 +8,13 @@
 - [[#my-keybindings][My keybindings]]
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
+  - [[#org-mode-enable-search-in-current-buffer-using-sparse-tree-search][Org mode enable search in current buffer using sparse tree search]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
   - [[#toggle-todo-states-in-normal-mode-with-the-t-key][Toggle TODO states in normal mode with the "t" key]]
   - [[#python-mode-quirks-in-evil-mode][+Python mode quirks in evil mode+]]
+  - [[#keybinding-for-recording-evil-delete-word-backwards][Keybinding for recording evil-delete-word-backwards]]
 - [[#dired-configuration][Dired configuration]]
   - [[#debug-message][Debug message]]
 - [[#auto-complete][Auto complete]]
@@ -61,6 +63,9 @@
 - [[#my-shortcut-keys][My shortcut keys]]
   - [[#move-to-next-method-and-previous-method][Move to next method and previous method]]
   - [[#forcing-org-mode-to-open-a-link-in-another-frame-not-window][Forcing org-mode to open a link in another frame not window]]
+- [[#xah-functions-being-used][Xah functions being used]]
+  - [[#select-text-between-quotesbraces][Select text between Quotes/Braces]]
+  - [[#xah-extend-selection][Xah Extend Selection]]
 - [[#java-setup][Java Setup]]
   - [[#log4j-setup-notes][+Log4j setup Notes+]]
   - [[#java-indentation][Java indentation]]
@@ -84,7 +89,7 @@
   - [[#enable-visual-line-mode][Enable visual-line-mode]]
   - [[#global-visual-line-mode][Global visual line mode]]
   - [[#dgg-helper-functions][DGG helper functions]]
-  - [[#update-path-variables][Update PATH variables]]
+  - [[#update-path-variables][+Update PATH variables+]]
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
@@ -138,10 +143,19 @@
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-next-item)
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "k") 'org-previous-item)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "u") 'org-previous-item)
 
   (message "After: Go to the next checkbox or list item")
 #+END_SRC
+
+** Org mode enable search in current buffer using sparse tree search
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "q") 'org-tags-sparse-tree)
+
+#+END_SRC
+
+
 
 
 * Evil-Mode                                                       :EVIL_MODE:
@@ -170,8 +184,8 @@
 #+BEGIN_SRC emacs-lisp :results silent
 
   ;; Toggle TODO states in normal mode with the "Tt" key
-  (evil-define-key 'normal org-mode-map "Tt" 'org-todo)
-(message "After: Toggle TODO states in normal mode with the "t" key")
+  ;; (evil-define-key 'normal org-mode-map "Tt" 'org-todo)
+;; (message "After: Toggle TODO states in normal mode with the "t" key")
 
 #+END_SRC
 ** +Python mode quirks in evil mode+                     :KEYBINDINGS:BUG_FIX:
@@ -184,6 +198,22 @@
   ;; (global-auto-revert-mode)
 
 #+END_SRC
+** Keybinding for recording evil-delete-word-backwards
+#+BEGIN_SRC emacs-lisp :results silent
+
+    ;; (evil-define-key 'insert global-map (kbd "C-w") 'evil-delete-backward-word)
+
+
+    ;; (define-key evil-insert-state-map (kbd "C-w") 'evil-delete-backward-word)
+
+  (global-set-key (kbd "C-w") 'evil-delete-backward-word)
+  ;; (define-key evil-insert-state-map (kbd "C-w") 'evil-delete-backward-word)
+  ;; (evil-define-key 'insert global-map (kbd "C-w") 'evil-delete-backward-word)
+  (message "After: Keybinding for recording evil-delete-word-backward")
+
+#+END_SRC
+
+
 * Dired configuration
 Get dired to print human readable sized files.
 #+BEGIN_SRC emacs-lisp :results silent
@@ -880,6 +910,146 @@ Fast todo selection allows changing from any task todo state to any other state 
 (message "After: Forcing org-mode to open a link in another frame not window")
 
 #+END_SRC
+
+* Xah functions being used
+URL: http://ergoemacs.org/emacs/modernization_mark-word.html
+Most of this section is direct rip off of xah's block editing functions.
+** Select text between Quotes/Braces
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (defun xah-select-text-in-quote ()
+    "Select text between the nearest left and right delimiters.
+  Delimiters here includes the following chars: \"`<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕（）
+  This command select between any bracket chars, does not consider nesting. For example, if text is
+  (a(b)c▮)
+  the selected char is “c”, not “a(b)c”.
+
+  URL `http://ergoemacs.org/emacs/modernization_mark-word.html'
+  Version 2020-11-24 2021-07-11"
+    (interactive)
+    (let ( $skipChars $p1 )
+      (setq $skipChars "^\"`<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕（）〘〙")
+      (skip-chars-backward $skipChars)
+      (setq $p1 (point))
+      (skip-chars-forward $skipChars)
+      (set-mark $p1)))
+
+  (message "XAH: Select text between Quotes/Braces")
+#+END_SRC
+
+
+"a(b)c"
+** Xah Extend Selection
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (defun xah-extend-selection ()
+    "Select the current word, bracket/quote expression, or expand selection.
+  Subsequent calls expands the selection.
+
+  when there's no selection,
+  • if cursor is on a any type of bracket (including parenthesis, quotation mark), select whole bracketed thing including bracket
+  • else, select current word.
+
+  when there's a selection, the selection extension behavior is still experimental. But when cursor is on a any type of bracket (parenthesis, quote), it extends selection to outer bracket.
+
+  URL `http://ergoemacs.org/emacs/modernization_mark-word.html'
+  Version 2020-02-04"
+    (interactive)
+    (if (region-active-p)
+        (progn
+          (let (($rb (region-beginning)) ($re (region-end)))
+            (goto-char $rb)
+            (cond
+             ((looking-at "\\s(")
+              (if (eq (nth 0 (syntax-ppss)) 0)
+                  (progn
+                    ;; (message "left bracket, depth 0.")
+                    (end-of-line) ; select current line
+                    (set-mark (line-beginning-position)))
+                (progn
+                  ;; (message "left bracket, depth not 0")
+                  (up-list -1 t t)
+                  (mark-sexp))))
+             ((eq $rb (line-beginning-position))
+              (progn
+                (goto-char $rb)
+                (let (($firstLineEndPos (line-end-position)))
+                  (cond
+                   ((eq $re $firstLineEndPos)
+                    (progn
+                      ;; (message "exactly 1 line. extend to next whole line." )
+                      (forward-line 1)
+                      (end-of-line)))
+                   ((< $re $firstLineEndPos)
+                    (progn
+                      ;; (message "less than 1 line. complete the line." )
+                      (end-of-line)))
+                   ((> $re $firstLineEndPos)
+                    (progn
+                      ;; (message "beginning of line, but end is greater than 1st end of line" )
+                      (goto-char $re)
+                      (if (eq (point) (line-end-position))
+                          (progn
+                            ;; (message "exactly multiple lines" )
+                            (forward-line 1)
+                            (end-of-line))
+                        (progn
+                          ;; (message "multiple lines but end is not eol. make it so" )
+                          (goto-char $re)
+                          (end-of-line)))))
+                   (t (error "logic error 42946" ))))))
+             ((and (> (point) (line-beginning-position)) (<= (point) (line-end-position)))
+              (progn
+                ;; (message "less than 1 line" )
+                (end-of-line) ; select current line
+                (set-mark (line-beginning-position))))
+             (t
+              ;; (message "last resort" )
+              nil))))
+      (progn
+        (cond
+         ((looking-at "\\s(")
+          ;; (message "left bracket")
+          (mark-sexp)) ; left bracket
+         ((looking-at "\\s)")
+          ;; (message "right bracket")
+          (backward-up-list) (mark-sexp))
+         ((looking-at "\\s\"")
+          ;; (message "string quote")
+          (mark-sexp)) ; string quote
+         ;; ((and (eq (point) (line-beginning-position)) (not (looking-at "\n")))
+         ;;  (message "beginning of line and not empty")
+         ;;  (end-of-line)
+         ;;  (set-mark (line-beginning-position)))
+         ((or (looking-back "\\s_" 1) (looking-back "\\sw" 1))
+          ;; (message "left is word or symbol")
+          (skip-syntax-backward "_w" )
+          ;; (re-search-backward "^\\(\\sw\\|\\s_\\)" nil t)
+          (push-mark)
+          (skip-syntax-forward "_w")
+          (setq mark-active t)
+          ;; (exchange-point-and-mark)
+          )
+         ((and (looking-at "\\s ") (looking-back "\\s " 1))
+          ;; (message "left and right both space" )
+          (skip-chars-backward "\\s " ) (set-mark (point))
+          (skip-chars-forward "\\s "))
+         ((and (looking-at "\n") (looking-back "\n" 1))
+          ;; (message "left and right both newline")
+          (skip-chars-forward "\n")
+          (set-mark (point))
+          (re-search-forward "\n[ \t]*\n")) ; between blank lines, select next text block
+         (t
+          ;; (message "just mark sexp" )
+          (mark-sexp)
+          (exchange-point-and-mark))
+         ;;
+         ))))
+
+  (message "After: Xah Extend Selection")
+#+END_SRC
+
+
 * Java Setup
 ** +Log4j setup Notes+
 [[https://writequit.org/articles/working-with-logs-in-emacs.html][URl WriteQuitNotes]]
@@ -966,69 +1136,69 @@ URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.h
 These functions define shortcuts or abbreviations for java setup. The shortcuts are kept as simple as possible for java and src.
 #+Begin_SRC emacs-lisp :results silent
 
-  (defun dgg-java-src ()
-     (interactive)
-     (insert "#+HEADERS: :classname Solution :cmdline \"-cp . -ea\"\n#+BEGIN_SRC java -n -r :RESULTS output :exports both\nclass Solution {\n\tpublic static void main(String args[]) {\n\n\t}\n}\n\n#+END_SRC\n\n#+RESULTS:\n"))
+    (defun dgg-java-src ()
+       (interactive)
+       (insert "#+HEADERS: :classname Solution :cmdline \"-cp . -ea\"\n#+BEGIN_SRC java -n -r :RESULTS output :exports both\nclass Solution {\n\tpublic static void main(String args[]) {\n\n\t}\n}\n\n#+END_SRC\n\n#+RESULTS:\n"))
 
-  (defun dgg-python-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC python -n -r :results output :exports both\n\ndef method(n):\n\t\tprint(n)\n\nmethod(10)\n#+END_SRC\n\n#+RESULTS:\n\n"))
+    (defun dgg-python-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC python -n -r :results output :exports both\n\ndef method(n):\n\t\tprint(n)\n\nmethod(10)\n#+END_SRC\n\n#+RESULTS:\n\n"))
 
-  (defun dgg-shell-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC shell -n -r :results output :exports both\n\n\n#+END_SRC\n\n#+RESULTS:\n\n"))
+    (defun dgg-shell-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC shell -n -r :results output :exports both\n\n\n#+END_SRC\n\n#+RESULTS:\n\n"))
 
-  (defun dgg-emacs-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC emacs-lisp :results silent\n\n\n#+END_SRC\n\n"))
+    (defun dgg-emacs-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC emacs-lisp :results silent\n\n\n#+END_SRC\n\n"))
 
-  (defun dgg-text-src ()
-     (interactive)
-     (insert "#+BEGIN_SRC text\n\n\n#+END_SRC\n\n"))
+    (defun dgg-text-src ()
+       (interactive)
+       (insert "#+BEGIN_SRC text\n\n\n#+END_SRC\n\n"))
 
-  (defun dgg-italic-bold-begin ()
-     (interactive)
-     (insert "/\` *"))
+    (defun dgg-italic-bold-begin ()
+       (interactive)
+       (insert "/\` *"))
 
-  (defun dgg-italic-bold-end ()
-     (interactive)
-     (insert "* \`/"))
+    (defun dgg-italic-bold-end ()
+       (interactive)
+       (insert "* \`/"))
 
-  (defun dgg-bold-highlight-begin ()
-     (interactive)
-     (insert "*   ="))
+    (defun dgg-bold-highlight-begin ()
+       (interactive)
+       (insert "*   ="))
 
-  (defun dgg-bold-highlight-end ()
-     (interactive)
-     (insert "=  *"))
+    (defun dgg-bold-highlight-end ()
+       (interactive)
+       (insert "=  *"))
 
-  (defun dgg-org-src-old ()
-     (interactive)
-     (insert "DOC TITLE -*- mode: org -*-\n#+LANGUAGE:  en\n#+INFOJS_OPT: view:showall toc:t ltoc:t mouse:underline path:http://orgmode.org/org-info.js\n#+LINK_HOME: http://ehneilsen.net\n#+LINK_UP: http://ehneilsen.net/notebook\n#+HTML_HEAD: <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/notebook.css\" />\n\n#+STARTUP:    indent hidestars\n\n#+OPTIONS:    num:nil \n\n#+TITLE: Bucket Sort"))
+    (defun dgg-org-src-old ()
+       (interactive)
+       (insert "DOC TITLE -*- mode: org -*-\n#+LANGUAGE:  en\n#+INFOJS_OPT: view:showall toc:t ltoc:t mouse:underline path:http://orgmode.org/org-info.js\n#+LINK_HOME: http://ehneilsen.net\n#+LINK_UP: http://ehneilsen.net/notebook\n#+HTML_HEAD: <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/notebook.css\" />\n\n#+STARTUP:    indent hidestars\n\n#+OPTIONS:    num:nil \n\n#+TITLE: Bucket Sort"))
 
-  (defun dgg-org-src ()
-     (interactive)
-     (insert "-*- File Name -*-\n#+TITLE: FileName\n#+AUTHOR:    Dhawan Gayash\n#+LANGUAGE:  en\n#+OPTIONS:   H:10 num:nil toc:10\n#+STARTUP:    indent hidestars\n#+OPTIONS:    num:nil \n#+SETUPFILE: /Users/tmp/workdir/inter/interview/html_pages/theme-readtheorg.setup"))
+    (defun dgg-org-src ()
+       (interactive)
+       (insert "-*- File Name -*-\n#+TITLE: FileName\n#+AUTHOR:    Dhawan Gayash\n#+LANGUAGE:  en\n#+OPTIONS:   H:10 num:nil toc:10\n#+STARTUP:    indent hidestars\n#+OPTIONS:    num:nil \n#+SETUPFILE: /Users/tmp/workdir/inter/interview/html_pages/theme-readtheorg.setup"))
 
-  (defun dgg-read-only-mode-directive ()
-     (interactive)
-     (insert "-*- buffer-read-only: t -*-"))
+    (defun dgg-read-only-mode-directive ()
+       (interactive)
+       (insert "-*- buffer-read-only: t -*-"))
 
-  (global-set-key (kbd "C-c f") 'dgg-java-src)
-  (global-set-key (kbd "C-c p") 'dgg-python-src)
-  (global-set-key (kbd "C-c s") 'dgg-shell-src)
-  (global-set-key (kbd "C-c q") 'dgg-org-src)
+    ;; (global-set-key (kbd "C-c f") 'dgg-java-src)
+    ;; (global-set-key (kbd "C-c p") 'dgg-python-src)
+    ;; (global-set-key (kbd "C-c s") 'dgg-shell-src)
+    ;; (global-set-key (kbd "C-c q") 'dgg-org-src)
 
-  (global-set-key (kbd "C-c t") 'dgg-text-src)
-  (global-set-key (kbd "C-c e") 'dgg-emacs-src)
-  (global-set-key (kbd "C-c y") 'dgg-read-only-mode-directive)
+    ;; (global-set-key (kbd "C-c t") 'dgg-text-src)
+    ;; (global-set-key (kbd "C-c e") 'dgg-emacs-src)
+    ;; (global-set-key (kbd "C-c y") 'dgg-read-only-mode-directive)
 
-  ;; comment and uncomment code sections
-  (global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
+    ;; comment and uncomment code sections
+    ;; (global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
 
-  ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
-  ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
-(message "After: My functions for shortcuts")
+    ;; (Global-set-key (kbd "C-c i") 'dgg-italic-bold-begin)
+    ;; (global-set-key (kbd "C-c o") 'dgg-italic-bold-end)
+  (message "After: My functions for shortcuts")
 #+END_SRC
 ** Insert around region
 URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
@@ -1069,13 +1239,13 @@ URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
       (goto-char end) (insert "/ ❕*")
       (goto-char start) (insert "*❕ /")))
 
-  (global-set-key (kbd "C-c o") 'wrap-markup-bold-quotes-region)
-  (global-set-key (kbd "C-c m") 'wrap-markup-italic-underscore-region)
+  ;; (global-set-key (kbd "C-c o") 'wrap-markup-bold-quotes-region)
+  ;; (global-set-key (kbd "C-c m") 'wrap-markup-italic-underscore-region)
 
-  (global-set-key (kbd "C-c n") 'wrap-markup-bold-italic-region)
+  ;; (global-set-key (kbd "C-c n") 'wrap-markup-bold-italic-region)
 
-  (global-set-key (kbd "C-c b") 'wrap-markup-bold-region)
-  (global-set-key (kbd "C-c i") 'wrap-markup-italic-region)
+  ;; (global-set-key (kbd "C-c b") 'wrap-markup-bold-region)
+  ;; (global-set-key (kbd "C-c i") 'wrap-markup-italic-region)
 
   ;; http://ergoemacs.org/emacs/elisp_examples.html
   (defun wrap-markup-region ()
@@ -1279,41 +1449,44 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
     (interactive)
     (kill-new (nth 4 (org-heading-components))))
 
-  (global-set-key (kbd "<F6>") 'dgg-extract-org-title)
+  (global-set-key (kbd "<F13>") 'dgg-extract-org-title)
 
   (message "After: DGG helper functions")
 #+END_SRC
 
-** Update PATH variables
-#+BEGIN_SRC emacs-lisp :results silent
-  (when (string-equal system-type "gnu/linux")
-    (let (
-          (mypaths
-           '(
-             "/home/dgg/.pyenv/plugins/pyenv-virtualenv/shims"
-             "/home/dgg/.pyenv/shims"
-             "/home/dgg/.pyenv/bin"
-             "/home/dgg/.sdkman/candidates/java/current/bin"
-             "/usr/local/sbin"
-             "/usr/local/bin"
-             "/usr/sbin"
-             "/usr/bin"
-             "/sbin"
-             "/bin"
-             "/usr/games"
-             "/usr/local/games"
-             "/snap/bin"
-             ))
-          )
+** +Update PATH variables+
+- Note taken on [2021-06-09 Wed 14:19] \\
+  SDKMAN is only being used in desktop as of now.
+- Code
+  #+BEGIN_SRC emacs-lisp :results silent
+    ;; (when (string-equal system-type "gnu/linux")
+    ;;   (let (
+    ;;         (mypaths
+    ;;          '(
+    ;;            "/home/dgg/.pyenv/plugins/pyenv-virtualenv/shims"
+    ;;            "/home/dgg/.pyenv/shims"
+    ;;            "/home/dgg/.pyenv/bin"
+    ;;            "/home/dgg/.sdkman/candidates/java/current/bin"
+    ;;            "/usr/local/sbin"
+    ;;            "/usr/local/bin"
+    ;;            "/usr/sbin"
+    ;;            "/usr/bin"
+    ;;            "/sbin"
+    ;;            "/bin"
+    ;;            "/usr/games"
+    ;;            "/usr/local/games"
+    ;;            "/snap/bin"
+    ;;            ))
+    ;;         )
 
-      (setenv "PATH" (mapconcat 'identity mypaths ":") )
+    ;;     (setenv "PATH" (mapconcat 'identity mypaths ":") )
 
-      (setq exec-path (append mypaths (list "." exec-directory)) )
-      ))
+    ;;     (setq exec-path (append mypaths (list "." exec-directory)) )
+    ;;     ))
 
-  (message "After: Update PATH variables")
+    ;; (message "After: Update PATH variables")
 
-#+END_SRC
+  #+END_SRC
 
 ** Making IELM usage bare-able with autopair or paraedit
 URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
