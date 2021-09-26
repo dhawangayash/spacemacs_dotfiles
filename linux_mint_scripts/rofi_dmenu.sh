@@ -1,4 +1,4 @@
 #!/bin/bash
-# Shortcut Keys: Shift+Super+Space
+# Shortcut Keys: Shift+Super+E
 # Hides the title bar
 rofi -show window

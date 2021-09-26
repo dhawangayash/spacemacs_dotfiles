@@ -380,58 +380,57 @@ To be used by `eww-after-render-hook'."
   :custom
   (org-roam-db-update-method 'immediate)
   :config
+  (setq org-roam-dailies-directory "scratch/")
   (setq org-roam-capture-templates
         '(("d" "default" plain
-           (function org-roam-capture--get-point)
            "%?"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n"
+           :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t))
         org-roam-capture-ref-templates
         '(("r" "ref" plain
-           (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n%(zp/org-protocol-insert-selection-dwim \"%i\")"
+           "%?"
+           :target (file+head "web/${slug}.org"
+                              "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n%(zp/org-protocol-insert-selection-dwim \"%i\")")
            :unnarrowed t)
           ("i" "incremental" plain
-           (function org-roam-capture--get-point)
            "* %?\n%(zp/org-protocol-insert-selection-dwim \"%i\")"
-           :file-name "web/${slug}"
-           :head "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n"
+           :target (file+head "web/${slug}.org"
+                              "#+title: ${title}\n#+roam_key: ${ref}\n#+created: %u\n#+last_modified: %U\n\n")
            :unnarrowed t
            :empty-lines-before 1))
         org-roam-dailies-capture-templates
         '(("d" "default" entry
-           #'org-roam-capture--get-point
            "* %?"
-           :file-name "scratch/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n\n"
-           :add-created t))))
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n\n")
+           :add-created t
+           ))
+        ))
 
-(use-package org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :custom
-  (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
-  (orb-file-field-extensions '("pdf" "epub" "html"))
+;; (use-package org-roam-bibtex
+;;   :after org-roam
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :custom
+;;   (orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file"))
+;;   (orb-file-field-extensions '("pdf" "epub" "html"))
 
-  (orb-templates
-   '(("r" "ref" plain (function org-roam-capture--get-point)
-      ""
-      :file-name "${citekey}"
-      :head "#+TITLE: ${citekey}: ${title}
-#+ROAM_KEY: ${ref}
-- tags ::
-- keywords :: ${keywords}
-* ${title}
-  :PROPERTIES:
-  :Custom_ID: ${citekey}
-  :URL: ${url}
-  :AUTHOR: ${author-or-editor}
-  :NOTER_DOCUMENT: ${file}
-  :NOTER_PAGE:
-  :END:"))))
+;;   (orb-templates
+;;    '(("r" "ref" plain (function org-roam-capture--get-point)
+;;       ""
+;;       :file-name "${citekey}"
+;;       :head "#+TITLE: ${citekey}: ${title}
+;; #+ROAM_KEY: ${ref}
+;; - tags ::
+;; - keywords :: ${keywords}
+;; * ${title}
+;;   :PROPERTIES:
+;;   :Custom_ID: ${citekey}
+;;   :URL: ${url}
+;;   :AUTHOR: ${author-or-editor}
+;;   :NOTER_DOCUMENT: ${file}
+;;   :NOTER_PAGE:
+;;   :END:"))))
 
 (use-package org-pdftools
   :hook
