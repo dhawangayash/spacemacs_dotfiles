@@ -9,6 +9,7 @@
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
   - [[#org-mode-enable-search-in-current-buffer-using-sparse-tree-search][Org mode enable search in current buffer using sparse tree search]]
+  - [[#making-ctrl-b-to-delete-character-backwards][Making Ctrl-b to delete character backwards]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -75,6 +76,7 @@
   - [[#insert-around-region][Insert around region]]
   - [[#unicode-chars][Unicode chars]]
   - [[#using-rainer-konigs-blog-about-keeping-three-most-important-things][Using Rainer Konig's blog about keeping three most important things]]
+  - [[#function-to-convert-a-word-into-its-ing-form][Function to convert a word into it's "ing" form]]
 - [[#clipboard-managment-using-ivy][Clipboard managment using ivy]]
   - [[#counsel-yank-pop-with-a-tweak][+Counsel-Yank-Pop With a Tweak+]]
   - [[#add-the-system-clipboard-to-the-emacs-kill-ring][Add the System Clipboard to the emacs-kill-ring]]
@@ -143,7 +145,7 @@
 
   (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-next-item)
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "u") 'org-previous-item)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "m") 'org-previous-item)
 
   (message "After: Go to the next checkbox or list item")
 #+END_SRC
@@ -156,6 +158,15 @@
 #+END_SRC
 
 
+
+
+** Making Ctrl-b to delete character backwards
+I really do not see a need for ctrl b to be bound to back char.
+#+BEGIN_SRC emacs-lisp :results silent
+
+(global-set-key (kbd "C-b") 'backward-delete-char-untabify)
+
+#+END_SRC
 
 
 * Evil-Mode                                                       :EVIL_MODE:
@@ -175,10 +186,20 @@
 #+END_SRC
 ** Keybindings to replicate gk and gj in VIM on Evil           :KEYBINDINGS:
 #+BEGIN_SRC emacs-lisp :results silent
+  ;; (with-eval-after-load 'evil-maps
+  ;;   (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "oj") 'evil-next-line)
+  ;;   (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "ok") 'evil-previous-line))
+
+  (spacemacs/set-leader-keys-for-minor-mode 'evil-mode (kbd "oj") 'evil-next-line)
+  (spacemacs/set-leader-keys-for-minor-mode 'evil-mode (kbd "oj") 'evil-next-line)
+
+  (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "oj") 'evil-next-line)
+  (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "ok") 'evil-previous-line)
 
   (spacemacs/set-leader-keys "oj" 'evil-next-line)
   (spacemacs/set-leader-keys "ok" 'evil-previous-line)
-(message "After: Keybindings to replicate gk and gj in VIM on Evil")
+
+  (message "After: Keybindings to replicate gk and gj in VIM on Evil")
 #+END_SRC
 ** Toggle TODO states in normal mode with the "t" key          :KEYBINDINGS:
 #+BEGIN_SRC emacs-lisp :results silent
@@ -528,7 +549,7 @@ URL: https://emacs.stackexchange.com/questions/5387/show-org-mode-hyperlink-as-p
   (message "After: Toggle function to display links or hide links")
 #+END_SRC
 
-** Toggle function to display emphasis markers in org file or hide emphasis markers
+** Toggle function to display emphasis markers in org file or hide emphasis markers :KEYBINDINGS:
 Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to display links or hide links]]
 #+BEGIN_SRC emacs-lisp :results silent
   (defun dgg-org-toggle-emphasis-display ()
@@ -542,7 +563,7 @@ Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to displ
           (setq org-hide-emphasis-markers t)
           (message "setq org-hide-emphasis-markers=%s" org-hide-emphasis-markers))))
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode "m" 'dgg-org-toggle-emphasis-display)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "h" 'dgg-org-toggle-emphasis-display)
   (message "After: Toggle function to display emphasis markers in org file or hide emphasis markers")
 #+END_SRC
 
@@ -1304,6 +1325,27 @@ URL: [[https://koenig-haunstetten.de/2018/02/17/improving-my-orgmode-workflow/][
 
   (message "After: Using Rainer Konig's blog about keeping three most important things")
 #+END_SRC
+
+** Function to convert a word into it's "ing" form             :KEYBINDINGS:
+URL: https://stackoverflow.com/questions/25188206/how-do-you-write-an-emacs-lisp-function-to-replace-a-word-at-point/25188590
+
+#+BEGIN_SRC emacs-lisp :results silent
+
+(defun dgg-word-or-region-to-lcc ()
+  "Convert word at point (or selected region) to lower camel case."
+  (interactive)
+  (let* ((bounds (if (use-region-p)
+                     (cons (region-beginning) (region-end))
+                   (bounds-of-thing-at-point 'symbol)))
+         (text   (buffer-substring-no-properties (car bounds) (cdr bounds))))
+    (when bounds
+      (delete-region (car bounds) (cdr bounds))
+      (insert (concat text "ing")))))
+
+(global-set-key (kbd "C-M-'") 'dgg-word-or-region-to-lcc)
+
+#+END_SRC
+
 
 * Clipboard managment using ivy
 ** +Counsel-Yank-Pop With a Tweak+
