@@ -490,19 +490,19 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-(use-package helm-bibtex
-  :config
-  ;; (setq bibtex-completion-bibliography
-  ;;       '("~/Dropbox/org/dgg_bib.bib"
-  ;;         "~/Dropbox/org/dgg_bib.org"))
-  ;; (setq bibtex-completion-notes-path "~/Dropbox/org/dgg_bib.org")
-  ;; (setq org-ref-default-bibliography '("~/Dropbox/org/dgg_bib.bib")
-  ;;       org-ref-pdf-directory "~/Dropbox/3_Resources/Books_Algo/"
-  ;;       org-ref-bibliography-notes "~/Dropbox/3_Resources/Books/")
+;; (use-package helm-bibtex
+;;   :config
+;;   ;; (setq bibtex-completion-bibliography
+;;   ;;       '("~/Dropbox/org/dgg_bib.bib"
+;;   ;;         "~/Dropbox/org/dgg_bib.org"))
+;;   ;; (setq bibtex-completion-notes-path "~/Dropbox/org/dgg_bib.org")
+;;   ;; (setq org-ref-default-bibliography '("~/Dropbox/org/dgg_bib.bib")
+;;   ;;       org-ref-pdf-directory "~/Dropbox/3_Resources/Books_Algo/"
+;;   ;;       org-ref-bibliography-notes "~/Dropbox/3_Resources/Books/")
 
-  (setq bibtex-completion-bibliography '("~/Dropbox/org/dgg_bib.bib"))
-  (setq bibtex-completion-pdf-field "File")
-)
+;;   (setq bibtex-completion-bibliography '("~/Dropbox/org/dgg_bib.bib"))
+;;   (setq bibtex-completion-pdf-field "File")
+;; )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END ORG ROAM CONFIG
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

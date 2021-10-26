@@ -10,6 +10,11 @@
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
   - [[#org-mode-enable-search-in-current-buffer-using-sparse-tree-search][Org mode enable search in current buffer using sparse tree search]]
   - [[#making-ctrl-b-to-delete-character-backwards][Making Ctrl-b to delete character backwards]]
+  - [[#making-ace-window-f12-function-keybinding][Making ace-window <f12> function keybinding]]
+  - [[#making-f11-full-screen-toggled-into-expand-regionel][Making F11 full screen toggled into expand-region.el]]
+  - [[#making-f10-xah-extend-selection][Making F10 xah extend selection]]
+  - [[#making-helm-mark-ring][Making Helm Mark ring]]
+  - [[#making-helm-kill-ring][Making Helm Kill Ring]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -67,6 +72,7 @@
 - [[#xah-functions-being-used][Xah functions being used]]
   - [[#select-text-between-quotesbraces][Select text between Quotes/Braces]]
   - [[#xah-extend-selection][Xah Extend Selection]]
+  - [[#xah-move-between-cursor-to-bracketquote][Xah Move between cursor to Bracket/Quote]]
 - [[#java-setup][Java Setup]]
   - [[#log4j-setup-notes][+Log4j setup Notes+]]
   - [[#java-indentation][Java indentation]]
@@ -77,6 +83,7 @@
   - [[#unicode-chars][Unicode chars]]
   - [[#using-rainer-konigs-blog-about-keeping-three-most-important-things][Using Rainer Konig's blog about keeping three most important things]]
   - [[#function-to-convert-a-word-into-its-ing-form][Function to convert a word into it's "ing" form]]
+  - [[#xah-fly-keys-insert-quotes-around-region][Xah fly keys insert quotes around region]]
 - [[#clipboard-managment-using-ivy][Clipboard managment using ivy]]
   - [[#counsel-yank-pop-with-a-tweak][+Counsel-Yank-Pop With a Tweak+]]
   - [[#add-the-system-clipboard-to-the-emacs-kill-ring][Add the System Clipboard to the emacs-kill-ring]]
@@ -93,6 +100,7 @@
   - [[#dgg-helper-functions][DGG helper functions]]
   - [[#update-path-variables][+Update PATH variables+]]
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
+  - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
@@ -143,9 +151,9 @@
 ** Go to the next checkbox or list item
 #+BEGIN_SRC emacs-lisp :results silent
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-next-item)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "m") 'org-next-item)
 
-  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "m") 'org-previous-item)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "j") 'org-previous-item)
 
   (message "After: Go to the next checkbox or list item")
 #+END_SRC
@@ -158,13 +166,48 @@
 #+END_SRC
 
 
-
-
 ** Making Ctrl-b to delete character backwards
 I really do not see a need for ctrl b to be bound to back char.
 #+BEGIN_SRC emacs-lisp :results silent
 
 (global-set-key (kbd "C-b") 'backward-delete-char-untabify)
+
+#+END_SRC
+
+
+** Making ace-window <f12> function keybinding
+#+BEGIN_SRC emacs-lisp :results silent
+
+(global-set-key (kbd "<f12>") 'ace-window)
+
+#+END_SRC
+
+** Making F11 full screen toggled into expand-region.el
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "<f9>") 'er/expand-region)
+
+#+END_SRC
+
+** Making F10 xah extend selection
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "<f10>") 'xah-extend-selection)
+
+#+END_SRC
+
+** Making Helm Mark ring
+#+BEGIN_SRC emacs-lisp :results silent
+  ;; (global-set-key (kbd "M-0") 'nil)
+
+  (global-set-key (kbd "M-0") 'helm-mark-ring)
+
+#+END_SRC
+
+** Making Helm Kill Ring
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "M-9") 'helm-show-kill-ring)
 
 #+END_SRC
 
@@ -1070,6 +1113,62 @@ Most of this section is direct rip off of xah's block editing functions.
   (message "After: Xah Extend Selection")
 #+END_SRC
 
+** Xah Move between cursor to Bracket/Quote                    :KEYBINDINGS:
+:PROPERTIES:
+:ID:       c8b06df2-a11b-4c25-b0be-ba89480d219d
+:END:
+URL: http://ergoemacs.org/emacs/emacs_navigating_keys_for_brackets.html
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (defvar xah-brackets nil "string of left/right brackets pairs.")
+  (setq xah-brackets "()[]{}<>（）［］｛｝⦅⦆〚〛⦃⦄“”‘’‹›«»「」〈〉《》【】〔〕⦗⦘『』〖〗〘〙｢｣⟦⟧⟨⟩⟪⟫⟮⟯⟬⟭⌈⌉⌊⌋⦇⦈⦉⦊❛❜❝❞❨❩❪❫❴❵❬❭❮❯❰❱❲❳〈〉⦑⦒⧼⧽﹙﹚﹛﹜﹝﹞⁽⁾₍₎⦋⦌⦍⦎⦏⦐⁅⁆⸢⸣⸤⸥⟅⟆⦓⦔⦕⦖⸦⸧⸨⸩｟｠⧘⧙⧚⧛⸜⸝⸌⸍⸂⸃⸄⸅⸉⸊᚛᚜༺༻༼༽⏜⏝⎴⎵⏞⏟⏠⏡﹁﹂﹃﹄︹︺︻︼︗︘︿﹀︽︾﹇﹈︷︸")
+
+  (defvar xah-left-brackets '("(" "{" "[" "<" "〔" "【" "〖" "〈" "《" "「" "『" "“" "‘" "‹" "«" )
+    "List of left bracket chars.")
+  (progn
+  ;; make xah-left-brackets based on xah-brackets
+    (setq xah-left-brackets '())
+    (dotimes ($x (- (length xah-brackets) 1))
+      (when (= (% $x 2) 0)
+        (push (char-to-string (elt xah-brackets $x))
+              xah-left-brackets)))
+    (setq xah-left-brackets (reverse xah-left-brackets)))
+
+  (defvar xah-right-brackets '(")" "]" "}" ">" "〕" "】" "〗" "〉" "》" "」" "』" "”" "’" "›" "»")
+    "list of right bracket chars.")
+  (progn
+    (setq xah-right-brackets '())
+    (dotimes ($x (- (length xah-brackets) 1))
+      (when (= (% $x 2) 1)
+        (push (char-to-string (elt xah-brackets $x))
+              xah-right-brackets)))
+    (setq xah-right-brackets (reverse xah-right-brackets)))
+
+  (defun xah-backward-left-bracket ()
+    "Move cursor to the previous occurrence of left bracket.
+  The list of brackets to jump to is defined by `xah-left-brackets'.
+  URL `http://ergoemacs.org/emacs/emacs_navigating_keys_for_brackets.html'
+  Version 2015-10-01"
+    (interactive)
+    (re-search-backward (regexp-opt xah-left-brackets) nil t))
+
+  (defun xah-forward-right-bracket ()
+    "Move cursor to the next occurrence of right bracket.
+  The list of brackets to jump to is defined by `xah-right-brackets'.
+  URL `http://ergoemacs.org/emacs/emacs_navigating_keys_for_brackets.html'
+  Version 2015-10-01"
+    (interactive)
+    (re-search-forward (regexp-opt xah-right-brackets) nil t))
+
+  (global-set-key (kbd "M-[") 'xah-backward-left-bracket)
+
+  (global-set-key (kbd "M-]") 'xah-forward-right-bracket)
+
+  (message "After: Xah Move between cursor to Bracket/Quote")
+
+#+END_SRC
+
+
 
 * Java Setup
 ** +Log4j setup Notes+
@@ -1331,20 +1430,121 @@ URL: https://stackoverflow.com/questions/25188206/how-do-you-write-an-emacs-lisp
 
 #+BEGIN_SRC emacs-lisp :results silent
 
-(defun dgg-word-or-region-to-lcc ()
-  "Convert word at point (or selected region) to lower camel case."
-  (interactive)
-  (let* ((bounds (if (use-region-p)
-                     (cons (region-beginning) (region-end))
-                   (bounds-of-thing-at-point 'symbol)))
-         (text   (buffer-substring-no-properties (car bounds) (cdr bounds))))
-    (when bounds
-      (delete-region (car bounds) (cdr bounds))
-      (insert (concat text "ing")))))
+  (defun dgg-word-or-region-to-lcc ()
+    "Convert word at point (or selected region) to lower camel case."
+    (interactive)
+    (let* ((bounds (if (use-region-p)
+                       (cons (region-beginning) (region-end))
+                     (bounds-of-thing-at-point 'symbol)))
+           (text   (buffer-substring-no-properties (car bounds) (cdr bounds))))
+      (when bounds
+        (delete-region (car bounds) (cdr bounds))
+        (insert (concat text "ing")))))
 
-(global-set-key (kbd "C-M-'") 'dgg-word-or-region-to-lcc)
+  (global-set-key (kbd "C-M-'") 'dgg-word-or-region-to-lcc)
 
 #+END_SRC
+
+** Xah fly keys insert quotes around region
+URL: https://github.com/xahlee/xah-fly-keys/blob/master/xah-fly-keys.el
+#+BEGIN_SRC emacs-lisp :results silent
+  (defun xah-quote-lines (Begin End QuoteL QuoteR Sep)
+    "Add quotes/brackets and separator (comma) to lines.
+  Act on current block or selection.
+  For example,
+   cat
+   dog
+   cow
+  becomes
+   \"cat\",
+   \"dog\",
+   \"cow\",
+  or
+   (cat)
+   (dog)
+   (cow)
+  In lisp code, QuoteL QuoteR Sep are strings.
+  URL `http://ergoemacs.org/emacs/emacs_quote_lines.html'
+  Version 2020-06-26 2021-07-21 2021-08-15 2021-09-15"
+    (interactive
+     (let* (($bds (xah-get-bounds-of-block-or-region))
+           ($p1 (car $bds))
+           ($p2 (cdr $bds))
+           ($brackets
+            '(
+              "\"double\""
+              "'single'"
+              "(paren)"
+              "{brace}"
+              "[square]"
+              "<greater>"
+              "`emacs'"
+              "`markdown`"
+              "~tilde~"
+              "=equal="
+              "“curly double”"
+              "‘curly single’"
+              "‹french angle›"
+              "«french double angle»"
+              "「corner」"
+              "none"
+              "other"
+              )) $bktChoice $sep $sepChoice $quoteL $quoteR)
+       (setq $bktChoice (ido-completing-read "Quote to use:" $brackets))
+       (setq $sepChoice (ido-completing-read "line separator:" '("," ";" "none" "other")))
+       (cond
+        ((string-equal $bktChoice "none")
+         (setq $quoteL "" $quoteR ""))
+        ((string-equal $bktChoice "other")
+         (let (($x (read-string "Enter 2 chars, for begin/end quote:")))
+           (setq $quoteL (substring-no-properties $x 0 1)
+                 $quoteR (substring-no-properties $x 1 2))))
+        (t (setq $quoteL (substring-no-properties $bktChoice 0 1)
+                 $quoteR (substring-no-properties $bktChoice -1))))
+       (setq $sep
+             (cond
+              ((string-equal $sepChoice "none") "")
+              ((string-equal $sepChoice "other") (read-string "Enter separator:"))
+              (t $sepChoice)))
+       (list $p1 $p2 $quoteL $quoteR $sep)))
+    (let (($p1 Begin) ($p2 End) ($quoteL QuoteL) ($quoteR QuoteR) ($sep Sep))
+      (save-excursion
+        (save-restriction
+          (narrow-to-region $p1 $p2)
+          (goto-char (point-min))
+          (catch 'EndReached
+            (while t
+              (skip-chars-forward "\t ")
+              (insert $quoteL)
+              (end-of-line)
+              (insert $quoteR $sep)
+              (if (eq (point) (point-max))
+                  (throw 'EndReached t)
+                (forward-char))))))))
+
+
+  (defun xah-get-bounds-of-block ()
+    "Return the boundary (START . END) of current block.
+  Version 2021-08-12"
+    (let ( $p1 $p2 ($blankRegex "\n[ \t]*\n"))
+      (save-excursion
+        (setq $p1 (if (re-search-backward $blankRegex nil 1)
+                      (goto-char (match-end 0))
+                    (point)))
+        (setq $p2 (if (re-search-forward $blankRegex nil 1)
+                      (match-beginning 0)
+                    (point))))
+      (cons $p1 $p2 )))
+
+  (defun xah-get-bounds-of-block-or-region ()
+    "If region is active, return its boundary, else same as `xah-get-bounds-of-block'.
+  Version 2021-08-12"
+    (if (region-active-p)
+        (cons (region-beginning) (region-end))
+      (xah-get-bounds-of-block)))
+
+#+END_SRC
+
 
 
 * Clipboard managment using ivy
@@ -1461,9 +1661,10 @@ URL: [[https://stackoverflow.com/questions/9288181/converting-from-camelcase-to-
 
 #+END_SRC
 ** Enable visual-line-mode
+URL: http://ergoemacs.org/emacs/emacs_long_line_wrap.html
 #+BEGIN_SRC emacs-lisp :results silent
 
-(visual-line-mode t)
+(global-visual-line-mode t)
 (message "After: Enable visual-line-mode")
 #+END_SRC
 ** Global visual line mode
@@ -1537,5 +1738,14 @@ URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
   ;; use C-j instead of RETURN
   (setq ielm-dynamic-return nil)
   (message "After: Making IELM usage bare-able with autopair or paraedit")
+
+#+END_SRC
+
+** Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling
+#+BEGIN_SRC emacs-lisp :results silent
+
+;; remvoe this advice I don't ever want the scrollbar.
+(advice-remove 'mwheel-scroll #'spacemacs//scroll-bar-show-delayed-hide)
+(message "Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling")
 
 #+END_SRC
