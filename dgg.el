@@ -357,6 +357,7 @@ To be used by `eww-after-render-hook'."
   (setq leuven-scale-org-agenda-structure nil)
   (setq leuven-dark-scale-volatile-highlight nil)
 )
+(message "Finished configuring Leuven-theme")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END leuven configurations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

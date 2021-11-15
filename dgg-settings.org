@@ -23,6 +23,7 @@
   - [[#keybinding-for-recording-evil-delete-word-backwards][Keybinding for recording evil-delete-word-backwards]]
 - [[#dired-configuration][Dired configuration]]
   - [[#debug-message][Debug message]]
+  - [[#making-dired-use-the-same-buffer-for-viewing-directory][Making dired use the same buffer for viewing directory]]
 - [[#auto-complete][Auto complete]]
   - [[#auto-complete-prompts-using-company-mode][Auto complete prompts using company mode]]
   - [[#removing-annoying-decorator-on-company-prompt][Removing annoying decorator on company prompt]]
@@ -291,6 +292,18 @@ Get dired to print human readable sized files.
   (message "Dired Config done")
 
 #+END_SRC
+** Making dired use the same buffer for viewing directory
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (require 'dired )
+
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file) ; was dired-advertised-find-file
+
+  (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))  ; was dired-up-director
+
+  (message "After: Making dired use the same buffer for viewing directory")
+#+END_SRC
+
 
 
 * Auto complete
@@ -334,7 +347,7 @@ Stop asking for code evaluation confirmation every single time
 url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
 #+Begin_SRC emacs-lisp :results silent
   (defun dgg/org-confirm-babel-evaluate (lang body)
-    (not (or (string= lang "java") (string= lang "python"))))
+    (not (or (string= lang "java") (string= lang "python") (string= lang "C"))))
   (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
   (message "After: Org tangle confirmation disable")
 #+END_SRC
