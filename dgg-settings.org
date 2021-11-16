@@ -17,6 +17,8 @@
   - [[#making-helm-kill-ring][Making Helm Kill Ring]]
   - [[#making-helm-global-mark-ring][Making Helm Global Mark Ring]]
   - [[#making-helm-global-mark-ring-1][Making Helm Global Mark Ring]]
+  - [[#insert-into-the-mark-ring][Insert into the mark ring]]
+  - [[#highlight-line-mode][Highlight line mode]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -226,6 +228,16 @@ I really do not see a need for ctrl b to be bound to back char.
 
   (global-set-key (kbd "<kp-5>") 'follow-mode)
 
+#+END_SRC
+
+** Insert into the mark ring
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "<kp-6>") 'set-mark-command)
+#+END_SRC
+
+** Highlight line mode
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "<kp-7>") 'hl-line-mode)
 #+END_SRC
 
 * Evil-Mode                                                       :EVIL_MODE:
