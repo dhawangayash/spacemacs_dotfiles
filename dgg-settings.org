@@ -13,8 +13,10 @@
   - [[#making-ace-window-f12-function-keybinding][Making ace-window <f12> function keybinding]]
   - [[#making-f11-full-screen-toggled-into-expand-regionel][Making F11 full screen toggled into expand-region.el]]
   - [[#making-f10-xah-extend-selection][Making F10 xah extend selection]]
-  - [[#making-helm-mark-ring][Making Helm Mark ring]]
+  - [[#making-helm-local-mark-ring][Making Helm Local Mark Ring]]
   - [[#making-helm-kill-ring][Making Helm Kill Ring]]
+  - [[#making-helm-global-mark-ring][Making Helm Global Mark Ring]]
+  - [[#making-helm-global-mark-ring-1][Making Helm Global Mark Ring]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -197,7 +199,7 @@ I really do not see a need for ctrl b to be bound to back char.
 
 #+END_SRC
 
-** Making Helm Mark ring
+** Making Helm Local Mark Ring
 #+BEGIN_SRC emacs-lisp :results silent
   ;; (global-set-key (kbd "M-0") 'nil)
 
@@ -212,6 +214,19 @@ I really do not see a need for ctrl b to be bound to back char.
 
 #+END_SRC
 
+** Making Helm Global Mark Ring
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "<kp-4>") 'helm-global-mark-ring)
+
+#+END_SRC
+
+** Making Helm Global Mark Ring
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "<kp-5>") 'follow-mode)
+
+#+END_SRC
 
 * Evil-Mode                                                       :EVIL_MODE:
 ** Setting auto-increment
