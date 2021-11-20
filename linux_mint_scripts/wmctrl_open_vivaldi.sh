@@ -1,0 +1,1 @@
+wmctrl -xa vivaldi
