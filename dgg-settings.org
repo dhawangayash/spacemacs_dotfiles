@@ -20,6 +20,7 @@
   - [[#insert-into-the-mark-ring][Insert into the mark ring]]
   - [[#highlight-line-mode][Highlight line mode]]
   - [[#yas-insert-snippet][Yas insert snippet]]
+  - [[#yas-insert-snippet-1][Yas insert snippet]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -246,6 +247,11 @@ I really do not see a need for ctrl b to be bound to back char.
   (global-set-key (kbd "<kp-8>") 'yas-insert-snippet)
 #+END_SRC
 
+
+** Yas insert snippet
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "<kp-3>") 'follow-mode)
+#+END_SRC
 
 
 * Evil-Mode                                                       :EVIL_MODE:
