@@ -579,6 +579,7 @@ before packages are loaded."
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg.el"))
   (eval-after-load 'org
     (org-babel-load-file (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org")))
+  (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-xah-functions.el"))
   )
 
 
