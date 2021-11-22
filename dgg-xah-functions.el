@@ -102,7 +102,6 @@ Version 2017-07-02"
       (delete-char 1))))
 
 ;; Setting DEL to delete everything within parentheses for quick deletion
-(global-unset-key (kbd "DEL"))
 
 (define-key emacs-lisp-mode-map (kbd "DEL") 'xah-delete-backward-char-or-bracket-text)
 

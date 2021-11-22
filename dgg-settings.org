@@ -9,6 +9,7 @@
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
   - [[#go-to-the-next-checkbox-or-list-item][Go to the next checkbox or list item]]
   - [[#org-mode-enable-search-in-current-buffer-using-sparse-tree-search][Org mode enable search in current buffer using sparse tree search]]
+  - [[#org-mode-fix-kill-region-call][Org mode fix kill-region call]]
   - [[#making-ctrl-b-to-delete-character-backwards][Making Ctrl-b to delete character backwards]]
   - [[#making-ace-window-f12-function-keybinding][Making ace-window <f12> function keybinding]]
   - [[#making-f11-full-screen-toggled-into-expand-regionel][Making F11 full screen toggled into expand-region.el]]
@@ -171,6 +172,15 @@
   (spacemacs/set-leader-keys-for-major-mode 'org-mode (kbd "q") 'org-tags-sparse-tree)
 
 #+END_SRC
+
+** Org mode fix kill-region call
+#+begin_src emacs-lisp :tangle yes :results silent
+  ;; This is a bug fix for org mode map delete region.
+  (define-key org-mode-map (kbd "<S-backspace>") 'kill-region)
+  (message "After: Org mode fix kill-region call")
+#+end_src
+
+
 
 
 ** Making Ctrl-b to delete character backwards
