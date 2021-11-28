@@ -3,6 +3,7 @@
 #+TAGS: KEYBINDINGS ORG BUG_FIX EVIL_MODE SO_Solution TOC
 
 * TOC                                                                   :TOC:
+- [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
 - [[#add-the-system-clipboard-to-emacs-kill-ring][Add the System Clipboard to emacs kill-ring]]
 - [[#my-keybindings][My keybindings]]
   - [[#shortcuts-for-insert-pair-and-delete-pair][Shortcuts for insert-pair and delete-pair]]
@@ -20,10 +21,7 @@
   - [[#insert-into-the-mark-ring][Insert into the mark ring]]
   - [[#highlight-line-mode][Highlight line mode]]
   - [[#yas-insert-snippet][Yas insert snippet]]
-  - [[#enable-yas-minor-mode][Enable yas-minor-mode]]
-  - [[#enable-org-column-mode][Enable org-column-mode]]
-  - [[#ctrl-g-keyboard-quit][Ctrl-g Keyboard-Quit]]
-  - [[#toggle-headline][Toggle headline]]
+  - [[#yas-insert-snippet-1][Yas insert snippet]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -31,7 +29,7 @@
   - [[#python-mode-quirks-in-evil-mode][+Python mode quirks in evil mode+]]
   - [[#keybinding-for-recording-evil-delete-word-backwards][Keybinding for recording evil-delete-word-backwards]]
 - [[#dired-configuration][Dired configuration]]
-  - [[#get-dired-to-print-human-readable-sized-files][Get dired to print human readable sized files.]]
+  - [[#debug-message][Debug message]]
   - [[#making-dired-use-the-same-buffer-for-viewing-directory][Making dired use the same buffer for viewing directory]]
 - [[#auto-complete][Auto complete]]
   - [[#auto-complete-prompts-using-company-mode][Auto complete prompts using company mode]]
@@ -111,7 +109,23 @@
   - [[#update-path-variables][+Update PATH variables+]]
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
   - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
-- [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
+
+* Enhancing the speed of spacemacs owing to flyspell performance issues
++ Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
++ +Disabling flyspell by default:+ [[https://gist.github.com/metamorph/69f37f7686164e7c4d94][github-gist-disable-flyspell-by-default]]
++ Disabling using the configuration layers variable: [[https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default][disable-by-default-spacemacs]]
+
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+
+  (remove-hook 'text-mode-hook 'dgg-enable-flyspell-mode)
+  (remove-hook 'org-mode-hook 'dgg-enable-flyspell-mode)
+  (remove-hook 'markdown-mode-hook 'dgg-enable-flyspell-mode)
+  (message "Completed Enhancing section")
+
+#+END_SRC
+
+#+RESULTS:
+: Completed Enhancing section
 
 * Add the System Clipboard to emacs kill-ring
 - URL: http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/
@@ -120,7 +134,7 @@
   By default, if you copy something to the system clipboard (e.g. some text in firefox) and then copy or kill some text in Emacs, then the text from firefox is lost. If you set the option below in your emacs config file then copying or killing text in Emacs will add the system clipboard text to the kill-ring so that you can find it when you cycle through your clipboard history in Emacs.
 
 - Code
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
     (setq save-interprogram-paste-before-kill t)
     (message "After: Add the System Clipboard to emacs kill-ring")
@@ -131,7 +145,7 @@
 * My keybindings                                                :KEYBINDINGS:
 
 ** Shortcuts for insert-pair and delete-pair
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (define-key global-map [?\s-r] 'revert-buffer)
   ;; My keybindings
@@ -144,6 +158,9 @@
   (message "After: Shortcuts for insert-pair and delete-pair")
 
 #+END_SRC
+
+#+RESULTS:
+: After: Shortcuts for insert-pair and delete-pair
 
 ** Go to the next checkbox or list item
 #+BEGIN_SRC emacs-lisp :results silent
@@ -164,7 +181,7 @@
 #+END_SRC
 
 ** Org mode fix kill-region call
-#+begin_src emacs-lisp :results silent
+#+begin_src emacs-lisp :tangle yes :results silent
   ;; This is a bug fix for org mode map delete region.
   (define-key org-mode-map (kbd "<S-backspace>") 'kill-region)
   (message "After: Org mode fix kill-region call")
@@ -175,7 +192,7 @@
 
 ** Making Ctrl-b to delete character backwards
 I really do not see a need for ctrl b to be bound to back char.
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
 
   (global-set-key (kbd "C-b") 'backward-delete-char-untabify)
@@ -184,28 +201,28 @@ I really do not see a need for ctrl b to be bound to back char.
 
 
 ** Making ace-window <f12> function keybinding
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
 (global-set-key (kbd "<f12>") 'ace-window)
 
 #+END_SRC
 
 ** Making F11 full screen toggled into expand-region.el
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (global-set-key (kbd "<f9>") 'er/expand-region)
 
 #+END_SRC
 
 ** Making F10 xah extend selection
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (global-set-key (kbd "<f10>") 'xah-extend-selection)
 
 #+END_SRC
 
 ** Making Helm Local Mark Ring
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   ;; (global-set-key (kbd "M-0") 'nil)
 
   (global-set-key (kbd "<kp-2>") 'helm-mark-ring)
@@ -213,64 +230,46 @@ I really do not see a need for ctrl b to be bound to back char.
 #+END_SRC
 
 ** Making Helm Kill Ring
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (global-set-key (kbd "<kp-1>") 'helm-show-kill-ring)
 
 #+END_SRC
 
 ** Making Helm Global Mark Ring
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (global-set-key (kbd "<kp-4>") 'helm-global-mark-ring)
 
 #+END_SRC
 
 ** Making Helm Global Mark Ring
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   (global-set-key (kbd "<kp-5>") 'follow-mode)
 
 #+END_SRC
 
 ** Insert into the mark ring
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   (global-set-key (kbd "<kp-6>") 'set-mark-command)
 #+END_SRC
 
 ** Highlight line mode
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   (global-set-key (kbd "<kp-7>") 'hl-line-mode)
 #+END_SRC
 
 ** Yas insert snippet
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   (global-set-key (kbd "<kp-8>") 'yas-insert-snippet)
 #+END_SRC
 
 
-** Enable yas-minor-mode
-#+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<kp-3>") 'yas-minor-mode)
+** Yas insert snippet
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
+  (global-set-key (kbd "<kp-3>") 'follow-mode)
 #+END_SRC
-
-
-** Enable org-column-mode
-#+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<kp-9>") 'org-columns)
-#+END_SRC
-
-
-** Ctrl-g Keyboard-Quit
-#+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<kp-0>") 'keyboard-quit)
-#+END_SRC
-
-** Toggle headline
-#+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<f2>") 'spacemacs/toggle-mode-line)
-#+END_SRC
-
 
 
 * Evil-Mode                                                       :EVIL_MODE:
@@ -280,7 +279,7 @@ I really do not see a need for ctrl b to be bound to back char.
 :END:
 - URL :: [[Https://github.com/syl20bnr/spacemacs/issues/9914][URL-used-to-resolve-issue]]
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 ;; (require 'evil-numbers)
 1
 (evil-define-key 'normal global-map (kbd "C-a") 'evil-numbers/inc-at-pt)
@@ -289,7 +288,7 @@ I really do not see a need for ctrl b to be bound to back char.
 (message "After: Setting auto-increment")
 #+END_SRC
 ** Keybindings to replicate gk and gj in VIM on Evil           :KEYBINDINGS:
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
   ;; (with-eval-after-load 'evil-maps
   ;;   (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "oj") 'evil-next-line)
   ;;   (spacemacs/set-leader-keys-for-major-mode 'evil-mode (kbd "ok") 'evil-previous-line))
@@ -306,7 +305,7 @@ I really do not see a need for ctrl b to be bound to back char.
   (message "After: Keybindings to replicate gk and gj in VIM on Evil")
 #+END_SRC
 ** Toggle TODO states in normal mode with the "t" key          :KEYBINDINGS:
-#+BEGIN_SRC emacs-lisp :tangle no :results silent
+#+BEGIN_SRC emacs-lisp :tangle yes :results silent
 
   ;; Toggle TODO states in normal mode with the "Tt" key
   ;; (evil-define-key 'normal org-mode-map "Tt" 'org-todo)
@@ -314,7 +313,7 @@ I really do not see a need for ctrl b to be bound to back char.
 
 #+END_SRC
 ** +Python mode quirks in evil mode+                     :KEYBINDINGS:BUG_FIX:
-#+BEGIN_SRC emacs-lisp :tangle no :results silent
+#+BEGIN_SRC emacs-lisp :results silent :tangle no
 
   ;; (setq evilmi-always-simple-jump t) is an option for advanced users. Jump algorithm using python indentation is still usable but with lower priority when this flag is on.
   ;; https://github.com/redguardtoo/evil-matchit/issues/75
@@ -340,14 +339,18 @@ I really do not see a need for ctrl b to be bound to back char.
 
 
 * Dired configuration
-** Get dired to print human readable sized files.
+Get dired to print human readable sized files.
 #+BEGIN_SRC emacs-lisp :results silent
 
-  (setq dired-listing-switches "-alh")
-  (message "After: Get dired to print human readable sized files.")
+(setq dired-listing-switches "-alh")
+(message "After: Dired configuration")
+#+END_SRC
+** Debug message
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (message "Dired Config done")
 
 #+END_SRC
-
 ** Making dired use the same buffer for viewing directory
 #+BEGIN_SRC emacs-lisp :results silent
 
@@ -401,7 +404,7 @@ URL: https://www.reddit.com/r/emacs/comments/n41prc/what_is_this_abc_prefix_in_c
 ** Org tangle confirmation disable
 Stop asking for code evaluation confirmation every single time
 url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp :results silent
   (defun dgg/org-confirm-babel-evaluate (lang body)
     (not (or (string= lang "java") (string= lang "python") (string= lang "C"))))
   (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
@@ -409,7 +412,7 @@ url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-con
 #+END_SRC
 
 ** Init Org mode, auto load todo paths, and define standard bindings
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 ;;;
 ;;;  Org Mode
 ;;;
@@ -426,11 +429,14 @@ url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-con
 
 #+END_SRC
 
+#+RESULTS:
+: after: init org mode, auto load todo paths, and define standard bindings
+
 ** Org configs based on john wigley
 
-- Blog: [[http://newartisans.com/2007/08/using-org-mode-as-a-day-planner/][notes-john-wigley]]
+Blog: [[http://newartisans.com/2007/08/using-org-mode-as-a-day-planner/][notes-john-wigley]]
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-skip-deadline-if-done t)
@@ -439,8 +445,12 @@ url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-con
 
 #+END_SRC
 
+#+RESULTS:
+: After:Org configs based on john wigley
+
+
 ** Org bullets stuff
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
   ;; https://orgmode.org/manual/Handling-links.html
   (global-set-key (kbd "C-c l") 'org-store-link)
   ;; (global-set-key "\C-cl" 'org-store-link)
@@ -459,11 +469,14 @@ url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-con
   (message "After: Org bullets stuff")
 #+END_SRC
 
+#+RESULTS:
+: After: Org bullets stuff
+
 ** Org agenda list from aaron bieber
 Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.html]
 
 - Good ::
-    #+BEGIN_SRC emacs-lisp :results silent
+    #+BEGIN_SRC emacs-lisp
 
     (defun dgg-pop-to-org-agenda (split)
       "Visit the org agenda, in the current window or a SPLIT."
@@ -477,6 +490,8 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
     (message "After: Org agenda list from aaron bieber")
     #+END_SRC
 
+    #+RESULTS:
+    : After: Org agenda list from aaron bieber
 
     The "dgg" part is just a namespace prefix that I use for all of my custom functions for historical reasons I won't go into; the important part is the ~split~ argument, which allows me to optionally allow the window to split as it does normally by specifying a prefix.
 
@@ -490,7 +505,7 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
 ** Org mode enable habits
 [[http://lists.gnu.org/archive/html/emacs-orgmode//2010-04/msg00122.html][enable org habits]]
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
   ;; Adding org-habit to the end of the list
   (add-to-list 'org-modules 'org-habit t)
 
@@ -499,30 +514,37 @@ Using the agenda: [https://blog.aaronbieber.com/2016/01/30/dig-into-org-mode.htm
   (message "After: Org mode enable habits")
 #+END_SRC
 
+#+RESULTS:
+: After: Org mode enable habits
+
 ** Org refile from Aaron URL
 [[https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html][refile-notes-aaron-blog]]
 
 - Refile targets with lower level
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+Begin_SRC emacs-lisp
     (setq org-refile-targets '((nil :maxlevel . 10)
                                (org-agenda-files :maxlevel . 5)))
     (message "After: Refile targets with lower level")
   #+END_SRC
 
+  #+RESULTS:
+  : After: Refile targets with lower level
+
 - Refile to the Top Level
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+Begin_SRC emacs-lisp
   (setq org-refile-use-outline-path 'file)
   (message "After: Refile to the Top Level")
   #+END_SRC
 - Creating new parents
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+Begin_SRC emacs-lisp
   (setq org-outline-path-complete-in-steps nil)
   (message "After: Creating new parents")
   #+END_SRC
 - Creating New Parents
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+Begin_SRC emacs-lisp
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (message "After: Creating New Parents")
+  (message "After: Org refile from Aaron URL")
   #+END_SRC
 
 ** +Automatic Org mode time clock+
@@ -530,7 +552,7 @@ URLs used for this feature:
 - [[https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html][discussion]]
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][what's advicing function do?]]
 -[[https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/#disqus_thread][ sacha's notes for the same feature]]
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp :tangle no
     ;; (setq org-clock-in-switch-to-state "IN_PROGRESS")
 
     ;; https://lists.gnu.org/archive/html/emacs-orgmode/2009-04/msg00315.html
@@ -877,7 +899,7 @@ I use magit to handle version control. It’s lovely, but I tweak a few things:
 - On the command line I’ll generally push a new branch with a plain old git push, which automatically creates a tracking branch on (usually) origin. Magit, by default, wants me to manually specify an upstream branch. This binds P P to magit-push-implicitly, which is just a wrapper around git push -v. Convenient!
 - I’d like to start in the insert state when writing a commit message.
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
   (use-package magit
     :bind
     ("C-x g" . magit-status)
@@ -901,7 +923,7 @@ I use magit to handle version control. It’s lovely, but I tweak a few things:
 * IVY Mode
 URL : [[https://oremacs.com/swiper/#key-bindings][key-bindings]]
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 
 (ivy-mode 1)
 
@@ -920,13 +942,13 @@ To set a mark in emacs use
 | C-c &             | org-mark-ring-goto |
 
 Don't allow more than 6 locations in the buffer
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 (setq mark-ring-max 40)
 (setq global-mark-ring-max 40)
 #+END_SRC
 
 Tip: Single key <F7> and popping from mark-ring by <F8>
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
   (defun xah-pop-local-mark-ring ()
     "Move cursor to last mark position of current buffer.
   Call this repeatedly will cycle all positions in `mark-ring'.
@@ -948,7 +970,7 @@ URL: [[https://cestlaz.github.io/posts/using-emacs-34-ibuffer-emmet/][ibuffer-em
 To use Ibuffer do the following:
 
 ** Use Ibuffer for Buffer List
-#+BEGIN_SRC emacs-lisp :results silent
+  #+Begin_SRC emacs-lisp
   (global-set-key (kbd "C-x C-b") 'ibuffer) ;; Use Ibuffer for Buffer List
   (message "After: Use Ibuffer for Buffer List")
   #+END_SRC
@@ -958,21 +980,21 @@ To use Ibuffer do the following:
 
 *** ibuffer-expert
      Unless you turn this variable on you will be prompted every time you want to delete a buffer, even unmodified ones, which is way too cautious for most people. You’ll still be prompted for confirmation when deleting modified buffers after the option has been turned off.
-     #+BEGIN_SRC emacs-lisp :results silent
+     #+Begin_SRC emacs-lisp
        (setq ibuffer-expert t)
        (message "After: ibuffer-expert")
      #+END_SRC
 
 *** ibuffer-show-empty-filter-groups
      Turning off ibuffer-show-empty-filter-groups is particularly useful, because the empty filter groups can really clutter things up.
-     #+BEGIN_SRC emacs-lisp :results silent
+     #+Begin_SRC emacs-lisp
        (setq ibuffer-show-empty-filter-groups nil)
        (message "After: ibuffer-show-empty-filter-groups")
      #+END_SRC
 
 *** ibuffer-auto-mode
      =ibuffer-auto-mode= is a minor mode that automatically keeps the buffer list up to date. I turn it on in my =ibuffer-mode-hook=:
-     #+BEGIN_SRC emacs-lisp :results silent
+     #+Begin_SRC emacs-lisp
        (add-hook 'ibuffer-mode-hook
                  '(lambda ()
                     (ibuffer-auto-mode 1)
@@ -1017,7 +1039,7 @@ URL: [[https://www.emacswiki.org/emacs/RevertBuffer][emacs-wiki-email-thread]]
 ** Fast Todo Selection
 Fast todo selection allows changing from any task todo state to any other state directly.
 
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 (setq org-use-fast-todo-selection t)
 
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
@@ -1026,14 +1048,14 @@ Fast todo selection allows changing from any task todo state to any other state 
 
 * My shortcut keys
 ** Move to next method and previous method
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
   (global-set-key (kbd "M-[") 'beginning-of-defun)
   (global-set-key (kbd "M-]") 'end-of-defun)
   (message "After: Move to next method and previous method")
 #+END_SRC
 
 ** Forcing org-mode to open a link in another frame not window
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp
 (defun dgg/org-open-other-frame ()
   "Jump to bookmark in another frame. See `bookmark-jump' for more."
   (interactive)
@@ -1289,7 +1311,7 @@ URL: http://ergoemacs.org/emacs/emacs_navigating_keys_for_brackets.html
 
 ** Java indentation
 URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.html]
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
   (defun fix-c-indent-offset-according-to-syntax-context (key val)
     ;; remove the old element
     (setq c-offsets-alist (delq (assoc key c-offsets-alist) c-offsets-alist))
@@ -1324,7 +1346,7 @@ URL [java-code][http://blog.binchen.org/posts/ccjava-code-indentation-in-emacs.h
 * Dgg functions
 ** My functions for shortcuts
 These functions define shortcuts or abbreviations for java setup. The shortcuts are kept as simple as possible for java and src.
-#+BEGIN_SRC emacs-lisp :results silent
+#+Begin_SRC emacs-lisp :results silent
 
     (defun dgg-java-src ()
        (interactive)
@@ -1392,7 +1414,7 @@ These functions define shortcuts or abbreviations for java setup. The shortcuts 
 #+END_SRC
 ** Insert around region
 URL: [[http://ergoemacs.org/emacs/elisp_examples.html][ErgoMacs from xah-lee]]
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
 
   (defun wrap-markup-bold-quotes-region (start end)
     "Insert a markup / * and * // around a region."
@@ -1621,7 +1643,7 @@ URL: https://github.com/xahlee/xah-fly-keys/blob/master/xah-fly-keys.el
 ** +Counsel-Yank-Pop With a Tweak+
 - URL :: [[http://pragmaticemacs.com/emacs/counsel-yank-pop-with-a-tweak/][URL-ivy-mode]]
 One of my favourites is counsel-yank-pop which replaces the standard clipboard history (kill-ring in Emacs terminology) with an ivy-powered version. You can then type search strings to filter your clipboard history dynamically.
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+BEGIN_SRC emacs-lisp :tangle no
 
     ;; (use-package counsel
     ;;   :bind
@@ -1655,7 +1677,7 @@ Save whatever’s in the current (system) clipboard before replacing it with the
 * Setup Emacs as a SQL database client
 Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emacs-as-an-sql-database-client][URL-emacs-sql]]
 ** Adding SQL mode
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
 
     (require 'sql)
 
@@ -1667,7 +1689,7 @@ Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emac
 
 ** SQL mode
 - History save sessions in emacs
-  #+BEGIN_SRC emacs-lisp :results silent
+  #+BEGIN_SRC emacs-lisp
 
     (defun my-sql-save-history-hook ()
       (let ((lval 'sql-input-ring-file-name)
@@ -1687,7 +1709,7 @@ Followed instructions from this URL: [[https://truongtx.me/2014/08/23/setup-emac
   #+END_SRC
 * CamelCaseing and Lower caseing in emacs
 URL: [[https://stackoverflow.com/questions/9288181/converting-from-camelcase-to-in-emacs][SO-elisp-code]]
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
   (defun to-underscore ()
     "Convert underscore naming convention to camel case naming convention.
   This function replaces all the underscores in the region to camel case."
@@ -1725,18 +1747,18 @@ URL: [[https://stackoverflow.com/questions/9288181/converting-from-camelcase-to-
 ** Turn off auto fill mode.
 #+BEGIN_SRC emacs-lisp :results silent
 
-  ;; DO NOT AUTOMATICALLY autofill
-  (auto-fill-mode -1)
-  (message "After: Turn off auto fill mode.")
+;; DO NOT AUTOMATICALLY autofill
+(auto-fill-mode -1)
+(message "After: Turn off auto fill mode.")
 
 #+END_SRC
 ** Enable visual-line-mode
 URL: http://ergoemacs.org/emacs/emacs_long_line_wrap.html
 #+BEGIN_SRC emacs-lisp :results silent
+
 (global-visual-line-mode t)
 (message "After: Enable visual-line-mode")
 #+END_SRC
-
 ** Global visual line mode
 #+begin_src emacs-lisp :results silent :tangle no
 ;; (global-visual-line-mode)
@@ -1744,7 +1766,7 @@ URL: http://ergoemacs.org/emacs/emacs_long_line_wrap.html
 
 ** DGG helper functions
 URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-title-using-org-entry-get/29884
-#+BEGIN_SRC emacs-lisp :results silent
+#+BEGIN_SRC emacs-lisp
 
   (defun dgg-debug-msg-adder()
     " My function to get current heading.
@@ -1755,6 +1777,15 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
     (kill-new (concat "(message \"After: " (nth 4 (org-heading-components)) "\")")))
 
   (global-set-key (kbd "C-c M-/") 'dgg-debug-msg-adder)
+
+  (defun dgg-extract-org-title()
+    " My function to get current heading.
+  Very useful when you want to extract the heading only."
+    (interactive)
+    (kill-new (nth 4 (org-heading-components))))
+
+  (global-set-key (kbd "<F13>") 'dgg-extract-org-title)
+
   (message "After: DGG helper functions")
 #+END_SRC
 
@@ -1762,7 +1793,7 @@ URL: https://emacs.stackexchange.com/questions/29836/how-to-get-the-headline-tit
 - Note taken on [2021-06-09 Wed 14:19] \\
   SDKMAN is only being used in desktop as of now.
 - Code
-  #+BEGIN_SRC emacs-lisp :tangle no :results silent
+  #+BEGIN_SRC emacs-lisp :results silent
     ;; (when (string-equal system-type "gnu/linux")
     ;;   (let (
     ;;         (mypaths
@@ -1805,23 +1836,8 @@ URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
 ** Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling
 #+BEGIN_SRC emacs-lisp :results silent
 
-  ;; remvoe this advice I don't ever want the scrollbar.
-  (advice-remove 'mwheel-scroll #'spacemacs//scroll-bar-show-delayed-hide)
-  (message "After: Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling")
-
-#+END_SRC
-
-
-* Enhancing the speed of spacemacs owing to flyspell performance issues
-+ Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
-a +Disabling flyspell by default:+ [[https://gist.github.com/metamorph/69f37f7686164e7c4d94][github-gist-disable-flyspell-by-default]]
-+ Disabling using the configuration layers variable: [[https://develop.spacemacs.org/layers/+checkers/spell-checking/README.html#disabling-by-default][disable-by-default-spacemacs]]
-
-#+BEGIN_SRC emacs-lisp :results silent
-
-  (remove-hook 'text-mode-hook 'dgg-enable-flyspell-mode)
-  (remove-hook 'org-mode-hook 'dgg-enable-flyspell-mode)
-  (remove-hook 'markdown-mode-hook 'dgg-enable-flyspell-mode)
-  (message "After: Enhancing the speed of spacemacs owing to flyspell performance issues")
+;; remvoe this advice I don't ever want the scrollbar.
+(advice-remove 'mwheel-scroll #'spacemacs//scroll-bar-show-delayed-hide)
+(message "Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling")
 
 #+END_SRC

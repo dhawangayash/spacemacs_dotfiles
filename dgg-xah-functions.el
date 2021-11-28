@@ -135,3 +135,5 @@ Version 2016-06-15"
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
 (global-set-key (kbd "<next>") 'xah-forward-block)
+
+(global-set-key (kbd "C-s") 'isearch-forward)
