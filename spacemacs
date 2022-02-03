@@ -602,7 +602,6 @@ This function is called at the very end of Spacemacs initialization."
  '(beacon-color "#ff9da4")
  '(custom-enabled-themes nil)
  '(custom-safe-themes '(default))
- '(electric-pair-mode t)
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#6272a4")
  '(fill-column 100)
