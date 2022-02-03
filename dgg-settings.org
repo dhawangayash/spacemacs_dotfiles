@@ -21,9 +21,11 @@
   - [[#highlight-line-mode][Highlight line mode]]
   - [[#yas-insert-snippet][Yas insert snippet]]
   - [[#enable-yas-minor-mode][Enable yas-minor-mode]]
-  - [[#enable-org-column-mode][Enable org-column-mode]]
+  - [[#enable-org-column-mode][+Enable org-column-mode+]]
   - [[#ctrl-g-keyboard-quit][Ctrl-g Keyboard-Quit]]
   - [[#toggle-headline][Toggle headline]]
+  - [[#move-to-next-frame][Move to next Frame]]
+  - [[#move-to-other-window-in-same-frame][move to other window in same frame]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -33,6 +35,7 @@
 - [[#dired-configuration][Dired configuration]]
   - [[#get-dired-to-print-human-readable-sized-files][Get dired to print human readable sized files.]]
   - [[#making-dired-use-the-same-buffer-for-viewing-directory][Making dired use the same buffer for viewing directory]]
+  - [[#quickly-copymove-files-in-emacs-dired-set-dired-dwim-target][Quickly copy/move files in emacs dired: Set dired-dwim-target]]
 - [[#auto-complete][Auto complete]]
   - [[#auto-complete-prompts-using-company-mode][Auto complete prompts using company mode]]
   - [[#removing-annoying-decorator-on-company-prompt][Removing annoying decorator on company prompt]]
@@ -255,9 +258,9 @@ I really do not see a need for ctrl b to be bound to back char.
 #+END_SRC
 
 
-** Enable org-column-mode
+** +Enable org-column-mode+
 #+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<kp-9>") 'org-columns)
+  ;; (global-set-key (kbd "<kp-9>") 'org-columns)
 #+END_SRC
 
 
@@ -272,6 +275,16 @@ I really do not see a need for ctrl b to be bound to back char.
 #+END_SRC
 
 
+
+** Move to next Frame
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "<kp-9>") 'other-frame)
+#+END_SRC
+
+** move to other window in same frame
+#+BEGIN_SRC emacs-lisp :results silent
+  (global-set-key (kbd "<insert>") 'other-window)
+#+END_SRC
 
 * Evil-Mode                                                       :EVIL_MODE:
 ** Setting auto-increment
@@ -361,6 +374,15 @@ I really do not see a need for ctrl b to be bound to back char.
 #+END_SRC
 
 
+** Quickly copy/move files in emacs dired: Set dired-dwim-target
+URL: https://emacs.stackexchange.com/questions/5603/how-to-quickly-copy-move-file-in-emacs-dired
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (setq dired-dwim-target t)
+
+  (message "After: Quickly copy/move files in emacs dired: Set dired-dwim-target")
+
+#+END_SRC
 
 * Auto complete
 ** Auto complete prompts using company mode
@@ -403,7 +425,14 @@ Stop asking for code evaluation confirmation every single time
 url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-confirmation-is-explicit-eval-yes][yes stop asking every time]]
 #+BEGIN_SRC emacs-lisp :results silent
   (defun dgg/org-confirm-babel-evaluate (lang body)
-    (not (or (string= lang "java") (string= lang "python") (string= lang "C"))))
+    (not (or
+          (string= lang "java")
+          (string= lang "python")
+          (string= lang "C")
+          (string= lang "c++")
+          ;; (string= lang "elisp")
+          ;; (string= lang "shell")
+          (string= lang "cpp"))))
   (setq org-confirm-babel-evaluate 'dgg/org-confirm-babel-evaluate)
   (message "After: Org tangle confirmation disable")
 #+END_SRC

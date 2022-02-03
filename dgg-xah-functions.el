@@ -137,3 +137,5 @@ Version 2016-06-15"
 (global-set-key (kbd "<next>") 'xah-forward-block)
 
 (global-set-key (kbd "C-s") 'isearch-forward)
+
+(global-set-key (kbd "<home>") 'cycle-spacing)
