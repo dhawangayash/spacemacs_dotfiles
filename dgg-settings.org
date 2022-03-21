@@ -26,6 +26,7 @@
   - [[#toggle-headline][Toggle headline]]
   - [[#move-to-next-frame][Move to next Frame]]
   - [[#move-to-other-window-in-same-frame][move to other window in same frame]]
+  - [[#change-c-backspace-to-use-undo-tree][Change C-Backspace to use undo tree]]
 - [[#evil-mode][Evil-Mode]]
   - [[#setting-auto-increment][Setting auto-increment]]
   - [[#keybindings-to-replicate-gk-and-gj-in-vim-on-evil][Keybindings to replicate gk and gj in VIM on Evil]]
@@ -286,6 +287,15 @@ I really do not see a need for ctrl b to be bound to back char.
   (global-set-key (kbd "<insert>") 'other-window)
 #+END_SRC
 
+** Change C-Backspace to use undo tree
+#+BEGIN_SRC emacs-lisp :results silent
+
+(global-unset-key (kbd "<C-backspace>"))
+(global-set-key (kbd "<C-backspace>") 'undo-tree-undo)
+
+#+END_SRC
+
+
 * Evil-Mode                                                       :EVIL_MODE:
 ** Setting auto-increment
 :PROPERTIES:
@@ -430,6 +440,7 @@ url: [[https://emacs.stackexchange.com/questions/2945/org-babel-eval-with-no-con
           (string= lang "python")
           (string= lang "C")
           (string= lang "c++")
+          (string= lang "plantuml")
           ;; (string= lang "elisp")
           ;; (string= lang "shell")
           (string= lang "cpp"))))
