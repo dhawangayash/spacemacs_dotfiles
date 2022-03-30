@@ -132,9 +132,60 @@ Version 2016-06-15"
                (setq $i n)))
       (setq $i (1+ $i)))))
 
+;; URL: http://xahlee.info/emacs/emacs/elisp_change_space-hyphen_underscore.html
+(defun xah-cycle-hyphen-lowline-space ( &optional @begin @end )
+  "Cycle hyphen/lowline/space chars in selection or inside quote/bracket or line, in that order.
+When this command is called, pressing t will repeat it. Press other key to exit.
+The region to work on is by this order:
+ 1. if there is a selection, use that.
+ 2. If cursor is string quote or any type of bracket, and is within current line, work on that region.
+ 3. else, work on current line.
+URL `http://xahlee.info/emacs/emacs/elisp_change_space-hyphen_underscore.html'
+Version 2019-02-12 2021-08-09"
+  (interactive)
+  ;; this function sets a property 'state. Possible values are 0 to length of $charArray.
+  (let ($p1 $p2)
+    (if (and @begin @end)
+        (setq $p1 @begin $p2 @end)
+      (if (use-region-p)
+          (setq $p1 (region-beginning) $p2 (region-end))
+        (if (nth 3 (syntax-ppss))
+            (save-excursion
+              (skip-chars-backward "^\"")
+              (setq $p1 (point))
+              (skip-chars-forward "^\"")
+              (setq $p2 (point)))
+          (let (($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕（）"))
+            (skip-chars-backward $skipChars (line-beginning-position))
+            (setq $p1 (point))
+            (skip-chars-forward $skipChars (line-end-position))
+            (setq $p2 (point))
+            (set-mark $p1)))))
+    (let ( $charArray $length $regionWasActive-p $nowState $changeTo)
+      (setq $charArray ["-" "_" " "])
+      (setq $length (length $charArray))
+      (setq $regionWasActive-p (region-active-p))
+      (setq $nowState (if (eq last-command this-command) (get 'xah-cycle-hyphen-lowline-space 'state) 0 ))
+      (setq $changeTo (elt $charArray $nowState))
+      (save-excursion
+        (save-restriction
+          (narrow-to-region $p1 $p2)
+          (goto-char (point-min))
+          (while (re-search-forward (elt $charArray (% (+ $nowState 2) $length)) (point-max) "move")
+            (replace-match $changeTo t t))))
+      (when (or (string-equal $changeTo " ") $regionWasActive-p)
+        (goto-char $p2)
+        (set-mark $p1)
+        (setq deactivate-mark nil))
+      (put 'xah-cycle-hyphen-lowline-space 'state (% (+ $nowState 1) $length))))
+  (set-transient-map (let (($kmap (make-sparse-keymap))) (define-key $kmap (kbd "t") 'xah-cycle-hyphen-lowline-space ) $kmap)))
+
+
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
 (global-set-key (kbd "<next>") 'xah-forward-block)
+
+(global-set-key (kbd "C-9") 'xah-cycle-hyphen-lowline-space)
 
 (global-set-key (kbd "C-s") 'isearch-forward)
 
