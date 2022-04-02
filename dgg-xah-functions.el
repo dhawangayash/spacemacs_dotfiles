@@ -103,7 +103,7 @@ Version 2017-07-02"
 
 ;; Setting DEL to delete everything within parentheses for quick deletion
 
-(define-key emacs-lisp-mode-map (kbd "DEL") 'xah-delete-backward-char-or-bracket-text)
+(define-key emacs-lisp-mode-map (kbd "<delete>") 'xah-delete-backward-char-or-bracket-text)
 
 
 (defun xah-forward-block (&optional n)
@@ -180,12 +180,40 @@ Version 2019-02-12 2021-08-09"
       (put 'xah-cycle-hyphen-lowline-space 'state (% (+ $nowState 1) $length))))
   (set-transient-map (let (($kmap (make-sparse-keymap))) (define-key $kmap (kbd "t") 'xah-cycle-hyphen-lowline-space ) $kmap)))
 
+(defun xah-space-to-newline ()
+  "Replace space sequence to a newline char.
+Works on current block or selection.
+
+URL `http://xahlee.info/emacs/emacs/emacs_space_to_newline.html'
+Version 2017-08-19"
+  (interactive)
+  (let* ( $p1 $p2 )
+    (if (use-region-p)
+        (progn
+          (setq $p1 (region-beginning))
+          (setq $p2 (region-end)))
+      (save-excursion
+        (if (re-search-backward "\n[ \t]*\n" nil "move")
+            (progn (re-search-forward "\n[ \t]*\n")
+                   (setq $p1 (point)))
+          (setq $p1 (point)))
+        (re-search-forward "\n[ \t]*\n" nil "move")
+        (skip-chars-backward " \t\n" )
+        (setq $p2 (point))))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region $p1 $p2)
+        (goto-char (point-min))
+        (while (re-search-forward " +" nil t)
+          (replace-match "\n" ))))))
+
 
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
 (global-set-key (kbd "<next>") 'xah-forward-block)
 
 (global-set-key (kbd "C-9") 'xah-cycle-hyphen-lowline-space)
+(global-set-key (kbd "C-8") 'xah-space-to-newline)
 
 (global-set-key (kbd "C-s") 'isearch-forward)
 
