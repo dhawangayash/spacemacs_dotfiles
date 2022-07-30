@@ -211,10 +211,94 @@ Version 2017-08-19"
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
 (global-set-key (kbd "<next>") 'xah-forward-block)
-
 (global-set-key (kbd "C-9") 'xah-cycle-hyphen-lowline-space)
 (global-set-key (kbd "C-8") 'xah-space-to-newline)
-
 (global-set-key (kbd "C-s") 'isearch-forward)
-
 (global-set-key (kbd "<home>") 'cycle-spacing)
+
+(defun xah-delete-blank-lines ()
+  "Delete all newline around cursor.
+URL `http://xahlee.ino/emacs/emacs/emacs_shrink_whitepace.html'
+Version 2018-04-02"
+  (interactive)
+  (let ($p3 $p4)
+    (skip-chars-backward "\n")
+    (setq $p3 (point))
+    (skip-chars-forward "\n")
+    (setq $p4 (point))
+    (delete-region $p3 $p4)))
+
+(defun xah-fly-delete-spaces()
+  "Delete space, tab, IDEOGRAPHIC SPACE (U+3000) around cursor.
+Version: 2019-06-13"
+  (interactive)
+  (let ($p1 $p2)
+    (skip-chars-forward " \t　")
+    (setq $p2 (point))
+    (skip-chars-backward " \t　")
+    (setq $p1 (point))
+    (delete-region $p1 $p2)))
+
+(defun xah-shrink-whitespaces()
+  "Remove whitespaces around cursor.
+
+Shrink neighboring space, then newline, then space again, leaving one space or newline at each step, TILL no more whitespaces are there.
+
+URL `http://xahlee.info/emacs/emacs/emacs_shrink_whitespace.html'
+Version 2014-10-21 2021-11-26 2021-11-30"
+  (interactive)
+  (let* (($eol-count 0)
+         ($p0 (point))
+         $p1 ; whitespace begin
+         $p2 ; whitespace end
+         ($charBefore (char-before))
+         ($charAfter (char-after))
+         ($space-neighbor-p (or
+                             (eq $charBefore 32) (eq $charBefore 9)
+                             (eq $charBefore 32) (eq $charBefore 9))))
+         (skip-chars-backward " \n\t　")
+         (setq $p1 (point))
+         (goto-char $p0)
+         (skip-chars-forward " \n\t　")
+         (setq $p2 (point))
+         (goto-char $p1)
+         (while (search-forward "\n" $p2 t)
+           (setq $eol-count (1+ $eol-count)))
+         (goto-char $p0)
+         (cond
+          ((eq $eol-count 0)
+           (if (> (- $p2 $p1) 1)
+               (progn
+                 (delete-horizontal-space) (insert " "))
+             (progn (delete-horizontal-space))))
+          ((eq $eol-count 1)
+           (if $space-neighbor-p
+               (xah-fly-delete-spaces)
+             (progn (xah-delete-blank-lines) (insert " "))))
+          ((eq $eol-count 2)
+           (if $space-neighbor-p
+               (xah-fly-delete-spaces)
+             (progn
+               (xah-delete-blank-lines)
+               (insert "\n"))))
+          ((> $eol-count 2)
+           (if $space-neighbor-p
+               (xah-fly-delete-spaces)
+             (progn
+               (goto-char $p2)
+               (search-backward "\n")
+               (delete-region $p1 (point))
+               (insert "\n"))))
+          (t (progn
+               (message "nothing done. logic error 40873. shouldn't reach here."))))))
+
+(global-set-key (kbd "<kp-0>") 'xah-shrink-whitespaces)
+
+(define-key evil-motion-state-map (kbd "<up>") 'beginning-of-defun)
+(define-key evil-motion-state-map (kbd "<down>") 'end-of-defun)
+(global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
+
+;; evil-jump-item (found in evil-motion-state-map)
+(spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
+(spacemacs/set-leader-keys (kbd "kk") 'beginning-of-defun)
+(spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
