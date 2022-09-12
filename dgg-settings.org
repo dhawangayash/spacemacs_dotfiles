@@ -60,6 +60,7 @@
   - [[#shutdown-hooks][Shutdown hooks]]
   - [[#org-clock-remove-clocked-tasks-with-000-duration][Org clock remove clocked tasks with 0:00 duration]]
   - [[#hide-emphasis-markers-in-emacs-makes-org-files-look-clean][Hide emphasis markers in emacs makes org files look clean]]
+  - [[#repeat-last-command-set-to-spc-][Repeat last command set to SPC-.]]
   - [[#disable-enlarged-org-mode-header-appearance][Disable enlarged org-mode header appearance]]
   - [[#changing-the-org-mode-ellipsis-to-a-more-indicative-symbol][Changing the org-mode ellipsis to a more indicative symbol]]
   - [[#org-roam-update-the-files-last_updated-tag-when-saving-the-file][Org-Roam update the files last_updated tag when saving the file]]
@@ -115,6 +116,7 @@
   - [[#update-path-variables][+Update PATH variables+]]
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
   - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
+  - [[#mouse-click-issue][Mouse click issue]]
 - [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
 
 * Add the System Clipboard to emacs kill-ring
@@ -760,6 +762,13 @@ URL: [[http://doc.norang.ca/org-mode.html#CaptureTemplates][norang]]
 
 #+END_SRC
 
+** Repeat last command set to SPC-.
+#+begin_src emacs-lisp :results silent
+
+  (spacemacs/set-leader-keys (kbd ".") 'repeat-complex-command)
+  (message "After: Repeat last command set to SPC-.")
+
+#+end_src
 
 ** Disable enlarged org-mode header appearance                 :SO_Solution:
 Many themes seem to increase size of headers based on the level. I absolutely hate this, but would still want to keep the theme for headers. I found this solution on stack overflow.
@@ -1851,6 +1860,20 @@ URL: http://emacs-fu.blogspot.com/2011/03/ielm-repl-for-emacs.html
 
 #+END_SRC
 
+
+** Mouse click issue
+This is an issue where the mouse click causes two commands to be executed namely:
+
+#+begin_quote
+<down-mouse-1>  ;; mouse-drag-region
+<mouse-1>       ;; mouse-set-point
+#+end_quote
+
+This causes all sorts of issues, the hacky way to fix this issue is to unset the key-binding for <mouse-1> action. This is done by the following elisp command.
+
+#+begin_src emacs-lisp :results silent
+(define-key evil-motion-state-map [mouse-1] 'ignore)
+#+end_src
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
