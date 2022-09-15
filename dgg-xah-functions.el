@@ -294,6 +294,25 @@ Version 2014-10-21 2021-11-26 2021-11-30"
 
 (global-set-key (kbd "<kp-0>") 'xah-shrink-whitespaces)
 
+(defun xah-delete-current-text-block ()
+  "Delete the current text block plus blank lines, or selection, and copy to `kill-ring'.
+
+URL `http://xahlee.info/emacs/emacs/emacs_delete_block.html'
+Version 2017-07-09 2021-08-14"
+  (interactive)
+  (let ($p1 $p2)
+    (if (region-active-p)
+        (setq $p1 (region-beginning) $p2 (region-end))
+      (progn
+        (if (re-search-backward "\n[ \t]*\n+" nil 1)
+            (setq $p1 (goto-char (match-end 0)))
+          (setq $p1 (point)))
+        (re-search-forward "\n[ \t]*\n+" nil 1)
+        (setq $p2 (point))))
+    (kill-region $p1 $p2)))
+
+(spacemacs/set-leader-keys (kbd "dd") 'xah-delete-current-text-block)
+
 (define-key evil-motion-state-map (kbd "<up>") 'beginning-of-defun)
 (define-key evil-motion-state-map (kbd "<down>") 'end-of-defun)
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
