@@ -447,13 +447,17 @@ Version 2020-10-17"
 (defvar xah-brackets '("“”" "()" "[]" "{}" "<>" "＜＞" "（）" "［］" "｛｝" "⦅⦆" "〚〛" "⦃⦄" "‹›" "«»" "「」" "〈〉" "《》" "【】" "〔〕" "⦗⦘" "『』" "〖〗" "〘〙" "｢｣" "⟦⟧" "⟨⟩" "⟪⟫" "⟮⟯" "⟬⟭" "⌈⌉" "⌊⌋" "⦇⦈" "⦉⦊" "❛❜" "❝❞" "❨❩" "❪❫" "❴❵" "❬❭" "❮❯" "❰❱" "❲❳" "〈〉" "⦑⦒" "⧼⧽" "﹙﹚" "﹛﹜" "﹝﹞" "⁽⁾" "₍₎" "⦋⦌" "⦍⦎" "⦏⦐" "⁅⁆" "⸢⸣" "⸤⸥" "⟅⟆" "⦓⦔" "⦕⦖" "⸦⸧" "⸨⸩" "｟｠")
   "A list of strings, each element is a string of 2 chars, the left bracket and a matching right bracket. Used by `xah-select-text-in-quote' and others.")
 
+;;;;;;; both lists have to match ;;;;;;;;;;;;;;;;;;;;
+;; a list of all open braces
 (defconst xah-left-brackets
   '("“" "(" "[" "{" "<" "＜" "（" "［" "｛" "⦅" "〚" "⦃" "‹" "«" "「" "〈" "《" "【" "〔" "⦗" "『" "〖" "〘" "｢" "⟦" "⟨" "⟪" "⟮" "⟬" "⌈" "⌊" "⦇" "⦉" "❛" "❝" "❨" "❪" "❴" "❬" "❮" "❰" "❲" "〈" "⦑" "⧼" "﹙" "﹛" "﹝" "⁽" "₍" "⦋" "⦍" "⦏" "⁅" "⸢" "⸤" "⟅" "⦓" "⦕" "⸦" "⸨" "｟")
   "List of left bracket chars. Each element is a string.")
 
+;; a list of all closed braces
 (defconst xah-right-brackets
   '("”" ")" "]" "}" ">" "＞" "）" "］" "｝" "⦆" "〛" "⦄" "›" "»" "」" "〉" "》" "】" "〕" "⦘" "』" "〗" "〙" "｣" "⟧" "⟩" "⟫" "⟯" "⟭" "⌉" "⌋" "⦈" "⦊" "❜" "❞" "❩" "❫" "❵" "❭" "❯" "❱" "❳" "〉" "⦒" "⧽" "﹚" "﹜" "﹞" "⁾" "₎" "⦌" "⦎" "⦐" "⁆" "⸣" "⸥" "⟆" "⦔" "⦖" "⸧" "⸩" "｠")
   "List of right bracket chars. Each element is a string.")
+;;;;;;; END both lists have to match ;;;;;;;;;;;;;;;;;;;;
 
 (defun xah-goto-matching-bracket ()
   "Move cursor to the matching bracket.
