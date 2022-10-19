@@ -19,6 +19,7 @@
   - [[#making-helm-global-mark-ring-1][Making Helm Global Mark Ring]]
   - [[#insert-into-the-mark-ring][Insert into the mark ring]]
   - [[#highlight-line-mode][Highlight line mode]]
+  - [[#enable-and-disable-abbrev-mode][Enable and disable abbrev-mode]]
   - [[#yas-insert-snippet][Yas insert snippet]]
   - [[#enable-yas-minor-mode][Enable yas-minor-mode]]
   - [[#enable-org-column-mode][+Enable org-column-mode+]]
@@ -244,10 +245,17 @@ I really do not see a need for ctrl b to be bound to back char.
   (global-set-key (kbd "<kp-6>") 'set-mark-command)
 #+END_SRC
 
-** Highlight line mode
+** Highlight line mode                                          :deprecated:
+
 #+BEGIN_SRC emacs-lisp :results silent
-  (global-set-key (kbd "<kp-7>") 'hl-line-mode)
+  ;; (global-set-key (kbd "<kp-7>") 'hl-line-mode)
 #+END_SRC
+
+
+** Enable and disable abbrev-mode
+  #+begin_src emacs-lisp :results silent
+  (global-set-key (kbd "<kp-7>") 'abbrev-mode)
+  #+end_src
 
 ** Yas insert snippet
 #+BEGIN_SRC emacs-lisp :results silent
@@ -723,6 +731,8 @@ Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to displ
 #+END_SRC
 
 ** Shutdown hooks
+URL: [[https://emacs.stackexchange.com/questions/21754/how-to-automatically-save-all-org-files-after-marking-a-repeating-item-as-done-i][SO]]
+
 #+BEGIN_SRC emacs-lisp :results silent
 
   ;; ORG-AGENDA CONFIGURATION
@@ -731,8 +741,10 @@ Inspiration: [[id:71089dbe-9801-4e81-a78e-a21a59023bc1][Toggle function to displ
   ;; (add-hook 'org-mode-hook 'auto-fill-mode)
   ;; Force headings to be the same Size. Not sure if I'm crazy...
   (add-hook 'org-load-hook #'mb/org-mode-hook)
+
   ;; Ensure buffers are saved automatically to prevent sync errors
-  (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+  ;; (add-hook 'auto-save-hook 'org-save-all-org-buffers)
+
   ;; Save file (if it exists) when cycling TODO states
   (advice-add 'org-todo           :after 'mb/save-buffer-if-file)
   (advice-add 'org-deadline       :after 'mb/save-buffer-if-file)
