@@ -315,7 +315,11 @@ Version 2017-07-09 2021-08-14"
 
 (define-key evil-motion-state-map (kbd "<up>") 'beginning-of-defun)
 (define-key evil-motion-state-map (kbd "<down>") 'end-of-defun)
+
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
+
+(define-key evil-lisp-state-map (kbd "<up>") 'beginning-of-defun)
+(define-key evil-lisp-state-map (kbd "<down>") 'end-of-defun)
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
@@ -480,6 +484,7 @@ Version: 2016-11-22"
 
 (global-set-key (kbd "\\") 'xah-goto-matching-bracket)
 
+;; (define-key evil-normal-state-map (kbd "SPC [") 'xah-goto-matching-bracket)
 
 (defun xah-toggle-letter-case ()
   "Toggle the letter case of current word or text selection.
@@ -511,4 +516,5 @@ Version 2020-06-26"
       (downcase-region $p1 $p2)
       (put this-command 'state 0)))))
 
-(global-set-key (kbd "C-7") 'xah-toggle-letter-case)
+;; (global-set-key (kbd "C-7") 'xah-toggle-letter-case)
+(define-key evil-motion-state-map (kbd "SPC 7") 'xah-toggle-letter-case)
