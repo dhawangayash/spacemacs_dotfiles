@@ -318,9 +318,21 @@ Version 2017-07-09 2021-08-14"
 
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
 
-(define-key evil-lisp-state-map (kbd "<up>") 'forward-list)
+;; [TODO] You need to gate this by waiting for first loading the evil lisp state
+;; layer first.
+;; ---
 
-(define-key evil-lisp-state-map (kbd "<down>") 'backward-list)
+;; (define-key evil-lisp-state-map (kbd "<up>") 'forward-list)
+
+;; (define-key evil-lisp-state-map (kbd "<down>") 'backward-list)
+
+(defun dgg-enable-evil-lisp-forward-backward ()
+  "This function enables forward-sexp and backward-sexp movement,
+when dealing with evil-lisp-mode-map map."
+  (interactive)
+  (define-key evil-lisp-state-map (kbd "<up>") 'forward-list)
+  (define-key evil-lisp-state-map (kbd "<down>") 'backward-list)
+  )
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
