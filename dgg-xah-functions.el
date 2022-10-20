@@ -318,8 +318,9 @@ Version 2017-07-09 2021-08-14"
 
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
 
-(define-key evil-lisp-state-map (kbd "<up>") 'beginning-of-defun)
-(define-key evil-lisp-state-map (kbd "<down>") 'end-of-defun)
+(define-key evil-lisp-state-map (kbd "<up>") 'forward-list)
+
+(define-key evil-lisp-state-map (kbd "<down>") 'backward-list)
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
