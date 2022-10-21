@@ -3,6 +3,7 @@
 ;; - https://develop.spacemacs.org/doc/DOCUMENTATION.html#binding-keys
 ;; - http://xahlee.info/emacs/emacs/emacs_delete_backward_char_or_bracket_text.html
 
+
 (defun xah-delete-backward-char-or-bracket-text ()
   "Delete backward 1 character, but if it's a \"quote\" or bracket ()[]{}【】「」 etc, delete bracket and the inner text, push the deleted text to `kill-ring'.
 
@@ -38,6 +39,7 @@ Version 2017-07-02"
      (t
       (delete-char -1)))))
 
+
 (defun xah-delete-backward-bracket-text ()
   "Delete the matching brackets/quotes to the left of cursor, including the inner text.
 
@@ -52,6 +54,7 @@ Version 2017-07-02"
     (forward-sexp -1)
     (mark-sexp)
     (kill-region (region-beginning) (region-end))))
+
 
 (defun xah-delete-backward-bracket-pair ()
   "Delete the matching brackets/quotes to the left of cursor.
@@ -74,6 +77,7 @@ Version 2017-07-02"
     (delete-char 1)
     (push-mark (point) t)
     (goto-char (- $p0 2))))
+
 
 (defun xah-delete-forward-bracket-pairs ( &optional @delete-inner-text-p)
   "Delete the matching brackets/quotes to the right of cursor.
@@ -99,8 +103,10 @@ Version 2017-07-02"
       (goto-char $pt)
       (delete-char 1))))
 
+
 ;; Setting DEL to delete everything within parentheses for quick deletion
 (define-key emacs-lisp-mode-map (kbd "<delete>") 'xah-delete-backward-char-or-bracket-text)
+
 
 (defun xah-forward-block (&optional n)
   "Move cursor beginning of next text block.
@@ -127,6 +133,7 @@ Version 2016-06-15"
         (progn (goto-char (point-min))
                (setq $i n)))
       (setq $i (1+ $i)))))
+
 
 ;; URL: http://xahlee.info/emacs/emacs/elisp_change_space-hyphen_underscore.html
 (defun xah-cycle-hyphen-lowline-space ( &optional @begin @end )
@@ -176,6 +183,7 @@ Version 2019-02-12 2021-08-09"
       (put 'xah-cycle-hyphen-lowline-space 'state (% (+ $nowState 1) $length))))
   (set-transient-map (let (($kmap (make-sparse-keymap))) (define-key $kmap (kbd "t") 'xah-cycle-hyphen-lowline-space ) $kmap)))
 
+
 (defun xah-space-to-newline ()
   "Replace space sequence to a newline char.
 Works on current block or selection.
@@ -206,9 +214,12 @@ Version 2017-08-19"
 
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
+
 (global-set-key (kbd "<next>") 'xah-forward-block)
 ;; (global-set-key (kbd "C-s") 'isearch-forward)
+
 (global-set-key (kbd "<home>") 'cycle-spacing)
+
 
 (defun xah-delete-blank-lines ()
   "Delete all newline around cursor.
@@ -222,6 +233,7 @@ Version 2018-04-02"
     (setq $p4 (point))
     (delete-region $p3 $p4)))
 
+
 (defun xah-fly-delete-spaces()
   "Delete space, tab, IDEOGRAPHIC SPACE (U+3000) around cursor.
 Version: 2019-06-13"
@@ -232,6 +244,7 @@ Version: 2019-06-13"
     (skip-chars-backward " \t　")
     (setq $p1 (point))
     (delete-region $p1 $p2)))
+
 
 (defun xah-shrink-whitespaces()
   "Remove whitespaces around cursor.
@@ -250,43 +263,45 @@ Version 2014-10-21 2021-11-26 2021-11-30"
          ($space-neighbor-p (or
                              (eq $charBefore 32) (eq $charBefore 9)
                              (eq $charBefore 32) (eq $charBefore 9))))
-         (skip-chars-backward " \n\t　")
-         (setq $p1 (point))
-         (goto-char $p0)
-         (skip-chars-forward " \n\t　")
-         (setq $p2 (point))
-         (goto-char $p1)
-         (while (search-forward "\n" $p2 t)
-           (setq $eol-count (1+ $eol-count)))
-         (goto-char $p0)
-         (cond
-          ((eq $eol-count 0)
-           (if (> (- $p2 $p1) 1)
-               (progn
-                 (delete-horizontal-space) (insert " "))
-             (progn (delete-horizontal-space))))
-          ((eq $eol-count 1)
-           (if $space-neighbor-p
-               (xah-fly-delete-spaces)
-             (progn (xah-delete-blank-lines) (insert " "))))
-          ((eq $eol-count 2)
-           (if $space-neighbor-p
-               (xah-fly-delete-spaces)
-             (progn
-               (xah-delete-blank-lines)
-               (insert "\n"))))
-          ((> $eol-count 2)
-           (if $space-neighbor-p
-               (xah-fly-delete-spaces)
-             (progn
-               (goto-char $p2)
-               (search-backward "\n")
-               (delete-region $p1 (point))
-               (insert "\n"))))
-          (t (progn
-               (message "nothing done. logic error 40873. shouldn't reach here."))))))
+    (skip-chars-backward " \n\t　")
+    (setq $p1 (point))
+    (goto-char $p0)
+    (skip-chars-forward " \n\t　")
+    (setq $p2 (point))
+    (goto-char $p1)
+    (while (search-forward "\n" $p2 t)
+      (setq $eol-count (1+ $eol-count)))
+    (goto-char $p0)
+    (cond
+     ((eq $eol-count 0)
+      (if (> (- $p2 $p1) 1)
+          (progn
+            (delete-horizontal-space) (insert " "))
+        (progn (delete-horizontal-space))))
+     ((eq $eol-count 1)
+      (if $space-neighbor-p
+          (xah-fly-delete-spaces)
+        (progn (xah-delete-blank-lines) (insert " "))))
+     ((eq $eol-count 2)
+      (if $space-neighbor-p
+          (xah-fly-delete-spaces)
+        (progn
+          (xah-delete-blank-lines)
+          (insert "\n"))))
+     ((> $eol-count 2)
+      (if $space-neighbor-p
+          (xah-fly-delete-spaces)
+        (progn
+          (goto-char $p2)
+          (search-backward "\n")
+          (delete-region $p1 (point))
+          (insert "\n"))))
+     (t (progn
+          (message "nothing done. logic error 40873. shouldn't reach here."))))))
+
 
 (global-set-key (kbd "<kp-0>") 'xah-shrink-whitespaces)
+
 
 (defun xah-delete-current-text-block ()
   "Delete the current text block plus blank lines, or selection, and copy to `kill-ring'.
@@ -305,12 +320,15 @@ Version 2017-07-09 2021-08-14"
         (setq $p2 (point))))
     (kill-region $p1 $p2)))
 
+
 (spacemacs/set-leader-keys (kbd "dd") 'xah-delete-current-text-block)
 
 (define-key evil-motion-state-map (kbd "<up>") 'beginning-of-defun)
+
 (define-key evil-motion-state-map (kbd "<down>") 'end-of-defun)
 
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
+
 
 ;; [TODO] You need to gate this by waiting for first loading the evil lisp state
 ;; layer first.
@@ -329,9 +347,8 @@ when dealing with evil-lisp-mode-map map."
   )
 
 ;; evil-jump-item (found in evil-motion-state-map)
-(spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
-(spacemacs/set-leader-keys (kbd "kk") 'beginning-of-defun)
 (spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
+
 
 (defun xah-beginning-of-line-or-block ()
   "Move cursor to beginning of line or previous paragraph.
@@ -355,6 +372,7 @@ Version 2017-05-13"
         (when (eq $p (point))
           (beginning-of-line))))))
 
+
 (defun xah-end-of-line-or-block ()
   "Move cursor to end of line or next paragraph.
 
@@ -370,10 +388,14 @@ Version 2017-05-30"
         (re-search-forward "\n[\t\n ]*\n+" nil "NOERROR" ))
     (end-of-line)))
 
+
 ;; (global-set-key (kbd "<left>") 'xah-beginning-of-line-or-block)
 ;; (global-set-key (kbd "<right>") 'xah-end-of-line-or-block)
+
 (define-key evil-motion-state-map (kbd "<left>") 'xah-beginning-of-line-or-block)
+
 (define-key evil-motion-state-map (kbd "<right>") 'xah-end-of-line-or-block)
+
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
@@ -392,7 +414,7 @@ Version 2020-10-17"
           (if (use-region-p)
               (buffer-substring-no-properties (region-beginning) (region-end))
             (let ($p0 $p1 $p2
-                      ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
+                      ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. Cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html.
                       ($pathStops "^  \t\n\"`'‘’“”|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
               (setq $p0 (point))
               (skip-chars-backward $pathStops)
@@ -452,6 +474,7 @@ Version 2020-10-17"
 
 (global-set-key (kbd "<C-return>") 'xah-open-file-at-cursor)
 
+
 ;; Emacs: Jump to Matching Bracket
 ;; http://xahlee.info/emacs/emacs/emacs_goto_matching_brackets.html
 (defvar xah-brackets '("“”" "()" "[]" "{}" "<>" "＜＞" "（）" "［］" "｛｝" "⦅⦆" "〚〛" "⦃⦄" "‹›" "«»" "「」" "〈〉" "《》" "【】" "〔〕" "⦗⦘" "『』" "〖〗" "〘〙" "｢｣" "⟦⟧" "⟨⟩" "⟪⟫" "⟮⟯" "⟬⟭" "⌈⌉" "⌊⌋" "⦇⦈" "⦉⦊" "❛❜" "❝❞" "❨❩" "❪❫" "❴❵" "❬❭" "❮❯" "❰❱" "❲❳" "〈〉" "⦑⦒" "⧼⧽" "﹙﹚" "﹛﹜" "﹝﹞" "⁽⁾" "₍₎" "⦋⦌" "⦍⦎" "⦏⦐" "⁅⁆" "⸢⸣" "⸤⸥" "⟅⟆" "⦓⦔" "⦕⦖" "⸦⸧" "⸨⸩" "｟｠")
@@ -469,26 +492,27 @@ Version 2020-10-17"
   "List of right bracket chars. Each element is a string.")
 ;;;;;;; END both lists have to match ;;;;;;;;;;;;;;;;;;;;
 
-0(defun xah-goto-matching-bracket ()
-  "Move cursor to the matching bracket.
+(defun xah-goto-matching-bracket ()
+   "Move cursor to the matching bracket.
 If cursor is not on a bracket, call `backward-up-list'.
 The list of brackets to jump to is defined by `xah-left-brackets' and `xah-right-brackets'.
 
 URL `http://xahlee.info/emacs/emacs/emacs_navigating_keys_for_brackets.html'
 Version: 2016-11-22"
-  (interactive)
-  (if (nth 3 (syntax-ppss))
-      (backward-up-list 1 'ESCAPE-STRINGS 'NO-SYNTAX-CROSSING)
-    (cond
-     ((eq (char-after) ?\") (forward-sexp))
-     ((eq (char-before) ?\") (backward-sexp ))
-     ((looking-at (regexp-opt xah-left-brackets))
-      (forward-sexp))
-     ((looking-back (regexp-opt xah-right-brackets) (max (- (point) 1) 1))
-      (backward-sexp))
-     (t (backward-up-list 1 'ESCAPE-STRINGS 'NO-SYNTAX-CROSSING)))))
+   (interactive)
+   (if (nth 3 (syntax-ppss))
+       (backward-up-list 1 'ESCAPE-STRINGS 'NO-SYNTAX-CROSSING)
+     (cond
+      ((eq (char-after) ?\") (forward-sexp))
+      ((eq (char-before) ?\") (backward-sexp ))
+      ((looking-at (regexp-opt xah-left-brackets))
+       (forward-sexp))
+      ((looking-back (regexp-opt xah-right-brackets) (max (- (point) 1) 1))
+       (backward-sexp))
+      (t (backward-up-list 1 'ESCAPE-STRINGS 'NO-SYNTAX-CROSSING)))))
 
 (global-set-key (kbd "\\") 'xah-goto-matching-bracket)
+
 
 ;; (define-key evil-normal-state-map (kbd "SPC [") 'xah-goto-matching-bracket)
 
@@ -522,7 +546,10 @@ Version 2020-06-26"
       (downcase-region $p1 $p2)
       (put this-command 'state 0)))))
 
-(define-key evil-motion-state-map (kbd "9") 'xah-toggle-letter-case)
+
+;; (define-key evil-motion-state-map (kbd "9") 'xah-toggle-letter-case)
+
+(define-key evil-motion-state-map (kbd "9") 'xah-cycle-hyphen-lowline-space)
 
 (define-key evil-motion-state-map (kbd "0") 'xah-toggle-letter-case)
 
@@ -535,10 +562,12 @@ Version 2020-06-26"
 (define-key evil-motion-state-map (kbd "6") 'forward-sentence)
 
 (define-key evil-motion-state-map (kbd "w") 'evil-backward-WORD-begin)
+
 (define-key evil-motion-state-map (kbd "e") 'evil-forward-WORD-end)
 
-(define-key evil-motion-state-map (kbd "1") 'evil-backward-word-begin)
-(define-key evil-motion-state-map (kbd "2") 'evil-forward-word-end)
+(define-key evil-motion-state-map (kbd "2") 'evil-backward-word-begin)
+
+(define-key evil-motion-state-map (kbd "3") 'evil-forward-word-end)
 
 (define-key evil-motion-state-map (kbd "+") 'recenter-top-bottom)
 
@@ -546,6 +575,6 @@ Version 2020-06-26"
 
 ;; (define-key evil-motion-state-map (kbd "4") 'forward-sentence)
 
-(define-key evil-motion-state-map (kbd "-") 'xah-space-to-newline)
+(define-key evil-motion-state-map (kbd "=") 'xah-space-to-newline)
 
-(define-key evil-motion-state-map (kbd "8") 'xah-cycle-hyphen-lowline-space)
+(define-key evil-motion-state-map (kbd "-") 'recenter-top-bottom)
