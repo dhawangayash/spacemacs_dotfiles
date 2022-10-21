@@ -105,7 +105,7 @@ Version 2017-07-02"
 
 
 ;; Setting DEL to delete everything within parentheses for quick deletion
-(define-key emacs-lisp-mode-map (kbd "<delete>") 'xah-delete-backward-char-or-bracket-text)
+(global-set-key (kbd "<delete>") 'xah-delete-backward-bracket-text)
 
 
 (defun xah-forward-block (&optional n)
@@ -578,3 +578,38 @@ Version 2020-06-26"
 (define-key evil-motion-state-map (kbd "=") 'xah-space-to-newline)
 
 (define-key evil-motion-state-map (kbd "-") 'recenter-top-bottom)
+
+(defun dgg-insert-backslash-key ()
+  "This inserts backslash b/c backslash is used by matching parentheses.
+This is useful for your sanity."
+  (interactive)
+  (insert "\\"))
+
+(define-key evil-motion-state-map (kbd "SPC \\") 'dgg-insert-backslash-key)
+
+
+(defun dgg-xah-search-current-word ()
+  "Call `isearch' on current word or text selection.
+“word” here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
+URL `http://xahlee.info/emacs/emacs/modernization_isearch.html'
+Version 2015-04-09"
+  (interactive)
+  (let ( $p1 $p2 )
+    (if (use-region-p)
+        (progn
+          (setq $p1 (region-beginning))
+          (setq $p2 (region-end)))
+      (save-excursion
+        (skip-chars-backward "-_A-Za-z0-9:")
+        (setq $p1 (point))
+        (right-char)
+        (skip-chars-forward "-_A-Za-z0-9:")
+        (setq $p2 (point))))
+    (setq mark-active nil)
+    (when (< $p1 (point))
+      (goto-char $p1))
+    (kill-region $p1 $p2)))
+
+(define-key evil-motion-state-map  (kbd "4") 'dgg-xah-search-current-word)
+
+(define-key evil-motion-state-map  (kbd "7") 'backward-kill-sentence)
