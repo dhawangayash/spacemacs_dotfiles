@@ -3,8 +3,6 @@
 ;; - https://develop.spacemacs.org/doc/DOCUMENTATION.html#binding-keys
 ;; - http://xahlee.info/emacs/emacs/emacs_delete_backward_char_or_bracket_text.html
 
-
-
 (defun xah-delete-backward-char-or-bracket-text ()
   "Delete backward 1 character, but if it's a \"quote\" or bracket ()[]{}【】「」 etc, delete bracket and the inner text, push the deleted text to `kill-ring'.
 
@@ -102,9 +100,7 @@ Version 2017-07-02"
       (delete-char 1))))
 
 ;; Setting DEL to delete everything within parentheses for quick deletion
-
 (define-key emacs-lisp-mode-map (kbd "<delete>") 'xah-delete-backward-char-or-bracket-text)
-
 
 (defun xah-forward-block (&optional n)
   "Move cursor beginning of next text block.
@@ -211,9 +207,7 @@ Version 2017-08-19"
 ;; Page up and Page down set to moving by xah-blocks
 (global-set-key (kbd "<prior>") 'xah-backward-block)
 (global-set-key (kbd "<next>") 'xah-forward-block)
-(global-set-key (kbd "C-9") 'xah-cycle-hyphen-lowline-space)
-(global-set-key (kbd "C-8") 'xah-space-to-newline)
-(global-set-key (kbd "C-s") 'isearch-forward)
+;; (global-set-key (kbd "C-s") 'isearch-forward)
 (global-set-key (kbd "<home>") 'cycle-spacing)
 
 (defun xah-delete-blank-lines ()
@@ -330,15 +324,14 @@ Version 2017-07-09 2021-08-14"
   "This function enables forward-sexp and backward-sexp movement,
 when dealing with evil-lisp-mode-map map."
   (interactive)
-  (define-key evil-lisp-state-map (kbd "<up>") 'forward-list)
-  (define-key evil-lisp-state-map (kbd "<down>") 'backward-list)
+  (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
+  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
   )
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "jj") 'end-of-defun)
 (spacemacs/set-leader-keys (kbd "kk") 'beginning-of-defun)
 (spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
-
 
 (defun xah-beginning-of-line-or-block ()
   "Move cursor to beginning of line or previous paragraph.
@@ -476,7 +469,7 @@ Version 2020-10-17"
   "List of right bracket chars. Each element is a string.")
 ;;;;;;; END both lists have to match ;;;;;;;;;;;;;;;;;;;;
 
-(defun xah-goto-matching-bracket ()
+0(defun xah-goto-matching-bracket ()
   "Move cursor to the matching bracket.
 If cursor is not on a bracket, call `backward-up-list'.
 The list of brackets to jump to is defined by `xah-left-brackets' and `xah-right-brackets'.
@@ -529,5 +522,30 @@ Version 2020-06-26"
       (downcase-region $p1 $p2)
       (put this-command 'state 0)))))
 
-;; (global-set-key (kbd "C-7") 'xah-toggle-letter-case)
-(define-key evil-motion-state-map (kbd "SPC 7") 'xah-toggle-letter-case)
+(define-key evil-motion-state-map (kbd "9") 'xah-toggle-letter-case)
+
+(define-key evil-motion-state-map (kbd "0") 'xah-toggle-letter-case)
+
+;; (define-key evil-motion-state-map (kbd "5") 'evil-backward-WORD-begin)
+
+;; (define-key evil-motion-state-map (kbd "6") 'evil-forward-WORD-end)
+
+(define-key evil-motion-state-map (kbd "5") 'backward-sentence)
+
+(define-key evil-motion-state-map (kbd "6") 'forward-sentence)
+
+(define-key evil-motion-state-map (kbd "w") 'evil-backward-WORD-begin)
+(define-key evil-motion-state-map (kbd "e") 'evil-forward-WORD-end)
+
+(define-key evil-motion-state-map (kbd "1") 'evil-backward-word-begin)
+(define-key evil-motion-state-map (kbd "2") 'evil-forward-word-end)
+
+(define-key evil-motion-state-map (kbd "+") 'recenter-top-bottom)
+
+;; (define-key evil-motion-state-map (kbd "3") 'backward-sentence)
+
+;; (define-key evil-motion-state-map (kbd "4") 'forward-sentence)
+
+(define-key evil-motion-state-map (kbd "-") 'xah-space-to-newline)
+
+(define-key evil-motion-state-map (kbd "8") 'xah-cycle-hyphen-lowline-space)
