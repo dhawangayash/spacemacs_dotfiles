@@ -2033,5 +2033,3 @@ Now we define the commands:
   (global-set-key (kbd "<f8> 9") 'xah-insert-square-bracket) ; []
 
 #+end_src
-
-[see Emacs: How to Define Keys]
