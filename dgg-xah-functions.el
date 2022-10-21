@@ -343,8 +343,7 @@ Version 2017-07-09 2021-08-14"
 when dealing with evil-lisp-mode-map map."
   (interactive)
   (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
-  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
-  )
+  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list))
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
@@ -588,8 +587,31 @@ This is useful for your sanity."
 (define-key evil-motion-state-map (kbd "SPC \\") 'dgg-insert-backslash-key)
 
 
-(defun dgg-xah-search-current-word ()
-  "Call `isearch' on current word or text selection.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar xah-punctuation-regex nil "A regex string for the purpose of moving cursor to a punctuation.")
+(setq xah-punctuation-regex "[\\!\?\"\.'#$%&*+,/:;<=>@^`|~]+")
+
+(defun xah-forward-punct (&optional n)
+  "Move cursor to the next occurrence of punctuation.
+The list of punctuations to jump to is defined by `xah-punctuation-regex'
+
+URL `http://xahlee.info/emacs/emacs/emacs_jump_to_punctuations.html'
+Version 2017-06-26"
+  (interactive "p")
+  (re-search-forward xah-punctuation-regex nil t n))
+
+
+(defun xah-backward-punct (&optional n)
+  "Move cursor to the previous occurrence of punctuation.
+See `xah-forward-punct'
+
+URL `http://xahlee.info/emacs/emacs/emacs_jump_to_punctuations.html'
+Version 2017-06-26"
+  (interactive "p")
+  (re-search-backward xah-punctuation-regex nil t n))
+
+(defun dgg-xah-delete-current-word ()
+  "Call `kill-region' on current word or text selection.
 “word” here is A to Z, a to z, and hyphen 「-」 and underline 「_」, independent of syntax table.
 URL `http://xahlee.info/emacs/emacs/modernization_isearch.html'
 Version 2015-04-09"
@@ -600,16 +622,16 @@ Version 2015-04-09"
           (setq $p1 (region-beginning))
           (setq $p2 (region-end)))
       (save-excursion
-        (skip-chars-backward "-_A-Za-z0-9:")
+        (skip-chars-backward (concat "-_A-Za-z0-9:" xah-punctuation-regex))
         (setq $p1 (point))
         (right-char)
-        (skip-chars-forward "-_A-Za-z0-9:")
+        (skip-chars-forward (concat "-_A-Za-z0-9:" xah-punctuation-regex))
         (setq $p2 (point))))
     (setq mark-active nil)
     (when (< $p1 (point))
       (goto-char $p1))
     (kill-region $p1 $p2)))
 
-(define-key evil-motion-state-map  (kbd "4") 'dgg-xah-search-current-word)
+(define-key evil-motion-state-map  (kbd "4") 'dgg-xah-delete-current-word)
 
 (define-key evil-motion-state-map  (kbd "7") 'backward-kill-sentence)

@@ -119,6 +119,9 @@
   - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
   - [[#mouse-click-issue][Mouse click issue]]
 - [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
+- [[#xah-parenthesis][Xah parenthesis]]
+  - [[#xah-emacs-commands][Xah Emacs Commands]]
+  - [[#problems-of-electric-pair-mode][Problems of electric-pair-mode]]
 
 * Add the System Clipboard to emacs kill-ring
 - URL: http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/
@@ -996,8 +999,8 @@ Tip: Single key <F7> and popping from mark-ring by <F8>
     (interactive)
     (set-mark-command t))
 
-  (global-set-key (kbd "<f7>") 'pop-global-mark)
-  (global-set-key (kbd "<f8>") 'xah-pop-local-mark-ring)
+  ;; (global-set-key (kbd "<f7>") 'pop-global-mark)
+  ;; (global-set-key (kbd "<f8>") 'xah-pop-local-mark-ring)
   (message "After: Cursor marks")
 #+END_SRC
 
@@ -1900,3 +1903,135 @@ a +Disabling flyspell by default:+ [[https://gist.github.com/metamorph/69f37f768
   (message "After: Enhancing the speed of spacemacs owing to flyspell performance issues")
 
 #+END_SRC
+
+* Xah parenthesis
+** Xah Emacs Commands
+Emacs: Insert Brackets by Pair 🚀
+By Xah Lee. Date: 2011-11-25. Last updated: 2022-10-04.
+This page shows a command xah-insert-bracket-pair to insert bracket pair, better than the emacs builtin ~electric-pair-mode~.
+
+Emacs has electric-pair-mode , which insert a bracket pair when you type the left bracket. [see Emacs: Insert Bracket Pairs, electric-pair-mode]
+
+** Problems of electric-pair-mode
+Which brackets it will close depends on the Syntax Table. Sometimes it does not close curly brackets {} (e.g. In emacs-lisp-mode). Sometimes it pairs single quote (e.g. In js-mode). The keys to insert brackets is typed by your stretched pinky. Not ergonomic. Advantages of xah-insert-bracket-pair Wrap brackets around current word (if cursor is on a word), or text selection, else just insert a pair and place cursor in between. Behavior is same and predictable anywhere. (not dependent on syntax table.) Convenient shortcuts keys on home row, or any key you chose. Inserts 10 other Unicode brackets and quotes.
+
+Bracket Pair Insertion Commands
+
+Put this in your Emacs Init File:
+
+#+begin_src emacs-lisp :results silent
+  (defun xah-insert-bracket-pair (LBracket RBracket &optional WrapMethod)
+    "Insert brackets around selection, word, at point, and maybe move cursor in between.
+
+   LBracket and RBracket are strings. WrapMethod must be either `line' or `block'. `block' means between empty lines.
+
+  • if there is a region, add brackets around region.
+  • If WrapMethod is `line', wrap around line.
+  • If WrapMethod is `block', wrap around block.
+  • if cursor is at beginning of line and its not empty line and contain at least 1 space, wrap around the line.
+  • If cursor is at end of a word or buffer, one of the following will happen:
+   xyz▮ → xyz(▮)
+   xyz▮ → (xyz▮)       if in one of the lisp modes.
+  • wrap brackets around word if any. e.g. xy▮z → (xyz▮). Or just (▮)
+
+  URL `http://xahlee.info/emacs/emacs/elisp_insert_brackets_by_pair.html'
+  Version: 2017-01-17 2021-08-12"
+    (if (region-active-p)
+        (progn
+          (let ( ($p1 (region-beginning)) ($p2 (region-end)))
+            (goto-char $p2) (insert RBracket)
+            (goto-char $p1) (insert LBracket)
+            (goto-char (+ $p2 2))))
+      (let ($p1 $p2)
+        (cond
+         ((eq WrapMethod 'line)
+          (setq $p1 (line-beginning-position) $p2 (line-end-position))
+          (goto-char $p2)
+          (insert RBracket)
+          (goto-char $p1)
+          (insert LBracket)
+          (goto-char (+ $p2 (length LBracket))))
+         ((eq WrapMethod 'block)
+          (save-excursion
+            (let (($bds (xah-get-bounds-of-block-or-region))) (setq $p1 (car $bds) $p2 (cdr $bds)))
+            (goto-char $p2)
+            (insert RBracket)
+            (goto-char $p1)
+            (insert LBracket)
+            (goto-char (+ $p2 (length LBracket)))))
+         ( ;  do line. line must contain space
+          (and
+           (eq (point) (line-beginning-position))
+           ;; (string-match " " (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+           (not (eq (line-beginning-position) (line-end-position))))
+          (insert LBracket )
+          (end-of-line)
+          (insert  RBracket))
+         ((and
+           (or ; cursor is at end of word or buffer. i.e. xyz▮
+            (looking-at "[^-_[:alnum:]]")
+            (eq (point) (point-max)))
+           (not (or
+                 (string-equal major-mode "xah-elisp-mode")
+                 (string-equal major-mode "emacs-lisp-mode")
+                 (string-equal major-mode "lisp-mode")
+                 (string-equal major-mode "lisp-interaction-mode")
+                 (string-equal major-mode "common-lisp-mode")
+                 (string-equal major-mode "clojure-mode")
+                 (string-equal major-mode "xah-clojure-mode")
+                 (string-equal major-mode "scheme-mode"))))
+          (progn
+            (setq $p1 (point) $p2 (point))
+            (insert LBracket RBracket)
+            (search-backward RBracket )))
+         (t (progn
+              ;; wrap around “word”. basically, want all alphanumeric, plus hyphen and underscore, but don't want space or punctuations. Also want chinese chars
+              ;; 我有一帘幽梦，不知与谁能共。多少秘密在其中，欲诉无人能懂。
+              (skip-chars-backward "-_[:alnum:]")
+              (setq $p1 (point))
+              (skip-chars-forward "-_[:alnum:]")
+              (setq $p2 (point))
+              (goto-char $p2)
+              (insert RBracket)
+              (goto-char $p1)
+              (insert LBracket)
+              (goto-char (+ $p2 (length LBracket)))))))))
+
+#+end_src
+
+require: Emacs: xah-get-thing.el
+
+Now we define the commands:
+
+#+begin_src emacs-lisp :results silent
+  (defun xah-insert-paren () (interactive) (xah-insert-bracket-pair "(" ")") )
+  (defun xah-insert-square-bracket () (interactive) (xah-insert-bracket-pair "[" "]") )
+  (defun xah-insert-brace () (interactive) (xah-insert-bracket-pair "{" "}") )
+
+  (defun xah-insert-markdown-quote () (interactive) (xah-insert-bracket-pair "`" "`") )
+  (defun xah-insert-markdown-triple-quote () (interactive) (xah-insert-bracket-pair "```\n" "\n```"))
+
+  (defun xah-insert-double-curly-quote () (interactive) (xah-insert-bracket-pair "“" "”") )
+  (defun xah-insert-curly-single-quote () (interactive) (xah-insert-bracket-pair "‘" "’") )
+  (defun xah-insert-single-angle-quote () (interactive) (xah-insert-bracket-pair "‹" "›") )
+  (defun xah-insert-double-angle-quote () (interactive) (xah-insert-bracket-pair "«" "»") )
+  (defun xah-insert-ascii-double-quote () (interactive) (xah-insert-bracket-pair "\"" "\"") )
+  (defun xah-insert-ascii-single-quote () (interactive) (xah-insert-bracket-pair "'" "'") )
+  (defun xah-insert-emacs-quote () (interactive) (xah-insert-bracket-pair "`" "'") )
+  (defun xah-insert-corner-bracket () (interactive) (xah-insert-bracket-pair "「" "」" ) )
+  (defun xah-insert-white-corner-bracket () (interactive) (xah-insert-bracket-pair "『" "』") )
+  (defun xah-insert-angle-bracket () (interactive) (xah-insert-bracket-pair "〈" "〉") )
+  (defun xah-insert-double-angle-bracket () (interactive) (xah-insert-bracket-pair "《" "》") )
+  (defun xah-insert-white-lenticular-bracket () (interactive) (xah-insert-bracket-pair "〖" "〗") )
+  (defun xah-insert-black-lenticular-bracket () (interactive) (xah-insert-bracket-pair "【" "】") )
+  (defun xah-insert-tortoise-shell-bracket () (interactive) (xah-insert-bracket-pair "〔" "〕" ) )
+
+  (global-set-key (kbd "<f8> 7") 'xah-insert-brace) ; {}
+
+  (global-set-key (kbd "<f8> 8") 'xah-insert-paren) ; ()
+
+  (global-set-key (kbd "<f8> 9") 'xah-insert-square-bracket) ; []
+
+#+end_src
+
+[see Emacs: How to Define Keys]
