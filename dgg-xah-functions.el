@@ -622,10 +622,10 @@ Version 2015-04-09"
           (setq $p1 (region-beginning))
           (setq $p2 (region-end)))
       (save-excursion
-        (skip-chars-backward "-_A-Za-z0-9")
+        (skip-chars-backward "A-Za-z0-9")
         (setq $p1 (point))
         (right-char)
-        (skip-chars-forward "-_A-Za-z0-9:")
+        (skip-chars-forward "A-Za-z0-9")
         (setq $p2 (point))))
     (setq mark-active nil)
     (when (< $p1 (point))
