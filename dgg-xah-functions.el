@@ -343,7 +343,10 @@ Version 2017-07-09 2021-08-14"
 when dealing with evil-lisp-mode-map map."
   (interactive)
   (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
-  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list))
+  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
+  (define-key evil-lisp-state-map (kbd "n") 'forward-list)
+  (define-key evil-lisp-state-map (kbd "p") 'backward-list))
+
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
@@ -576,6 +579,8 @@ Version 2020-06-26"
 
 (define-key evil-motion-state-map (kbd "=") 'xah-space-to-newline)
 
+(define-key evil-normal-state-map (kbd "<insert>") 'undo-tree-visualize)
+
 (define-key evil-motion-state-map (kbd "-") 'recenter-top-bottom)
 
 (defun dgg-insert-backslash-key ()
@@ -587,7 +592,11 @@ This is useful for your sanity."
 (define-key evil-motion-state-map (kbd "SPC \\") 'dgg-insert-backslash-key)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;    xah punctuation
+;;;    xah forward
+;;;    xah backward
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar xah-punctuation-regex nil "A regex string for the purpose of moving cursor to a punctuation.")
 (setq xah-punctuation-regex "[\\!\?\"\.'#$%&*+,/:;<=>@^`|~]+")
 
