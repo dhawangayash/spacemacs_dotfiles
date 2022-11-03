@@ -323,9 +323,9 @@ Version 2017-07-09 2021-08-14"
 
 (spacemacs/set-leader-keys (kbd "dd") 'xah-delete-current-text-block)
 
-(define-key evil-motion-state-map (kbd "<up>") 'beginning-of-defun)
+(define-key evil-normal-state-map (kbd "<up>") 'beginning-of-defun)
 
-(define-key evil-motion-state-map (kbd "<down>") 'end-of-defun)
+(define-key evil-normal-state-map (kbd "<down>") 'end-of-defun)
 
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
 
@@ -345,8 +345,18 @@ when dealing with evil-lisp-mode-map map."
   (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
   (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
   (define-key evil-lisp-state-map (kbd "n") 'forward-list)
-  (define-key evil-lisp-state-map (kbd "p") 'backward-list))
+  (define-key evil-lisp-state-map (kbd "p") 'backward-list)
+  )
 
+(defun dgg-company-state-active-map ()
+  "This function enables kp-4 and kp-7
+to be used as company-select-previous and company-select-next commands."
+  (interactive)
+  (define-key company-active-map (kbd "<kp-7>") 'company-select-previous)
+  (define-key company-active-map (kbd "<kp-4>") 'company-select-next)
+  ;; (define-key company-mode-map (kbd "<kp-5>") 'ivy-scroll-down-command)
+  ;; (define-key company-mode-map (kbd "<kp-8>") 'ivy-scroll-up-command)
+  )
 
 ;; evil-jump-item (found in evil-motion-state-map)
 (spacemacs/set-leader-keys (kbd "hh") 'evil-lisp-state-prev-opening-paren)
@@ -548,20 +558,23 @@ Version 2020-06-26"
       (downcase-region $p1 $p2)
       (put this-command 'state 0)))))
 
-
 ;; (define-key evil-motion-state-map (kbd "9") 'xah-toggle-letter-case)
 
 (define-key evil-motion-state-map (kbd "9") 'xah-cycle-hyphen-lowline-space)
 
-(define-key evil-motion-state-map (kbd "0") 'xah-toggle-letter-case)
+(define-key evil-normal-state-map (kbd "0") 'xah-toggle-letter-case)
 
-;; (define-key evil-motion-state-map (kbd "5") 'evil-backward-WORD-begin)
-
-;; (define-key evil-motion-state-map (kbd "6") 'evil-forward-WORD-end)
+(defun dgg-wrapper-move-forward ()
+  "Moving forward using lisp's 'forward-sentence just stops after a single
+line. this function just wraps that method by moving the point to the
+beginning of the next word."
+  (interactive)
+  (forward-sentence)
+  (evil-forward-WORD-begin))
 
 (define-key evil-motion-state-map (kbd "5") 'backward-sentence)
 
-(define-key evil-motion-state-map (kbd "6") 'forward-sentence)
+(define-key evil-motion-state-map (kbd "6") 'dgg-wrapper-move-forward)
 
 (define-key evil-motion-state-map (kbd "w") 'evil-backward-WORD-begin)
 
@@ -571,13 +584,11 @@ Version 2020-06-26"
 
 (define-key evil-motion-state-map (kbd "3") 'evil-forward-word-end)
 
-(define-key evil-motion-state-map (kbd "+") 'recenter-top-bottom)
+(define-key evil-motion-state-map (kbd "<kp-add>") 'yank)
 
-;; (define-key evil-motion-state-map (kbd "3") 'backward-sentence)
+(global-set-key (kbd "<kp-add>") 'yank)
 
-;; (define-key evil-motion-state-map (kbd "4") 'forward-sentence)
-
-(define-key evil-motion-state-map (kbd "=") 'xah-space-to-newline)
+(define-key evil-normal-state-map (kbd "=") 'xah-space-to-newline)
 
 (define-key evil-normal-state-map (kbd "<insert>") 'undo-tree-visualize)
 
@@ -591,6 +602,12 @@ This is useful for your sanity."
 
 (define-key evil-motion-state-map (kbd "SPC \\") 'dgg-insert-backslash-key)
 
+(defun dgg-image-attr-examples ()
+  "This inserts backslash b/c backslash is used by matching parentheses.
+This is useful for your sanity."
+  (interactive)
+  (insert "#+attr_latex: :width 4in
+#+attr_html: :width 600"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;    xah punctuation
@@ -598,6 +615,7 @@ This is useful for your sanity."
 ;;;    xah backward
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar xah-punctuation-regex nil "A regex string for the purpose of moving cursor to a punctuation.")
+
 (setq xah-punctuation-regex "[\\!\?\"\.'#$%&*+,/:;<=>@^`|~]+")
 
 (defun xah-forward-punct (&optional n)
@@ -644,3 +662,14 @@ Version 2015-04-09"
 (define-key evil-motion-state-map  (kbd "4") 'dgg-xah-delete-current-word)
 
 (define-key evil-motion-state-map  (kbd "7") 'backward-kill-sentence)
+
+(defun dgg-enable-lueven-themes ()
+  "Hack to fix lueven theme."
+  (interactive)
+  (load-theme 'leuven))
+
+(global-set-key (kbd "C-<kp-0>") 'dgg-enable-lueven-themes)
+
+(define-key evil-visual-state-map (kbd "<up>") 'xah-beginning-of-line-or-block)
+
+(define-key evil-visual-state-map (kbd "<down>") 'xah-end-of-line-or-block)

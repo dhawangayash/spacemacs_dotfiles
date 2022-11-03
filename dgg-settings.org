@@ -16,6 +16,7 @@
   - [[#making-helm-local-mark-ring][Making Helm Local Mark Ring]]
   - [[#making-helm-kill-ring][Making Helm Kill Ring]]
   - [[#making-helm-global-mark-ring][Making Helm Global Mark Ring]]
+  - [[#making-new-frame][Making New Frame]]
   - [[#making-helm-global-mark-ring-1][Making Helm Global Mark Ring]]
   - [[#insert-into-the-mark-ring][Insert into the mark ring]]
   - [[#highlight-line-mode][Highlight line mode]]
@@ -232,7 +233,14 @@ I really do not see a need for ctrl b to be bound to back char.
 ** Making Helm Global Mark Ring
 #+BEGIN_SRC emacs-lisp :results silent
 
-  (global-set-key (kbd "<kp-4>") 'helm-global-mark-ring)
+  ;; (global-set-key (kbd "<kp-4>") 'helm-global-mark-ring)
+
+#+END_SRC
+
+** Making New Frame
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (global-set-key (kbd "<kp-4>") 'make-frame)
 
 #+END_SRC
 

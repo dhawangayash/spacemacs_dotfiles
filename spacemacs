@@ -604,7 +604,8 @@ This function is called at the very end of Spacemacs initialization."
    ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
  '(beacon-color "#ff9da4")
  '(custom-enabled-themes nil)
- '(custom-safe-themes '(default))
+ '(custom-safe-themes
+   '("aba75724c5d4d0ec0de949694bce5ce6416c132bb031d4e7ac1c4f2dbdd3d580" default))
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#6272a4")
  '(fill-column 100)
