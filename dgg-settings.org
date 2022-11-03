@@ -2009,6 +2009,7 @@ Put this in your Emacs Init File:
 
 require: Emacs: xah-get-thing.el
 
+URL: http://xahlee.info/emacs/emacs/elisp_insert_brackets_by_pair.html
 Now we define the commands:
 
 #+begin_src emacs-lisp :results silent
