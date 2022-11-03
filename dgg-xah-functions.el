@@ -344,9 +344,14 @@ when dealing with evil-lisp-mode-map map."
   (interactive)
   (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
   (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
+
   (define-key evil-lisp-state-map (kbd "n") 'forward-list)
   (define-key evil-lisp-state-map (kbd "p") 'backward-list)
-  )
+
+  (define-key evil-lisp-state-map (kbd "u") 'backward-up-list)
+  (define-key evil-lisp-state-map (kbd "d") 'down-list)
+
+  (define-key evil-lisp-state-map (kbd "=") 'recenter-top-bottom))
 
 (defun dgg-company-state-active-map ()
   "This function enables kp-4 and kp-7
