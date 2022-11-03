@@ -2015,6 +2015,7 @@ Now we define the commands:
   (defun xah-insert-paren () (interactive) (xah-insert-bracket-pair "(" ")") )
   (defun xah-insert-square-bracket () (interactive) (xah-insert-bracket-pair "[" "]") )
   (defun xah-insert-brace () (interactive) (xah-insert-bracket-pair "{" "}") )
+  (defun xah-insert-angle-bracket () (interactive) (xah-insert-bracket-pair "<" ">") )
 
   (defun xah-insert-markdown-quote () (interactive) (xah-insert-bracket-pair "`" "`") )
   (defun xah-insert-markdown-triple-quote () (interactive) (xah-insert-bracket-pair "```\n" "\n```"))
@@ -2028,16 +2029,16 @@ Now we define the commands:
   (defun xah-insert-emacs-quote () (interactive) (xah-insert-bracket-pair "`" "'") )
   (defun xah-insert-corner-bracket () (interactive) (xah-insert-bracket-pair "「" "」" ) )
   (defun xah-insert-white-corner-bracket () (interactive) (xah-insert-bracket-pair "『" "』") )
-  (defun xah-insert-angle-bracket () (interactive) (xah-insert-bracket-pair "〈" "〉") )
   (defun xah-insert-double-angle-bracket () (interactive) (xah-insert-bracket-pair "《" "》") )
   (defun xah-insert-white-lenticular-bracket () (interactive) (xah-insert-bracket-pair "〖" "〗") )
   (defun xah-insert-black-lenticular-bracket () (interactive) (xah-insert-bracket-pair "【" "】") )
   (defun xah-insert-tortoise-shell-bracket () (interactive) (xah-insert-bracket-pair "〔" "〕" ) )
 
+
+  (global-set-key (kbd "<f8> 4") 'xah-insert-ascii-single-quote) ; ''
+  (global-set-key (kbd "<f8> 5") 'xah-insert-ascii-double-quote) ; ""
+  (global-set-key (kbd "<f8> 6") 'xah-insert-angle-bracket) ; <>
   (global-set-key (kbd "<f8> 7") 'xah-insert-brace) ; {}
-
   (global-set-key (kbd "<f8> 8") 'xah-insert-paren) ; ()
-
   (global-set-key (kbd "<f8> 9") 'xah-insert-square-bracket) ; []
-
 #+end_src
