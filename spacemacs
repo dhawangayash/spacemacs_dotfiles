@@ -577,12 +577,25 @@ before packages are loaded."
   ;; didn't work
   (setq byte-compile-warnings '(cl-functions))
 
-  (spacemacs//add-to-load-path (expand-file-name "~/workdir/spacemacs_dotfiles/"))
+  (spacemacs//add-to-load-path
+    (expand-file-name "~/workdir/spacemacs_dotfiles/"))
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg.el"))
   (eval-after-load 'org
-    (org-babel-load-file (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org")))
-  (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-xah-functions.el"))
+    (org-babel-load-file
+      (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-settings.org")))
+  (load
+    (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-xah-functions.el"))
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg-org.el"))
+
+  ;; URL: https://youtu.be/tiOT_7Qv5_4?t=2544
+  (with-eval-after-load 'ispell
+    (when (executable-find ispell-program-name)
+      (add-hook 'text-mode-hook #'flyspell-mode)
+      (add-hook 'prog-mode-hook #'flyspell-prog-mode)))
+  (with-eval-after-load 'evil-lisp-state
+    (dgg-enable-evil-lisp-forward-backward))
+  (with-eval-after-load 'company
+    (dgg-company-state-active-map))
   )
 
 

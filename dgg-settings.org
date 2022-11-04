@@ -123,6 +123,7 @@
 - [[#xah-parenthesis][Xah parenthesis]]
   - [[#xah-emacs-commands][Xah Emacs Commands]]
   - [[#problems-of-electric-pair-mode][Problems of electric-pair-mode]]
+  - [[#xahs-cut-line-or-region][Xah's cut line or region]]
 
 * Add the System Clipboard to emacs kill-ring
 - URL: http://pragmaticemacs.com/emacs/add-the-system-clipboard-to-the-emacs-kill-ring/
@@ -2042,4 +2043,67 @@ Now we define the commands:
   (global-set-key (kbd "<f8> 7") 'xah-insert-brace) ; {}
   (global-set-key (kbd "<f8> 8") 'xah-insert-paren) ; ()
   (global-set-key (kbd "<f8> 9") 'xah-insert-square-bracket) ; []
+#+end_src
+
+** Xah's cut line or region
+URL: http://xahlee.info/emacs/emacs/emacs_copy_cut_current_line.html
+#+begin_src emacs-lisp :results silent
+  (defun xah-copy-line-or-region ()
+    "Copy current line or selection.
+  When called repeatedly, append copy subsequent lines.
+  When `universal-argument' is called first, copy whole buffer (respects `narrow-to-region').
+
+  URL `http://xahlee.info/emacs/emacs/emacs_copy_cut_current_line.html'
+  Version: 2010-05-21 2022-10-03"
+    (interactive)
+    (let ((inhibit-field-text-motion nil))
+      (if current-prefix-arg
+          (progn
+            (copy-region-as-kill (point-min) (point-max)))
+        (if (region-active-p)
+            (progn
+              (copy-region-as-kill (region-beginning) (region-end)))
+          (if (eq last-command this-command)
+              (if (eobp)
+                  (progn )
+                (progn
+                  (kill-append "\n" nil)
+                  (kill-append
+                   (buffer-substring-no-properties (line-beginning-position) (line-end-position))
+                   nil)
+                  (progn
+                    (end-of-line)
+                    (forward-char))))
+            (if (eobp)
+                (if (eq (char-before) 10 )
+                    (progn )
+                  (progn
+                    (copy-region-as-kill (line-beginning-position) (line-end-position))
+                    (end-of-line)))
+              (progn
+                (copy-region-as-kill (line-beginning-position) (line-end-position))
+                (end-of-line)
+                (forward-char))))))))
+
+
+  (defun xah-cut-line-or-region ()
+    "Cut current line or selection.
+  When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
+
+  URL `http://xahlee.info/emacs/emacs/emacs_copy_cut_current_line.html'
+  Version: 2010-05-21 2015-06-10"
+    (interactive)
+    (if current-prefix-arg
+        (progn ; not using kill-region because we don't want to include previous kill
+          (kill-new (buffer-string))
+          (delete-region (point-min) (point-max)))
+      (progn (if (region-active-p)
+                 (kill-region (region-beginning) (region-end) t)
+               (kill-region (line-beginning-position) (line-beginning-position 2))))))
+
+  (global-set-key (kbd "<f7> x") 'xah-cut-line-or-region) ; cut
+
+  (global-set-key (kbd "<f7> c") 'xah-copy-line-or-region) ; copy
+
+  (global-set-key (kbd "<f7> v") 'yank) ; paste
 #+end_src

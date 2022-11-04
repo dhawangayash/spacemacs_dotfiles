@@ -346,7 +346,7 @@ when dealing with evil-lisp-mode-map map."
   (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
 
   (define-key evil-lisp-state-map (kbd "n") 'forward-list)
-  (define-key evil-lisp-state-map (kbd "p") 'backward-list)
+  (define-key evil-lisp-state-map (kbd "m") 'backward-list)
 
   (define-key evil-lisp-state-map (kbd "u") 'backward-up-list)
   (define-key evil-lisp-state-map (kbd "d") 'down-list)
@@ -568,6 +568,8 @@ Version 2020-06-26"
 (define-key evil-motion-state-map (kbd "9") 'xah-cycle-hyphen-lowline-space)
 
 (define-key evil-normal-state-map (kbd "0") 'xah-toggle-letter-case)
+
+(global-set-key (kbd "<kp-divide>") 'xah-toggle-letter-case)
 
 (defun dgg-wrapper-move-forward ()
   "Moving forward using lisp's 'forward-sentence just stops after a single
