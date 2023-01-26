@@ -694,3 +694,5 @@ Version: 2018-08-30"
     (aset buffer-display-table ?\^L
           (vconcat (make-list 70 (make-glyph-code ?─ 'font-lock-comment-face))))
     (redraw-frame)))
+
+(global-set-key  (kbd "<Scroll_Lock>") 'xah-show-formfeed-as-line)
