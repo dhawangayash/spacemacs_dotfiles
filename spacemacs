@@ -119,6 +119,7 @@ This function should only modify configuration layer settings."
                                        :config
                                        (atomic-chrome start-server))
                                       ;; https://emacs.stackexchange.com/questions/54092/spacemacs-helm-org-layer-is-missing
+                                      keyfreq
                                       hl-anything
                                       helm-org
                                       pyenv-mode

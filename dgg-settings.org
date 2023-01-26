@@ -119,6 +119,7 @@
   - [[#making-ielm-usage-bare-able-with-autopair-or-paraedit][Making IELM usage bare-able with autopair or paraedit]]
   - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
   - [[#mouse-click-issue][Mouse click issue]]
+  - [[#keyfrequency-counter][keyfrequency counter]]
 - [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
 - [[#xah-parenthesis][Xah parenthesis]]
   - [[#xah-emacs-commands][Xah Emacs Commands]]
@@ -1898,6 +1899,16 @@ This causes all sorts of issues, the hacky way to fix this issue is to unset the
 #+begin_src emacs-lisp :results silent
 (define-key evil-motion-state-map [mouse-1] 'ignore)
 #+end_src
+
+** keyfrequency counter
+#+BEGIN_SRC emacs-lisp :results silent
+
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+
+#+END_SRC
+
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
 + Github tracker: https://github.com/syl20bnr/spacemacs/issues/11909
