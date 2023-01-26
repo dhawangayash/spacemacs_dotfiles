@@ -563,7 +563,7 @@ Version 2020-06-26"
       (downcase-region $p1 $p2)
       (put this-command 'state 0)))))
 
-;; (define-key evil-motion-state-map (kbd "9") 'xah-toggle-letter-case)
+;; (define-key evil-motion-state-map (kbd "b") 'xah-toggle-letter-case)
 
 (define-key evil-motion-state-map (kbd "9") 'xah-cycle-hyphen-lowline-space)
 
@@ -591,9 +591,9 @@ beginning of the next word."
 
 (define-key evil-motion-state-map (kbd "3") 'evil-forward-word-end)
 
-(define-key evil-motion-state-map (kbd "<kp-add>") 'yank)
+;; (define-key evil-motion-state-map (kbd "<kp-add>") 'yank)
 
-(global-set-key (kbd "<kp-add>") 'yank)
+;; (global-set-key (kbd "<kp-add>") 'yank)
 
 (define-key evil-normal-state-map (kbd "=") 'xah-space-to-newline)
 
@@ -680,3 +680,17 @@ Version 2015-04-09"
 (define-key evil-visual-state-map (kbd "<up>") 'xah-beginning-of-line-or-block)
 
 (define-key evil-visual-state-map (kbd "<down>") 'xah-end-of-line-or-block)
+
+(defun xah-show-formfeed-as-line ()
+  "Display the formfeed ^L char as line.
+
+URL `http://xahlee.info/emacs/emacs/emacs_form_feed_section_paging.html'
+Version: 2018-08-30"
+  (interactive)
+  ;; 2016-10-11 thanks to Steve Purcell's page-break-lines.el
+  (progn
+    (when (not buffer-display-table)
+      (setq buffer-display-table (make-display-table)))
+    (aset buffer-display-table ?\^L
+          (vconcat (make-list 70 (make-glyph-code ?─ 'font-lock-comment-face))))
+    (redraw-frame)))
