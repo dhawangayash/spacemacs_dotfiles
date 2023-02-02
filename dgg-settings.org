@@ -1903,9 +1903,9 @@ This causes all sorts of issues, the hacky way to fix this issue is to unset the
 ** keyfrequency counter
 #+BEGIN_SRC emacs-lisp :results silent
 
-(require 'keyfreq)
-(keyfreq-mode 1)
-(keyfreq-autosave-mode 1)
+;; (require 'keyfreq)
+;; (keyfreq-mode 1)
+;; (keyfreq-autosave-mode 1)
 
 #+END_SRC
 
