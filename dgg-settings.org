@@ -1915,7 +1915,7 @@ If you want line numbers toggle locally, using ~SPC t n n~ or use ~M-x linum-mod
 
 #+BEGIN_SRC emacs-lisp :results silent
 
-  (setq dotspacemacs-line-numbers nil)
+  (setq-default dotspacemacs-line-numbers nil)
   (message "After: switch off line numbers globally")
 
 #+END_SRC
