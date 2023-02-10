@@ -710,3 +710,5 @@ Version: 2018-08-30"
   (spacemacs/set-leader-keys "l." 'visual-line-mode)
 
 (define-key evil-hybrid-state-map (kbd "<home>") 'evil-normal-state)
+
+(define-key evil-visual-state-map (kbd "<home>") 'evil-exit-visual-state)
