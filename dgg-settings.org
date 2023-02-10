@@ -120,6 +120,7 @@
   - [[#remove-the-advice-to-enable-scroll-bar-for-a-few-seconds-when-using-mouse-scrolling][Remove the advice to enable scroll-bar for a few seconds when using mouse scrolling]]
   - [[#mouse-click-issue][Mouse click issue]]
   - [[#keyfrequency-counter][keyfrequency counter]]
+  - [[#switch-off-line-numbers-globally][switch off line numbers globally]]
 - [[#enhancing-the-speed-of-spacemacs-owing-to-flyspell-performance-issues][Enhancing the speed of spacemacs owing to flyspell performance issues]]
 - [[#xah-parenthesis][Xah parenthesis]]
   - [[#xah-emacs-commands][Xah Emacs Commands]]
@@ -1908,6 +1909,17 @@ This causes all sorts of issues, the hacky way to fix this issue is to unset the
 ;; (keyfreq-autosave-mode 1)
 
 #+END_SRC
+
+** switch off line numbers globally
+If you want line numbers toggle locally, using ~SPC t n n~ or use ~M-x linum-mode~
+
+#+BEGIN_SRC emacs-lisp :results silent
+
+  (setq dotspacemacs-line-numbers nil)
+  (message "After: switch off line numbers globally")
+
+#+END_SRC
+
 
 
 * Enhancing the speed of spacemacs owing to flyspell performance issues
