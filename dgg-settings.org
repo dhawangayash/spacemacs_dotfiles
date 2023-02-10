@@ -1911,7 +1911,7 @@ This causes all sorts of issues, the hacky way to fix this issue is to unset the
 #+END_SRC
 
 ** switch off line numbers globally
-If you want line numbers toggle locally, using ~SPC t n n~ or use ~M-x linum-mode~
+If you want line numbers toggle locally, then use ~SPC t n n~ or use ~M-x linum-mode~
 
 #+BEGIN_SRC emacs-lisp :results silent
 
