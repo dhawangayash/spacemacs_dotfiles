@@ -697,11 +697,16 @@ Version: 2018-08-30"
 
 (global-set-key  (kbd "<Scroll_Lock>") 'xah-show-formfeed-as-line)
 
-
-
 (global-set-key  (kbd "<Scroll_Lock>") 'xah-show-formfeed-as-line)
 
 ;; Adding SPC l . to mean visual-line-map
-(define-key evil-normal-state-local-map (kbd "SPC l") nil)
-(spacemacs/declare-prefix "l" "bracket-prefix")
-(spacemacs/set-leader-keys "l." 'visual-line-mode)
+  ;; unset evil-visual-state-map from transient mode to visual-line-mode
+  (define-key evil-normal-state-local-map (kbd "SPC l") nil)
+
+  ;; visual-line-mode prefix
+  (spacemacs/declare-prefix "l" "prefix-visual-line-mode")
+
+  ;; visual-line-mode
+  (spacemacs/set-leader-keys "l." 'visual-line-mode)
+
+(define-key evil-hybrid-state-map (kbd "<home>") 'evil-normal-state)
