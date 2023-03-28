@@ -118,21 +118,31 @@ This function should only modify configuration layer settings."
                                        :ensure
                                        :config
                                        (atomic-chrome start-server))
+
+                                      ;; themes
+                                      doom-themes
+
                                       ;; https://emacs.stackexchange.com/questions/54092/spacemacs-helm-org-layer-is-missing
-                                      keyfreq
-                                      hl-anything
                                       helm-org
-                                      pyenv-mode
-                                      mips-mode
+
+                                      hl-anything
                                       imenu-anywhere
+                                      keyfreq
+                                      leuven-theme
+                                      mips-mode
+
+                                      pyenv-mode
+
+                                      ;; workaround for renamed string-edit package (renamed from string-edit to string-edit-at-point leading to
+                                      ;; issues in spacemacs, that expects string-edit. the commit is  the last before the rename of the package)
+                                      ;; should be removed after the spacemacs issue is resolved (see https://github.com/syl20bnr/spacemacs/issues/15648)
+                                      (string-edit :location (recipe :fetcher github :repo "magnars/string-edit.el" :commit "d7c4b9db6c4987b5c022a9858e6302a4c53aff5f"))
+
                                       ;;; second brain
                                       ;; org-roam-bibtex
                                       (org-pdftools :location (recipe :fetcher github :repo "fuxialexander/org-pdftools"))
                                       org-noter
                                       org-noter-pdftools
-                                      ;; themes
-                                      leuven-theme
-                                      doom-themes
                                       )
 
    ;; A list of packages that cannot be updated.
@@ -578,8 +588,8 @@ before packages are loaded."
   ;; didn't work
   (setq byte-compile-warnings '(cl-functions))
 
-  (spacemacs//add-to-load-path
-    (expand-file-name "~/workdir/spacemacs_dotfiles/"))
+  ;; URL: https://gist.github.com/TheBB/367096660b203952c162#the-load-path
+  (push (expand-file-name "~/workdir/spacemacs_dotfiles/") load-path)
   (load (expand-file-name "~/workdir/spacemacs_dotfiles/dgg.el"))
   (eval-after-load 'org
     (org-babel-load-file
@@ -619,7 +629,7 @@ This function is called at the very end of Spacemacs initialization."
  '(beacon-color "#ff9da4")
  '(custom-enabled-themes nil)
  '(custom-safe-themes
-   '("aba75724c5d4d0ec0de949694bce5ce6416c132bb031d4e7ac1c4f2dbdd3d580" default))
+   '("cfe4d36ed4cf00a541f7ba0deb38c94808c13a3e4c717f07bc3b9c866670e8d1" "aba75724c5d4d0ec0de949694bce5ce6416c132bb031d4e7ac1c4f2dbdd3d580" default))
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#6272a4")
  '(fill-column 100)
