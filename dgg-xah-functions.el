@@ -323,9 +323,12 @@ Version 2017-07-09 2021-08-14"
 
 (spacemacs/set-leader-keys (kbd "dd") 'xah-delete-current-text-block)
 
+
 (define-key evil-normal-state-map (kbd "<up>") 'beginning-of-defun)
-
 (define-key evil-normal-state-map (kbd "<down>") 'end-of-defun)
+(define-key evil-motion-state-map (kbd "<left>") 'xah-beginning-of-line-or-block)
+(define-key evil-motion-state-map (kbd "<right>") 'xah-end-of-line-or-block)
+
 
 (global-set-key (kbd "<kp-decimal>") 'evil-jump-item)
 
@@ -342,16 +345,14 @@ Version 2017-07-09 2021-08-14"
   "This function enables forward-sexp and backward-sexp movement,
 when dealing with evil-lisp-mode-map map."
   (interactive)
-  (define-key evil-lisp-state-map (kbd "<up>") 'backward-list)
-  (define-key evil-lisp-state-map (kbd "<down>") 'forward-list)
+  (define-key evil-lisp-state-map (kbd "<up>") 'backward-up-list)
+  (define-key evil-lisp-state-map (kbd "<down>") 'down-list)
 
-  (define-key evil-lisp-state-map (kbd "n") 'forward-list)
-  (define-key evil-lisp-state-map (kbd "m") 'backward-list)
+  (define-key evil-lisp-state-map (kbd "<right>") 'forward-list)
+  (define-key evil-lisp-state-map (kbd "<left>") 'backward-list)
 
-  (define-key evil-lisp-state-map (kbd "u") 'backward-up-list)
-  (define-key evil-lisp-state-map (kbd "d") 'down-list)
-
-  (define-key evil-lisp-state-map (kbd "=") 'recenter-top-bottom))
+  (define-key evil-lisp-state-map (kbd "=") 'recenter-top-bottom)
+  )
 
 (defun dgg-company-state-active-map ()
   "This function enables kp-4 and kp-7
@@ -409,9 +410,6 @@ Version 2017-05-30"
 ;; (global-set-key (kbd "<left>") 'xah-beginning-of-line-or-block)
 ;; (global-set-key (kbd "<right>") 'xah-end-of-line-or-block)
 
-(define-key evil-motion-state-map (kbd "<left>") 'xah-beginning-of-line-or-block)
-
-(define-key evil-motion-state-map (kbd "<right>") 'xah-end-of-line-or-block)
 
 
 (defun xah-open-file-at-cursor ()
